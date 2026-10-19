@@ -99,7 +99,6 @@ dialog::backdrop{background:#0008}
 .lamp{width:28px;height:28px;flex:none}
 .card.unk .s{font-size:min(44px,9.6vw)}
 .tyinfo{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px 14px;margin:10px 0;font-size:15px;line-height:1.7}
-.demo{display:block!important}
 .spd{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-weight:700;font-size:14px;color:var(--sub)}
 .spd .seg{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .spd .seg button{padding:9px 4px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-size:15px;font-weight:800}
@@ -108,7 +107,7 @@ dialog::backdrop{background:#0008}
 </head>
 <body>
 <div id="alertbar" role="alert" hidden><span id="alertTxt"></span><button class="go" id="alertX"></button></div>
-<div style="background:#ffd60a;color:#3d2e00;font-weight:800;font-size:13px;padding:6px 10px;border-radius:10px;margin-bottom:8px" id="pv"></div>
+<div style="background:#ffd60a;color:#3d2e00;font-weight:800;font-size:13px;padding:6px 10px;border-radius:10px;margin-bottom:8px" id="pv" hidden></div>
 <header>
  <h1 id="ttl"></h1>
  <span class="badge" id="tyb"></span>
@@ -172,6 +171,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  <div class="card ok" id="cbus"><div class="n" id="nbus"></div><div class="s"><span class="lamp"></span><span id="sbus"></span></div><div class="d" id="dbus"></div></div>
  <div class="card ok" id="cyui"><div class="n" id="nyui"></div><div class="s"><span class="lamp"></span><span id="syui"></span></div><div class="d" id="dyui"></div></div>
  <a class="lnk" id="blink" href="https://www.bus-okinawa.or.jp/" target="_blank" rel="noopener"></a>
+ <a class="lnk" id="ylink" href="https://www.yui-rail.co.jp/" target="_blank" rel="noopener"></a>
  <div class="demo"><span id="demoL"></span><br>
   <span id="demoBus"></span><span id="demoYui"></span></div>
  <div class="opts"><h2 id="alT"></h2>
@@ -208,20 +208,15 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <dialog id="dlg"><div id="dbody"></div><button class="go" id="dclose" style="width:100%;margin-top:8px"></button></dialog>
 
 <script>
-(function(){const MS={bus:'ok',text:'平常通り運行しております。',uncertain:false,error:false,checked:new Date().toISOString()};
-const MT={"typhoons": [{"id": "TC2630", "number": "2630", "cat": "TY", "issue": "2026-10-15T13:05:00+09:00", "fc": [{"h": 24, "c": [20.0, 131.0], "r": 90}, {"h": 48, "c": [22.5, 128.5], "r": 150}, {"h": 72, "c": [25.5, 126.5], "r": 220}, {"h": 96, "c": [29.0, 126.0], "r": 330}, {"h": 120, "c": [33.0, 128.5], "r": 450}], "now": {"c": [18.0, 134.0], "hpa": 950, "wind": 40, "gust": 55, "spd": 20, "spdnote": null, "course": "西北西", "scale": "大型", "int": "強い", "loc": "フィリピンの東", "storm": 140, "gale": 500}}, {"id": "TC2631", "number": "a", "cat": "TD", "issue": "2026-10-15T13:05:00+09:00", "fc": [], "now": {"c": [10.0, 150.0], "hpa": 1004, "wind": null, "gust": null, "spd": null, "spdnote": "ゆっくり", "course": "西", "scale": null, "int": null, "loc": "マリアナ諸島", "storm": null, "gale": null}}], "checked": "2026-10-17T09:16:29+00:00", "error": false};MT.checked=new Date().toISOString();
-const of=window.fetch;window.fetch=function(u,o){u=String(u);
- if(u.includes('status.json'))return Promise.resolve(new Response(JSON.stringify(MS),{status:200}));
- if(u.includes('typhoon.json'))return Promise.resolve(new Response(JSON.stringify(MT),{status:200}));
- return of.apply(this,arguments)}})();
+
 
 const L=(function(){try{var o=localStorage.getItem('oktLang');if(o=='ja'||o=='en')return o}catch(e){}return /^ja/i.test(navigator.language||'ja')?'ja':'en'})();
 const T={ja:{
  ttl:'沖縄 台風・交通',tab0:'運行状況',tab1:'台風進路',re:'いま確認',bus:'バス',yui:'ゆいレール',
  st:{ok:'平常運転',part:'一部運休',stop:'運休',unk:'確認できません'},bst:{ok:'平常運転',part:'一部運休',stop:'全路線運休',unk:'確認できません'},
  dok:'通常どおり運行しています',dpart:'一部の会社で運休が出ています',dstop:'運休しています',
- dunk:'情報を取得できません。協会のページで確認してください',dyui:'ゆいレールは自動確認に未対応です。公式の運行情報をご確認ください',bsrc:'協会の表示：',unc:'※文面が通常と違います。協会のページで確認してください',stale:'※自動確認が止まっている可能性があります',blink:'沖縄県バス協会の運行情報を開く',
- nodata:'<b>台風データは準備中です</b><br>画面に台風が出ていなくても、台風が来ていないとは限りません。<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">気象庁の公式情報を開く</a>',
+ dunk:'情報を取得できません。協会のページで確認してください',dyui:'ゆいレールの情報を取得できません。公式サイトで確認してください',ysrc:'公式サイトの表示：',ylink:'ゆいレールの公式サイトを開く',issued:'気象庁の発表：',bsrc:'協会の表示：',unc:'※文面が通常と違います。協会のページで確認してください',stale:'※自動確認が止まっている可能性があります',blink:'沖縄県バス協会の運行情報を開く',
+ nodata:'<b>台風データを取得中です</b><br>画面に台風が出ていなくても、台風が来ていないとは限りません。<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">気象庁の公式情報を開く</a>',
  spk:'🔊 読み上げ',pv:'※プレビュー表示です。バス・台風のデータはサンプルで、実際の状況ではありません。',lang:'English',spdL:'読み上げの速さ',rates:['ゆっくり','普通','速い'],spkStop:'⏹ 読み上げを止める',alVcL:'音声でも読み上げる',tyb2:'🌀 台風発生中',
  tyunk:'台風データを取得できません。気象庁の公式情報をご確認ください。',tynone:'現在、気象庁が情報を出している台風・熱帯低気圧はありません。',
  tyhit:(h,d)=>'沖縄本島に最も近づく予想：'+(h?h/24+'日目':'現在')+'（中心まで約'+d+'km）',tyfar:d=>'沖縄本島から約'+d+'km（800km以内には入らない予想）',tystale:'※台風データの自動更新が止まっている可能性があります',
@@ -236,8 +231,9 @@ const T={ja:{
  day:n=>n+'日目',home:'ホーム画面に追加',feat:'機能紹介',fi:`<img id="fimg" src="feature.png" alt="" onerror="this.remove()" style="width:100%;border-radius:12px;margin-bottom:8px">
 <h3 style="margin:6px 0">できること</h3>
 <ul style="padding-left:20px;line-height:1.7;margin:0 0 8px">
-<li>バスの運行状況を色で確認（平常運転・一部運休・全路線運休）</li>
-<li>バス協会の発表をそのまま表示</li>
+<li>バス・ゆいレールの運行状況を色で確認（平常運転・一部運休・運休）</li>
+<li>台風の進路を、気象庁の発表どおり1〜5日目の色分けで順番に表示</li>
+<li>バス協会・ゆいレールの発表をそのまま表示</li>
 <li>5分ごとに自動更新。「いま確認」でもすぐ確認</li>
 <li>運休になったら、音と画面でお知らせ（オン・オフを選べる）</li>
 <li>台風の地図は、2本指やダブルタップで拡大・縮小</li>
@@ -246,13 +242,10 @@ const T={ja:{
 <li>日本語・英語（自動で切り替え。右上のボタンでも切り替え）</li>
 <li>読み上げの速さを3段階で選べる（ゆっくり・普通・速い）</li>
 <li>無料</li></ul>
-<h3 style="margin:6px 0">準備中</h3>
-<ul style="padding-left:20px;line-height:1.7;margin:0">
-<li>台風の進路を、1〜5日目の色分けで順番に表示</li>
-<li>ゆいレールの運行状況</li></ul>`,hclose:'閉じる',
+`,hclose:'閉じる',
  ban:'新商品のお知らせ（ここにバナー）',banimg:'ここに画像が表示されます',
  info:'<b>サンプル台風</b><br>強さ：強い／中心気圧 960hPa／最大風速 40m/s<br>沖縄本島に最も近づく予想：3日目',
- src:'台風の情報は、気象庁の公開データを10分ごとに自動で取得して表示しています。海岸線は概略です。出典：気象庁ホームページ',
+ src:'台風の情報は、気象庁の公開データを自動で取得して表示しています（5分ごと・「いま確認」ですぐ更新）。海岸線は概略です。出典：気象庁ホームページ',
  net:'通信がなくても開けます（運行状況は最後に取得した内容を表示します）。',off:'オフライン：前回の情報を表示中',
  hi:'<b>iPhone</b><br>Safariで共有ボタン→「ホーム画面に追加」<br><br><b>Android</b><br>Chromeのメニュー→「ホーム画面に追加」<div class="ph">説明イラスト（差し替え予定）</div>',
  tyb:'🌀 台風接近',
@@ -262,8 +255,8 @@ en:{
  ttl:'Okinawa Typhoon & Transit',tab0:'Service status',tab1:'Typhoon track',re:'Check now',bus:'Bus',yui:'Yui Rail',
  st:{ok:'Running',part:'Partly suspended',stop:'Suspended',unk:'Unknown'},bst:{ok:'Running',part:'Partly suspended',stop:'All suspended',unk:'Unknown'},
  dok:'Operating as usual',dpart:'Some companies have suspensions',dstop:'Service is suspended',
- dunk:'Cannot get the status. Please check the association page.',dyui:'Yui Rail is not checked automatically. Please see the official site.',bsrc:'Association says: ',unc:'* The wording differs from usual. Please check the association page.',stale:'* Automatic checks may have stopped.',blink:'Open the Okinawa Bus Association status page',
- nodata:'<b>Typhoon data is not connected yet</b><br>No typhoon shown does not mean none is coming.<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">Open the official JMA site</a>',
+ dunk:'Cannot get the status. Please check the association page.',dyui:'Cannot get the Yui Rail status. Please check the official site.',ysrc:'Official site says: ',ylink:'Open the Yui Rail official site',issued:'JMA issued: ',bsrc:'Association says: ',unc:'* The wording differs from usual. Please check the association page.',stale:'* Automatic checks may have stopped.',blink:'Open the Okinawa Bus Association status page',
+ nodata:'<b>Loading typhoon data</b><br>No typhoon shown does not mean none is coming.<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">Open the official JMA site</a>',
  spk:'🔊 Read aloud',pv:'* Preview: bus and typhoon data are samples, not the real situation.',lang:'日本語',spdL:'Reading speed',rates:['Slow','Normal','Fast'],spkStop:'⏹ Stop reading',alVcL:'Also read it aloud',tyb2:'🌀 Typhoon active',
  tyunk:'Typhoon data is not available. Please check the official JMA information.',tynone:'No typhoon or tropical depression is currently announced by JMA.',
  tyhit:(h,d)=>'Closest to Okinawa Island: '+(h?'day '+h/24:'now')+' (center about '+d+' km away)',tyfar:d=>'About '+d+' km from Okinawa Island (not expected within 800 km)',tystale:'* Automatic typhoon updates may have stopped.',
@@ -278,8 +271,9 @@ en:{
  day:n=>'Day '+n,home:'Add to Home Screen',feat:'Features',fi:`<img id="fimg" src="feature.png" alt="" onerror="this.remove()" style="width:100%;border-radius:12px;margin-bottom:8px">
 <h3 style="margin:6px 0">What it does</h3>
 <ul style="padding-left:20px;line-height:1.7;margin:0 0 8px">
-<li>Bus status at a glance, by color (running / partly suspended / all suspended)</li>
-<li>Shows the bus association's announcement as it is</li>
+<li>Bus and Yui Rail status at a glance, by color (running / partly suspended / suspended)</li>
+<li>Typhoon track from JMA, in colors for days 1 to 5, lit in order</li>
+<li>Shows the bus association's and Yui Rail's announcements as they are</li>
 <li>Updates every 5 minutes, or tap "Check now"</li>
 <li>Sound and screen alerts when service stops (each can be turned on or off)</li>
 <li>Pinch or double-tap the typhoon map to zoom</li>
@@ -288,13 +282,10 @@ en:{
 <li>Japanese and English (automatic, or use the button at top right)</li>
 <li>Choose the reading speed: slow, normal or fast</li>
 <li>Free</li></ul>
-<h3 style="margin:6px 0">Coming soon</h3>
-<ul style="padding-left:20px;line-height:1.7;margin:0">
-<li>Typhoon track in colors for days 1 to 5, lit in order</li>
-<li>Yui Rail status</li></ul>`,hclose:'Close',
+`,hclose:'Close',
  ban:'New product news (banner here)',banimg:'Image will appear here',
  info:'<b>Sample typhoon</b><br>Strong / 960 hPa / max wind 40 m/s<br>Closest to Okinawa Island: Day 3',
- src:'Typhoon information is fetched automatically every 10 minutes from public JMA data. Coastlines are approximate. Source: Japan Meteorological Agency website',
+ src:'Typhoon information is fetched automatically from public JMA data (every 5 minutes, or tap "Check now"). Coastlines are approximate. Source: Japan Meteorological Agency website',
  net:'Opens without a connection (shows the last information received).',off:'Offline: showing last known info',
  hi:'<b>iPhone</b><br>Safari: Share button → "Add to Home Screen"<br><br><b>Android</b><br>Chrome menu → "Add to Home screen"<div class="ph">Guide illustration (to be added)</div>',
  tyb:'🌀 Typhoon nearby',
@@ -342,7 +333,7 @@ function draw(){
  $('ttl').textContent=T.ttl;$('hbtn').textContent=T.home;$('fbtn').textContent=T.feat;$('spk').textContent=(window.speechSynthesis&&speechSynthesis.speaking)?T.spkStop:T.spk;
  $('tab0').textContent=T.tab0;$('tab1').textContent=T.tab1;$('re').textContent=T.re;$('re2').textContent=T.re;
  $('nbus').textContent=T.bus;$('nyui').textContent=T.yui;$('demoL').textContent=T.demoL;
- $('blink').textContent=T.blink;$('src').textContent=T.src;$('net').textContent=T.net;
+ $('blink').textContent=T.blink;$('ylink').textContent=T.ylink;$('src').textContent=T.src;$('net').textContent=T.net;
  $('dclose').textContent=T.hclose;$('pv').textContent=T.pv;$('lbtn').textContent=T.lang;$('spdL').textContent=T.spdL;
  document.querySelectorAll('#spdRow [data-r]').forEach(b=>{const i=+b.dataset.r;b.textContent=T.rates[i];b.classList.toggle('sel',i==S.rate)});
  $('alT').textContent=T.alT;$('alSL').textContent=T.alSL;$('alVL').textContent=T.alVL;$('alTest').textContent=T.alTest;$('alertX').textContent=T.alX;
@@ -351,6 +342,7 @@ function draw(){
   const v=S[k];$('c'+k).className='card '+v;$('s'+k).textContent=list[v];
   let d=v=='unk'?(k=='yui'?T.dyui:T.dunk):v=='ok'?T.dok:v=='part'?T.dpart:T.dstop;
   if(k=='bus'){if(S.btxt)d+='　'+T.bsrc+'「'+S.btxt+'」';if(S.bunc)d+='　'+T.unc;if(S.bsrc&&Date.now()-new Date(S.bsrc)>45*60000)d+='　'+T.stale}
+  if(k=='yui'&&S.ytxt)d+='　'+T.ysrc+'「'+S.ytxt+'」';
   $('d'+k).textContent=d;}
  const mk=(k,opts)=>opts.map(o=>`<button data-k="${k}" data-v="${o}">${k=='bus'?T.bus:T.yui}:${(k=='bus'?T.bst:T.st)[o]}</button>`).join('');
  $('demoBus').innerHTML=mk('bus',['ok','part','stop']);$('demoYui').innerHTML=mk('yui',['ok','stop']);
@@ -380,11 +372,11 @@ $('alTest').onclick=()=>alertUser('bus','stop');
 const fmt=iso=>{const d=new Date(iso);return isNaN(d)?now():d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')};
 async function recheck(){
  const bs=[$('re'),$('re2')];bs.forEach(b=>b.disabled=true);
- try{const r=await fetch('status.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();
+ try{const r=await fetch('status.json',{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();
   S.btxt=j.text||'';S.bunc=!!j.uncertain;S.bsrc=j.checked||'';S.chk=j.checked?fmt(j.checked):now();S.err=(navigator.onLine===false||j.error)?1:0;
-  setState('bus',['ok','part','stop'].includes(j.bus)?j.bus:'unk')}
+  S.ytxt=j.ytext||'';S.yunc=!!j.yunc;setState('bus',['ok','part','stop'].includes(j.bus)?j.bus:'unk');setState('yui',['ok','part','stop'].includes(j.yui)?j.yui:'unk')}
  catch(e){S.err=1}
- try{const r=await fetch('typhoon.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();S.typ=j;S.tyerr=(navigator.onLine===false||j.error)?1:0}catch(e){S.tyerr=1}
+ try{const r=await fetch('typhoon.json',{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();S.typ=j;S.tyerr=(navigator.onLine===false||j.error)?1:0}catch(e){S.tyerr=1}
  drawTy();light(cur);
  bs.forEach(b=>b.disabled=false);save();draw()}
 $('re').onclick=recheck;$('re2').onclick=recheck;
@@ -401,7 +393,7 @@ const OKI_C=[127.7,26.2];
 const hav=(a,b)=>{const R=6371,r=Math.PI/180,x=Math.sin((b[1]-a[1])*r/2)**2+Math.cos(a[1]*r)*Math.cos(b[1]*r)*Math.sin((b[0]-a[0])*r/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
 const dist=c=>hav([c[1],c[0]],OKI_C);
 const tyList=()=>(S.typ&&Array.isArray(S.typ.typhoons))?S.typ.typhoons.filter(t=>t&&t.now&&t.now.c):[];
-function tyName(t){const n=t.number||'';return n.length>2?(L=='ja'?'台風'+(+n.slice(-2))+'号':'Typhoon No. '+(+n.slice(-2))):(L=='ja'?'熱帯低気圧'+n:'Tropical depression '+n)}
+function tyName(t,short){const n=t.number||'';if(n.length>2){const nm=short?null:(L=='ja'?t.name:t.nameEn);return (L=='ja'?'台風'+(+n.slice(-2))+'号':'Typhoon No. '+(+n.slice(-2)))+(nm?(L=='ja'?'（'+nm+'）':' ('+nm+')'):'')}return L=='ja'?'熱帯低気圧'+(n.length==1?n:''):'Tropical depression'+(n.length==1?' '+n:'')}
 function nearest(t){let best=null;[{h:0,c:t.now.c,r:0}].concat(t.fc||[]).forEach(p=>{const d=dist(p.c);if(!best||d<best.d)best={d,h:p.h,r:p.r||0}});return best}
 const within=t=>{const b=nearest(t);return b.d-b.r<=800};
 function drawTy(){
@@ -421,13 +413,13 @@ function drawTy(){
    $('nums').appendChild(sv2('text',{class:'lb',x:q[0],y:q[1],'text-anchor':'middle','dominant-baseline':'central','font-weight':900,fill:'#12263a',stroke:'#fff','paint-order':'stroke'},d+1))});
   w.appendChild(sv2('circle',{class:'cur',cx:pc[0],cy:pc[1],r:8,fill:'#ff3b5c'}));
   w.appendChild(sv2('circle',{class:'sm',cx:pc[0],cy:pc[1],r:8,fill:'#fff',stroke:'#12263a'}));
-  $('lbl').appendChild(sv2('text',{class:'gl tl',x:pc[0]+14,y:pc[1]-12,'text-anchor':'start'},tyName(t)))});
+  $('lbl').appendChild(sv2('text',{class:'gl tl',x:pc[0]+14,y:pc[1]-12,'text-anchor':'start'},tyName(t,1)))});
  $('p1').classList.toggle('nodata',!list.length);
  const bd=$('tyb');if(list.length){bd.textContent=list.some(within)?T.tyb:T.tyb2;bd.classList.add('on')}else bd.classList.remove('on');
  let h;
  if(!S.typ||!Array.isArray(S.typ.typhoons))h=T.tyunk;
  else if(!list.length)h=T.tynone;
- else h=list.map(t=>{const b=nearest(t);return '<b>'+tyName(t)+'</b>：'+(within(t)?T.tyhit(b.h,Math.round(b.d)):T.tyfar(Math.round(dist(t.now.c))))}).join('<br>');
+ else h=list.map(t=>{const b=nearest(t),iss=t.issue?new Date(t.issue):null;return '<b>'+tyName(t)+'</b>：'+(within(t)?T.tyhit(b.h,Math.round(b.d)):T.tyfar(Math.round(dist(t.now.c))))+(iss&&!isNaN(iss)?'<br><small>'+T.issued+(iss.getMonth()+1)+'/'+iss.getDate()+' '+iss.getHours()+':'+String(iss.getMinutes()).padStart(2,'0')+'</small>':'')}).join('<br>');
  if(S.typ&&(S.tyerr||(S.typ.checked&&Date.now()-new Date(S.typ.checked)>90*60000)))h+='<br><small>'+T.tystale+'</small>';
  h+='<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">'+(L=='ja'?'気象庁の公式情報を開く':'Open the official JMA site')+'</a>';
  $('info').innerHTML=h;$('info').className='tyinfo'}
@@ -519,7 +511,7 @@ document.addEventListener('pointerdown',e=>{if(e.target.closest('button,#banner,
 function net(){if(!navigator.onLine)$('net').textContent=T.off}
 addEventListener('offline',net);addEventListener('online',()=>$('net').textContent=T.net);
 addEventListener('pagehide',save);document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
-S.pin=-1;S.yui='unk';draw();drawTy();restart();recheck();setInterval(recheck,300000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)recheck()});if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+S.pin=-1;draw();drawTy();restart();recheck();setInterval(recheck,300000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)recheck()});if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body>
 </html>
