@@ -99,15 +99,72 @@ dialog::backdrop{background:#0008}
 .lamp{width:28px;height:28px;flex:none}
 .card.unk .s{font-size:min(44px,9.6vw)}
 .tyinfo{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px 14px;margin:10px 0;font-size:15px;line-height:1.7}
+.demo{display:block!important}
 .spd{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-weight:700;font-size:14px;color:var(--sub)}
 .spd .seg{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .spd .seg button{padding:9px 4px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-size:15px;font-weight:800}
 .spd .seg button.sel{background:var(--acc);border-color:var(--acc);color:#fff}
+.tyhd{font-size:19px;font-weight:900;line-height:1.3}
+.tynear{font-size:14px;font-weight:800;color:var(--acc);margin-bottom:6px;line-height:1.35}
+.tygrid{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+.tyr{padding:3px 0;border-bottom:1px solid var(--line);line-height:1.25}
+.tyr span{display:block;color:var(--sub);font-weight:700;font-size:12px}.tyr b{font-size:16px}
+.tyfc{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:6px;font-size:13px;font-weight:700;line-height:1.3}
+.tyfh{width:100%;color:var(--sub);font-size:12px}
+.tyfd{display:flex;align-items:center;gap:4px}.tyfd i{width:10px;height:10px;border-radius:50%;flex:none}
+.tysep{border:0;border-top:2px dashed var(--line);margin:12px 0}
+.tyiss{margin-top:10px;font-size:14px;color:var(--sub)}
+.srcbox{margin-top:12px;padding:10px 12px;border-top:2px dashed var(--line);font-size:13px;color:var(--sub);line-height:1.6}
+.srcbox p{margin:0 0 6px}
+.clk{display:inline-block;margin-top:10px;background:#fff;color:#12263a;border:2px solid #12263a;border-radius:999px;padding:7px 16px;font-size:15px;font-weight:900;text-decoration:none;transition:transform .08s,filter .08s;-webkit-tap-highlight-color:transparent}
+.clk:active{transform:scale(.92) translateY(2px);filter:brightness(.85)}
+.srcbox a{display:block;font-weight:800;color:var(--acc);padding:4px 0;font-size:14px}
+/* compact: map + info on one screen */
+#info.tyinfo{padding:8px 10px;margin:6px 0;font-size:13px;line-height:1.4}
+#info .tyhd{font-size:16px}
+#info .tynear{font-size:12.5px;margin-bottom:2px}
+#info .tykey{grid-template-columns:repeat(3,1fr);gap:4px;margin:4px 0}
+#info .tyk{padding:3px 2px;border-radius:9px;border-width:1.5px}
+#info .tyk span{font-size:10.5px}
+#info .tyk b{font-size:16px;margin-top:0}
+#info .tyk b small{font-size:10px}
+#info .tyk b.na{font-size:11px}
+.tyk.d b{color:#12263a}.tyk.s b,.tyk.p b{color:#5a3fd6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tyk.d b{color:#eaf4ff}}
+#info .tymore{margin-top:4px}
+#info .tyfar1{font-size:12px;color:var(--sub);line-height:1.35}
+#info .tysep{margin:6px 0}
+#info .tymore summary{font-size:12.5px;font-weight:800;color:var(--acc);cursor:pointer;padding:2px 0}
+#info .tyiss{margin-top:4px;font-size:11.5px;display:inline}
+#info br+a,#info a{font-size:12px}
+#legend.legend{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:6px 0}
+#legend .chip{padding:5px 2px;font-size:13px;border-width:2px;justify-content:center;gap:3px;white-space:nowrap}
+#legend .chip i{width:8px;height:8px}
+#legend .chip.sel{transform:scale(1.06);border-width:3px;box-shadow:0 0 0 2px var(--c),0 2px 8px var(--c)}
+.tykey{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 10px}
+.tyk{background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:6px 4px;text-align:center;line-height:1.2}
+.tyk span{display:block;font-size:12px;font-weight:800;color:var(--sub)}
+.tyk b{display:block;font-size:20px;font-weight:900;margin-top:2px}
+.tyk b small{font-size:12px;font-weight:800}
+.tyk.g b{color:#e0002a}.tyk.w b{color:#d46b00}.tyk.v b{color:var(--acc)}
+.tyk b.na{font-size:13px;color:var(--sub)}
+.legend .chip{padding:9px 14px;font-size:16px;border-width:3px;transition:transform .12s,background .15s,opacity .15s,filter .15s,box-shadow .15s}
+.legend .chip:active{transform:scale(.86) translateY(4px)!important;filter:brightness(.75)!important;box-shadow:inset 0 3px 6px #0004!important}
+.legend .chip.sel{background:var(--c);color:#fff;transform:scale(1.12);border-width:4px;border-color:#12263a;box-shadow:0 0 0 3px var(--c),0 4px 14px var(--c);-webkit-text-stroke:.12em #12263a;paint-order:stroke fill;z-index:1;position:relative}
+.legend .chip.sel i{background:#fff;box-shadow:0 0 6px #fff}
+.legend .chip.dim{background:#e3e7ec;color:#9aa5b1;border-color:var(--c);opacity:.7;filter:saturate(.35)}
+.legend .chip.dim i{background:#b5bec8}
+#arw .ab{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:calc(12px*var(--inv,1))}
+#arw .af{fill:none;stroke:#e0002a;stroke-linecap:round;stroke-linejoin:round;stroke-width:calc(6px*var(--inv,1))}
+#arw .ah{fill:#e0002a;stroke:#fff;stroke-linejoin:round;stroke-width:calc(3px*var(--inv,1))}
+@keyframes pop{0%{transform:scale(.6)}45%{transform:scale(1.45)}100%{transform:scale(1)}}
+#circles circle.pop{animation:pop .5s ease-out}
 </style>
 </head>
 <body>
 <div id="alertbar" role="alert" hidden><span id="alertTxt"></span><button class="go" id="alertX"></button></div>
-<div style="background:#ffd60a;color:#3d2e00;font-weight:800;font-size:13px;padding:6px 10px;border-radius:10px;margin-bottom:8px" id="pv" hidden></div>
+<style>#pv[hidden]{display:none!important}</style>
+<div style="background:#ffd60a;color:#3d2e00;font-weight:800;font-size:13px;padding:6px 10px;border-radius:10px;margin-bottom:8px" id="pv"></div>
 <header>
  <h1 id="ttl"></h1>
  <span class="badge" id="tyb"></span>
@@ -168,18 +225,16 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 <section class="panel" id="p0">
  <div class="bar"><span id="chk"></span><button class="go" id="re"></button></div>
- <div class="card ok" id="cbus"><div class="n" id="nbus"></div><div class="s"><span class="lamp"></span><span id="sbus"></span></div><div class="d" id="dbus"></div></div>
- <div class="card ok" id="cyui"><div class="n" id="nyui"></div><div class="s"><span class="lamp"></span><span id="syui"></span></div><div class="d" id="dyui"></div></div>
- <a class="lnk" id="blink" href="https://www.bus-okinawa.or.jp/" target="_blank" rel="noopener"></a>
- <a class="lnk" id="ylink" href="https://www.yui-rail.co.jp/" target="_blank" rel="noopener"></a>
- <div class="demo"><span id="demoL"></span><br>
-  <span id="demoBus"></span><span id="demoYui"></span></div>
+ <div class="card ok" id="cbus"><div class="n" id="nbus"></div><div class="s"><span class="lamp"></span><span id="sbus"></span></div><div class="d" id="dbus"></div><a class="clk" id="cbL" href="https://www.bus-okinawa.or.jp/" target="_blank" rel="noopener"></a></div>
+ <div class="card ok" id="cyui"><div class="n" id="nyui"></div><div class="s"><span class="lamp"></span><span id="syui"></span></div><div class="d" id="dyui"></div><a class="clk" id="cyL" href="https://www.yui-rail.co.jp/" target="_blank" rel="noopener"></a></div>
+<span id="blink" hidden></span><span id="demoL" hidden></span><span id="demoBus" hidden></span><span id="demoYui" hidden></span>
  <div class="opts"><h2 id="alT"></h2>
   <label class="opt"><input type="checkbox" id="alS"><span id="alSL"></span></label>
   <label class="opt"><input type="checkbox" id="alV"><span id="alVL"></span></label>
   <label class="opt"><input type="checkbox" id="alVc"><span id="alVcL"></span></label>
   <button class="go" id="alTest" style="margin-top:6px"></button></div>
  <div class="note" id="net"></div>
+ <div class="srcbox"><p id="srcNote"></p><a id="lkBus" href="https://www.bus-okinawa.or.jp/" target="_blank" rel="noopener"></a><a id="lkYui" href="https://www.yui-rail.co.jp/" target="_blank" rel="noopener"></a></div>
 </section>
 
 <section class="panel nodata" id="p1" hidden>
@@ -193,6 +248,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   <g id="tyw"></g>
   <g id="tyt"></g>
   <g id="circles"></g>
+  <g id="arw"></g>
   <polygon id="oisl2" fill="none" stroke="#2f7d32" style="stroke-width:calc(2px*var(--inv,1));stroke-linejoin:round"/>
   <g id="lbl"></g>
   <g id="nums"></g>
@@ -208,15 +264,21 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <dialog id="dlg"><div id="dbody"></div><button class="go" id="dclose" style="width:100%;margin-top:8px"></button></dialog>
 
 <script>
-
+const PREVIEW=/claude/i.test(location.hostname)||location.protocol=='file:';
+(function(){if(!PREVIEW)return;const MS={bus:'ok',text:'平常通り運行しております。',uncertain:false,yui:'ok',ytext:'通常どおり運行しています',yuncertain:false,error:false,checked:new Date().toISOString()};
+const MT={"typhoons": [{"id": "TC2630", "number": "2630", "cat": "TY", "issue": "2026-10-15T13:05:00+09:00", "fc": [{"h": 24, "c": [20.0, 131.0], "r": 90}, {"h": 48, "c": [22.5, 128.5], "r": 150}, {"h": 72, "c": [25.5, 126.5], "r": 220}, {"h": 96, "c": [29.0, 126.0], "r": 330}, {"h": 120, "c": [33.0, 128.5], "r": 450}], "now": {"c": [18.0, 134.0], "hpa": 950, "wind": 40, "gust": 55, "spd": 20, "spdnote": null, "course": "西北西", "scale": "大型", "int": "強い", "loc": "フィリピンの東", "storm": 140, "gale": 500}}, {"id": "TC2631", "number": "a", "cat": "TD", "issue": "2026-10-15T13:05:00+09:00", "fc": [], "now": {"c": [10.0, 150.0], "hpa": 1004, "wind": null, "gust": null, "spd": null, "spdnote": "ゆっくり", "course": "西", "scale": null, "int": null, "loc": "マリアナ諸島", "storm": null, "gale": null}}], "checked": "2026-10-17T09:16:29+00:00", "error": false};MT.checked=new Date().toISOString();
+const of=window.fetch;window.fetch=function(u,o){u=String(u);
+ if(u.includes('status.json'))return Promise.resolve(new Response(JSON.stringify(MS),{status:200}));
+ if(u.includes('typhoon.json'))return Promise.resolve(new Response(JSON.stringify(MT),{status:200}));
+ return of.apply(this,arguments)}})();
 
 const L=(function(){try{var o=localStorage.getItem('oktLang');if(o=='ja'||o=='en')return o}catch(e){}return /^ja/i.test(navigator.language||'ja')?'ja':'en'})();
 const T={ja:{
  ttl:'沖縄 台風・交通',tab0:'運行状況',tab1:'台風進路',re:'いま確認',bus:'バス',yui:'ゆいレール',
- st:{ok:'平常運転',part:'一部運休',stop:'運休',unk:'確認できません'},bst:{ok:'平常運転',part:'一部運休',stop:'全路線運休',unk:'確認できません'},
+ st:{ok:'平常運転',part:'遅れ・一部運休',stop:'運休',unk:'確認できません'},bst:{ok:'平常運転',part:'一部運休',stop:'全路線運休',unk:'確認できません'},
  dok:'通常どおり運行しています',dpart:'一部の会社で運休が出ています',dstop:'運休しています',
- dunk:'情報を取得できません。協会のページで確認してください',dyui:'ゆいレールの情報を取得できません。公式サイトで確認してください',ysrc:'公式サイトの表示：',ylink:'ゆいレールの公式サイトを開く',issued:'気象庁の発表：',bsrc:'協会の表示：',unc:'※文面が通常と違います。協会のページで確認してください',stale:'※自動確認が止まっている可能性があります',blink:'沖縄県バス協会の運行情報を開く',
- nodata:'<b>台風データを取得中です</b><br>画面に台風が出ていなくても、台風が来ていないとは限りません。<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">気象庁の公式情報を開く</a>',
+ dunk:'情報を取得できません。協会のページで確認してください',dyui:'情報を取得できません。ゆいレールのページで確認してください',dypart:'遅れや一部区間の運転見合わせがあります',ysrc:'ゆいレールの表示：',yunc:'※文面が通常と違います。ゆいレールのページで確認してください',srcNote:'この運行状況は、沖縄県バス協会とゆいレールの公式ホームページを自動で読み取って表示しています。表示がおかしいときは、下の公式ページで確認してください。',lBus:'沖縄県バス協会（公式）',cLk:'🔗 公式ページを見る',lYui:'ゆいレール（公式）',bsrc:'協会の表示：',unc:'※文面が通常と違います。協会のページで確認してください',stale:'※自動確認が止まっている可能性があります',blink:'沖縄県バス協会の運行情報を開く',
+ nodata:'<b>台風データは準備中です</b><br>画面に台風が出ていなくても、台風が来ていないとは限りません。<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">気象庁の公式情報を開く</a>',
  spk:'🔊 読み上げ',pv:'※プレビュー表示です。バス・台風のデータはサンプルで、実際の状況ではありません。',lang:'English',spdL:'読み上げの速さ',rates:['ゆっくり','普通','速い'],spkStop:'⏹ 読み上げを止める',alVcL:'音声でも読み上げる',tyb2:'🌀 台風発生中',
  tyunk:'台風データを取得できません。気象庁の公式情報をご確認ください。',tynone:'現在、気象庁が情報を出している台風・熱帯低気圧はありません。',
  tyhit:(h,d)=>'沖縄本島に最も近づく予想：'+(h?h/24+'日目':'現在')+'（中心まで約'+d+'km）',tyfar:d=>'沖縄本島から約'+d+'km（800km以内には入らない予想）',tystale:'※台風データの自動更新が止まっている可能性があります',
@@ -231,9 +293,8 @@ const T={ja:{
  day:n=>n+'日目',home:'ホーム画面に追加',feat:'機能紹介',fi:`<img id="fimg" src="feature.png" alt="" onerror="this.remove()" style="width:100%;border-radius:12px;margin-bottom:8px">
 <h3 style="margin:6px 0">できること</h3>
 <ul style="padding-left:20px;line-height:1.7;margin:0 0 8px">
-<li>バス・ゆいレールの運行状況を色で確認（平常運転・一部運休・運休）</li>
-<li>台風の進路を、気象庁の発表どおり1〜5日目の色分けで順番に表示</li>
-<li>バス協会・ゆいレールの発表をそのまま表示</li>
+<li>バスの運行状況を色で確認（平常運転・一部運休・全路線運休）</li>
+<li>バス協会の発表をそのまま表示</li>
 <li>5分ごとに自動更新。「いま確認」でもすぐ確認</li>
 <li>運休になったら、音と画面でお知らせ（オン・オフを選べる）</li>
 <li>台風の地図は、2本指やダブルタップで拡大・縮小</li>
@@ -242,10 +303,13 @@ const T={ja:{
 <li>日本語・英語（自動で切り替え。右上のボタンでも切り替え）</li>
 <li>読み上げの速さを3段階で選べる（ゆっくり・普通・速い）</li>
 <li>無料</li></ul>
-`,hclose:'閉じる',
+<h3 style="margin:6px 0">準備中</h3>
+<ul style="padding-left:20px;line-height:1.7;margin:0">
+<li>台風の進路を、1〜5日目の色分けで順番に表示</li>
+<li>ゆいレールの運行状況</li></ul>`,hclose:'閉じる',
  ban:'新商品のお知らせ（ここにバナー）',banimg:'ここに画像が表示されます',
  info:'<b>サンプル台風</b><br>強さ：強い／中心気圧 960hPa／最大風速 40m/s<br>沖縄本島に最も近づく予想：3日目',
- src:'台風の情報は、気象庁の公開データを自動で取得して表示しています（5分ごと・「いま確認」ですぐ更新）。海岸線は概略です。出典：気象庁ホームページ',
+ src:'台風の情報は、気象庁の公開データを10分ごとに自動で取得して表示しています。海岸線は概略です。出典：気象庁ホームページ',
  net:'通信がなくても開けます（運行状況は最後に取得した内容を表示します）。',off:'オフライン：前回の情報を表示中',
  hi:'<b>iPhone</b><br>Safariで共有ボタン→「ホーム画面に追加」<br><br><b>Android</b><br>Chromeのメニュー→「ホーム画面に追加」<div class="ph">説明イラスト（差し替え予定）</div>',
  tyb:'🌀 台風接近',
@@ -253,10 +317,10 @@ const T={ja:{
  alM:(n,v)=>'⚠ '+n+'：'+v},
 en:{
  ttl:'Okinawa Typhoon & Transit',tab0:'Service status',tab1:'Typhoon track',re:'Check now',bus:'Bus',yui:'Yui Rail',
- st:{ok:'Running',part:'Partly suspended',stop:'Suspended',unk:'Unknown'},bst:{ok:'Running',part:'Partly suspended',stop:'All suspended',unk:'Unknown'},
+ st:{ok:'Running',part:'Delays',stop:'Suspended',unk:'Unknown'},bst:{ok:'Running',part:'Partly suspended',stop:'All suspended',unk:'Unknown'},
  dok:'Operating as usual',dpart:'Some companies have suspensions',dstop:'Service is suspended',
- dunk:'Cannot get the status. Please check the association page.',dyui:'Cannot get the Yui Rail status. Please check the official site.',ysrc:'Official site says: ',ylink:'Open the Yui Rail official site',issued:'JMA issued: ',bsrc:'Association says: ',unc:'* The wording differs from usual. Please check the association page.',stale:'* Automatic checks may have stopped.',blink:'Open the Okinawa Bus Association status page',
- nodata:'<b>Loading typhoon data</b><br>No typhoon shown does not mean none is coming.<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">Open the official JMA site</a>',
+ dunk:'Cannot get the status. Please check the association page.',dyui:'Cannot get the status. Please check the Yui Rail website.',dypart:'There are delays or partial suspensions.',ysrc:'Yui Rail says: ',yunc:'* The wording differs from usual. Please check the Yui Rail website.',srcNote:'This status is read automatically from the official websites of the Okinawa Bus Association and Yui Rail. If something looks wrong, please check the official pages below.',lBus:'Okinawa Bus Association (official)',cLk:'🔗 Open official page',lYui:'Yui Rail (official)',bsrc:'Association says: ',unc:'* The wording differs from usual. Please check the association page.',stale:'* Automatic checks may have stopped.',blink:'Open the Okinawa Bus Association status page',
+ nodata:'<b>Typhoon data is not connected yet</b><br>No typhoon shown does not mean none is coming.<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">Open the official JMA site</a>',
  spk:'🔊 Read aloud',pv:'* Preview: bus and typhoon data are samples, not the real situation.',lang:'日本語',spdL:'Reading speed',rates:['Slow','Normal','Fast'],spkStop:'⏹ Stop reading',alVcL:'Also read it aloud',tyb2:'🌀 Typhoon active',
  tyunk:'Typhoon data is not available. Please check the official JMA information.',tynone:'No typhoon or tropical depression is currently announced by JMA.',
  tyhit:(h,d)=>'Closest to Okinawa Island: '+(h?'day '+h/24:'now')+' (center about '+d+' km away)',tyfar:d=>'About '+d+' km from Okinawa Island (not expected within 800 km)',tystale:'* Automatic typhoon updates may have stopped.',
@@ -271,9 +335,8 @@ en:{
  day:n=>'Day '+n,home:'Add to Home Screen',feat:'Features',fi:`<img id="fimg" src="feature.png" alt="" onerror="this.remove()" style="width:100%;border-radius:12px;margin-bottom:8px">
 <h3 style="margin:6px 0">What it does</h3>
 <ul style="padding-left:20px;line-height:1.7;margin:0 0 8px">
-<li>Bus and Yui Rail status at a glance, by color (running / partly suspended / suspended)</li>
-<li>Typhoon track from JMA, in colors for days 1 to 5, lit in order</li>
-<li>Shows the bus association's and Yui Rail's announcements as they are</li>
+<li>Bus status at a glance, by color (running / partly suspended / all suspended)</li>
+<li>Shows the bus association's announcement as it is</li>
 <li>Updates every 5 minutes, or tap "Check now"</li>
 <li>Sound and screen alerts when service stops (each can be turned on or off)</li>
 <li>Pinch or double-tap the typhoon map to zoom</li>
@@ -282,10 +345,13 @@ en:{
 <li>Japanese and English (automatic, or use the button at top right)</li>
 <li>Choose the reading speed: slow, normal or fast</li>
 <li>Free</li></ul>
-`,hclose:'Close',
+<h3 style="margin:6px 0">Coming soon</h3>
+<ul style="padding-left:20px;line-height:1.7;margin:0">
+<li>Typhoon track in colors for days 1 to 5, lit in order</li>
+<li>Yui Rail status</li></ul>`,hclose:'Close',
  ban:'New product news (banner here)',banimg:'Image will appear here',
  info:'<b>Sample typhoon</b><br>Strong / 960 hPa / max wind 40 m/s<br>Closest to Okinawa Island: Day 3',
- src:'Typhoon information is fetched automatically from public JMA data (every 5 minutes, or tap "Check now"). Coastlines are approximate. Source: Japan Meteorological Agency website',
+ src:'Typhoon information is fetched automatically every 10 minutes from public JMA data. Coastlines are approximate. Source: Japan Meteorological Agency website',
  net:'Opens without a connection (shows the last information received).',off:'Offline: showing last known info',
  hi:'<b>iPhone</b><br>Safari: Share button → "Add to Home Screen"<br><br><b>Android</b><br>Chrome menu → "Add to Home screen"<div class="ph">Guide illustration (to be added)</div>',
  tyb:'🌀 Typhoon nearby',
@@ -325,7 +391,7 @@ const KX=23.23,KY=25.64,GP=(lo,la)=>[(lo-116)*KX,(38-la)*KY],GR=km=>km/111*KY;
  const o=GP(127.7,26.2),rr=$('ring');rr.setAttribute('cx',o[0]);rr.setAttribute('cy',o[1]);rr.setAttribute('r',GR(800));
  const rt=$('ringT');rt.setAttribute('x',o[0]+GR(800)*.72);rt.setAttribute('y',o[1]-GR(800)*.72);rt.textContent='800km';
 })();
-let S={rate:1,tab:0,bus:'unk',yui:'unk',speed:8,pin:-1,chk:'',as:1,av:1,avc:0,btxt:'',bunc:0,bsrc:'',err:0,typ:null,tyerr:0};
+let S={rate:1,tab:0,bus:'unk',yui:'unk',ytxt:'',yunc:0,speed:8,pin:-1,chk:'',as:1,av:1,avc:0,btxt:'',bunc:0,bsrc:'',err:0,typ:null,tyerr:0};
 try{Object.assign(S,JSON.parse(localStorage.getItem('okt')||'{}'))}catch(e){}
 function save(){try{localStorage.setItem('okt',JSON.stringify(S))}catch(e){}}
 function now(){const d=new Date();return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')}
@@ -333,16 +399,16 @@ function draw(){
  $('ttl').textContent=T.ttl;$('hbtn').textContent=T.home;$('fbtn').textContent=T.feat;$('spk').textContent=(window.speechSynthesis&&speechSynthesis.speaking)?T.spkStop:T.spk;
  $('tab0').textContent=T.tab0;$('tab1').textContent=T.tab1;$('re').textContent=T.re;$('re2').textContent=T.re;
  $('nbus').textContent=T.bus;$('nyui').textContent=T.yui;$('demoL').textContent=T.demoL;
- $('blink').textContent=T.blink;$('ylink').textContent=T.ylink;$('src').textContent=T.src;$('net').textContent=T.net;
- $('dclose').textContent=T.hclose;$('pv').textContent=T.pv;$('lbtn').textContent=T.lang;$('spdL').textContent=T.spdL;
+ $('blink').textContent=T.blink;$('srcNote').textContent=T.srcNote;$('lkBus').textContent=T.lBus;$('lkYui').textContent=T.lYui;$('cbL').textContent=T.cLk;$('cyL').textContent=T.cLk;$('src').textContent=T.src;$('net').textContent=T.net;
+ $('dclose').textContent=T.hclose;$('pv').textContent=T.pv;$('pv').hidden=!PREVIEW;$('lbtn').textContent=T.lang;$('spdL').textContent=T.spdL;
  document.querySelectorAll('#spdRow [data-r]').forEach(b=>{const i=+b.dataset.r;b.textContent=T.rates[i];b.classList.toggle('sel',i==S.rate)});
  $('alT').textContent=T.alT;$('alSL').textContent=T.alSL;$('alVL').textContent=T.alVL;$('alTest').textContent=T.alTest;$('alertX').textContent=T.alX;
  $('alS').checked=!!S.as;$('alV').checked=!!S.av;$('alVcL').textContent=T.alVcL;$('alVc').checked=!!S.avc;
  for(const [k,list] of [['bus',T.bst],['yui',T.st]]){
   const v=S[k];$('c'+k).className='card '+v;$('s'+k).textContent=list[v];
-  let d=v=='unk'?(k=='yui'?T.dyui:T.dunk):v=='ok'?T.dok:v=='part'?T.dpart:T.dstop;
+  let d=v=='unk'?(k=='yui'?T.dyui:T.dunk):(k=='yui'&&v=='part')?T.dypart:v=='ok'?T.dok:v=='part'?T.dpart:T.dstop;
   if(k=='bus'){if(S.btxt)d+='　'+T.bsrc+'「'+S.btxt+'」';if(S.bunc)d+='　'+T.unc;if(S.bsrc&&Date.now()-new Date(S.bsrc)>45*60000)d+='　'+T.stale}
-  if(k=='yui'&&S.ytxt)d+='　'+T.ysrc+'「'+S.ytxt+'」';
+  if(k=='yui'){if(S.ytxt)d+='　'+T.ysrc+'「'+S.ytxt+'」';if(S.yunc)d+='　'+T.yunc}
   $('d'+k).textContent=d;}
  const mk=(k,opts)=>opts.map(o=>`<button data-k="${k}" data-v="${o}">${k=='bus'?T.bus:T.yui}:${(k=='bus'?T.bst:T.st)[o]}</button>`).join('');
  $('demoBus').innerHTML=mk('bus',['ok','part','stop']);$('demoYui').innerHTML=mk('yui',['ok','stop']);
@@ -372,12 +438,13 @@ $('alTest').onclick=()=>alertUser('bus','stop');
 const fmt=iso=>{const d=new Date(iso);return isNaN(d)?now():d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')};
 async function recheck(){
  const bs=[$('re'),$('re2')];bs.forEach(b=>b.disabled=true);
- try{const r=await fetch('status.json',{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();
+ try{const r=await fetch('status.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();
   S.btxt=j.text||'';S.bunc=!!j.uncertain;S.bsrc=j.checked||'';S.chk=j.checked?fmt(j.checked):now();S.err=(navigator.onLine===false||j.error)?1:0;
-  S.ytxt=j.ytext||'';S.yunc=!!j.yunc;setState('bus',['ok','part','stop'].includes(j.bus)?j.bus:'unk');setState('yui',['ok','part','stop'].includes(j.yui)?j.yui:'unk')}
+  setState('bus',['ok','part','stop'].includes(j.bus)?j.bus:'unk');
+  S.ytxt=j.ytext||'';S.yunc=!!j.yuncertain;setState('yui',['ok','part','stop'].includes(j.yui)?j.yui:'unk')}
  catch(e){S.err=1}
- try{const r=await fetch('typhoon.json',{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();S.typ=j;S.tyerr=(navigator.onLine===false||j.error)?1:0}catch(e){S.tyerr=1}
- drawTy();light(cur);
+ try{const r=await fetch('typhoon.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();S.typ=j;S.tyerr=(navigator.onLine===false||j.error)?1:0}catch(e){S.tyerr=1}
+ drawTy();restart();
  bs.forEach(b=>b.disabled=false);save();draw()}
 $('re').onclick=recheck;$('re2').onclick=recheck;
 
@@ -386,26 +453,55 @@ $('re').onclick=recheck;$('re2').onclick=recheck;
 const g=$('circles'),lg=$('legend');
 for(let i=0;i<5;i++){
  const b=document.createElement('button');b.className='chip';b.style.setProperty('--c',COL[i]);b.innerHTML='<i></i>'+T.day(i+1);b.dataset.i=i;
- b.onclick=()=>{if(S.pin==i){S.pin=-1;save();restart()}else{S.pin=i;save();light(cur)}};lg.appendChild(b)}
+ b.onclick=()=>{S.pin=S.pin==i?-1:i;save();restart()};lg.appendChild(b)}
 const NSV='http://www.w3.org/2000/svg';
 const sv2=(n,a,tx)=>{const e=document.createElementNS(NSV,n);for(const k in a)e.setAttribute(k,a[k]);if(tx!=null)e.textContent=tx;return e};
 const OKI_C=[127.7,26.2];
 const hav=(a,b)=>{const R=6371,r=Math.PI/180,x=Math.sin((b[1]-a[1])*r/2)**2+Math.cos(a[1]*r)*Math.cos(b[1]*r)*Math.sin((b[0]-a[0])*r/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
 const dist=c=>hav([c[1],c[0]],OKI_C);
 const tyList=()=>(S.typ&&Array.isArray(S.typ.typhoons))?S.typ.typhoons.filter(t=>t&&t.now&&t.now.c):[];
-function tyName(t,short){const n=t.number||'';if(n.length>2){const nm=short?null:(L=='ja'?t.name:t.nameEn);return (L=='ja'?'台風'+(+n.slice(-2))+'号':'Typhoon No. '+(+n.slice(-2)))+(nm?(L=='ja'?'（'+nm+'）':' ('+nm+')'):'')}return L=='ja'?'熱帯低気圧'+(n.length==1?n:''):'Tropical depression'+(n.length==1?' '+n:'')}
-function nearest(t){let best=null;[{h:0,c:t.now.c,r:0}].concat(t.fc||[]).forEach(p=>{const d=dist(p.c);if(!best||d<best.d)best={d,h:p.h,r:p.r||0}});return best}
+function tyName(t){const n=t.number||'';return n.length>2?(L=='ja'?'台風'+(+n.slice(-2))+'号':'Typhoon No. '+(+n.slice(-2))):(L=='ja'?'熱帯低気圧'+n:'Tropical depression '+n)}
+function nearest(t){let best=null;[{h:0,c:t.now.c,r:0}].concat(dayFc(t)).forEach(p=>{const d=dist(p.c);if(!best||d<best.d)best={d,h:p.h,r:p.r||0}});return best}
+/* JMA forecast hours are not always 24,48..: e.g. 21,45,69,93,117. Pick the closest one for each day. */
+function dayFc(t){const a=(t.fc||[]).filter(f=>f&&f.c&&f.c.length>1&&!isNaN(+f.h)).map(f=>Object.assign({},f,{h:+f.h})),o=[];
+ for(let d=1;d<=5;d++){let b=null;a.forEach(f=>{const e=Math.abs(f.h-24*d);if(e<=12&&(!b||e<Math.abs(b.h-24*d)))b=f});if(b&&!o.includes(b))o.push(Object.assign({},b,{h:24*d}))}
+ return o}
 const within=t=>{const b=nearest(t);return b.d-b.r<=800};
+
+function tyText(t){
+ const n=t.now,b=nearest(t),ja=L=='ja',R=[];
+ const far=!within(t)&&tyList().some(within);
+ const row=(k,v)=>{if(v!=null&&v!==''&&v!=='-')R.push('<div class="tyr"><span>'+k+'</span><b>'+v+'</b></div>')};
+ row(ja?'沖縄本島まで':'To Okinawa Is.',(ja?'約':'~')+Math.round(dist(n.c))+'km');
+ const cs=ja?n.course:(EN_DIR[n.course]||n.course);
+ if(n.spd!=null)row(ja?'進む方向・速さ':'Movement',(cs?cs+(ja?'へ ':' '):'')+n.spd+'km/h');
+ else if(n.spdnote)row(ja?'進む方向・速さ':'Movement',(cs?cs+(ja?'へ ':' '):'')+(ja?n.spdnote:(n.spdnote=='ゆっくり'?'slowly':'almost stationary')));
+ if(n.hpa)row(ja?'中心気圧':'Central pressure',n.hpa+' hPa');
+ if(n.scale&&n.scale!='-')row(ja?'大きさ':'Size',ja?n.scale:(EN_SC[n.scale]||n.scale));
+ if(n.int&&n.int!='-')row(ja?'強さ':'Intensity',ja?n.int:(EN_IN[n.int]||n.int));
+ if(n.storm)row(ja?'暴風域（半径）':'Storm radius',n.storm+'km');
+ if(n.gale)row(ja?'強風域（半径）':'Gale radius',n.gale+'km');
+ row(ja?'現在の位置':'Position',(+n.c[0]).toFixed(1)+'°N '+(+n.c[1]).toFixed(1)+'°E');
+ const fc=dayFc(t);
+ let F='';
+ if(fc.length)F='<div class="tyfc"><div class="tyfh">'+(ja?'日ごとの本島までの距離':'Daily distance to Okinawa Is.')+'</div>'+fc.map(f=>{const d=f.h/24;return '<div class="tyfd"><i style="background:'+COL[d-1]+'"></i>'+d+(ja?'日目 ':'d ')+Math.round(dist(f.c))+'km</div>'}).join('')+'</div>';
+ const na=ja?'発表なし':'n/a',kv=(c,k,v,u)=>'<div class="tyk '+c+'"><span>'+k+'</span>'+(v!=null&&v!==''?'<b>'+v+'<small> '+u+'</small></b>':'<b class="na">'+na+'</b>')+'</div>';
+ const spv=n.spd!=null?n.spd:(n.spdnote?(ja?n.spdnote:(n.spdnote=='ゆっくり'?'slow':'stationary')):null);
+ const szv=(n.scale&&n.scale!='-')?(ja?n.scale:(EN_SC[n.scale]||n.scale)):(n.storm?(ja?'暴風':'storm ')+n.storm:null);
+ const K='<div class="tykey">'+kv('d',ja?'本島まで':'To Okinawa',Math.round(dist(n.c)),'km')+kv('g',ja?'最大瞬間風速':'Max gust',n.gust,'m/s')+kv('w',ja?'最大風速':'Max wind',n.wind,'m/s')+kv('v',ja?'進む速さ':'Speed',spv,n.spd!=null?'km/h':'')+kv('s',ja?'大きさ':'Size',szv,(n.scale&&n.scale!='-')?'':(n.storm?'km':''))+kv('p',ja?'中心気圧':'Pressure',n.hpa,'hPa')+'</div>';
+ return '<div class="tyhd">'+tyName(t)+'</div><div class="tynear">'+(within(t)?T.tyhit(b.h,Math.round(b.d)):T.tyfar(Math.round(dist(n.c))))+'</div>'+(far?'':K)+'<details class="tymore"'+(far?'':' open')+'><summary>'+(ja?'くわしい情報':'More details')+'</summary><div class="tygrid">'+R.join('')+'</div>'+F+'</details>'}
+let PATHS=[];
 function drawTy(){
- const w=$('tyw'),tt=$('tyt'),list=tyList();
+ const w=$('tyw'),tt=$('tyt'),list=tyList();PATHS=[];
  [g,w,tt,$('nums')].forEach(e=>{while(e.firstChild)e.removeChild(e.firstChild)});
  $('lbl').querySelectorAll('.tl').forEach(e=>e.remove());
  list.forEach(t=>{
   const n=t.now,pc=GP(n.c[1],n.c[0]);
   if(n.gale)w.appendChild(sv2('circle',{class:'wa',cx:pc[0],cy:pc[1],r:GR(n.gale),fill:'#ffd60a','fill-opacity':.22,stroke:'#e0b400'}));
   if(n.storm)w.appendChild(sv2('circle',{class:'wa',cx:pc[0],cy:pc[1],r:GR(n.storm),fill:'#ff2d2d','fill-opacity':.3,stroke:'#c40000'}));
-  const fc=(t.fc||[]).filter(f=>f.h>=24&&f.h<=120&&f.h%24==0);
+  const fc=dayFc(t);
   const pts=[pc].concat(fc.map(f=>GP(f.c[1],f.c[0])));
+  PATHS.push({pts,days:fc.map(f=>f.h/24-1)});
   tt.appendChild(sv2('polyline',{class:'trk',points:pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}));
   fc.forEach(f=>{const d=f.h/24-1,q=GP(f.c[1],f.c[0]);
    const el=sv2('circle',{cx:q[0],cy:q[1],r:Math.max(14,GR(f.r||0)),fill:COL[d],'fill-opacity':.28,stroke:COL[d]});
@@ -413,15 +509,17 @@ function drawTy(){
    $('nums').appendChild(sv2('text',{class:'lb',x:q[0],y:q[1],'text-anchor':'middle','dominant-baseline':'central','font-weight':900,fill:'#12263a',stroke:'#fff','paint-order':'stroke'},d+1))});
   w.appendChild(sv2('circle',{class:'cur',cx:pc[0],cy:pc[1],r:8,fill:'#ff3b5c'}));
   w.appendChild(sv2('circle',{class:'sm',cx:pc[0],cy:pc[1],r:8,fill:'#fff',stroke:'#12263a'}));
-  $('lbl').appendChild(sv2('text',{class:'gl tl',x:pc[0]+14,y:pc[1]-12,'text-anchor':'start'},tyName(t,1)))});
+  $('lbl').appendChild(sv2('text',{class:'gl tl',x:pc[0]+14,y:pc[1]-12,'text-anchor':'start'},tyName(t)))});
  $('p1').classList.toggle('nodata',!list.length);
  const bd=$('tyb');if(list.length){bd.textContent=list.some(within)?T.tyb:T.tyb2;bd.classList.add('on')}else bd.classList.remove('on');
  let h;
  if(!S.typ||!Array.isArray(S.typ.typhoons))h=T.tyunk;
  else if(!list.length)h=T.tynone;
- else h=list.map(t=>{const b=nearest(t),iss=t.issue?new Date(t.issue):null;return '<b>'+tyName(t)+'</b>：'+(within(t)?T.tyhit(b.h,Math.round(b.d)):T.tyfar(Math.round(dist(t.now.c))))+(iss&&!isNaN(iss)?'<br><small>'+T.issued+(iss.getMonth()+1)+'/'+iss.getDate()+' '+iss.getHours()+':'+String(iss.getMinutes()).padStart(2,'0')+'</small>':'')}).join('<br>');
+ else h=list.map(tyText).join('<hr class="tysep">');
+ const iss=S.typ&&(S.typ.issued||S.typ.reported||S.typ.time||(list[0]&&(list[0].issued||list[0].time)));
+ if(iss){const d=new Date(iss);if(!isNaN(d))h+='<div class="tyiss">'+(L=='ja'?'気象庁の発表：':'JMA issued: ')+(d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')+'</div>'}
  if(S.typ&&(S.tyerr||(S.typ.checked&&Date.now()-new Date(S.typ.checked)>90*60000)))h+='<br><small>'+T.tystale+'</small>';
- h+='<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">'+(L=='ja'?'気象庁の公式情報を開く':'Open the official JMA site')+'</a>';
+ h+=' <a href="https://www.jma.go.jp/" target="_blank" rel="noopener">'+(L=='ja'?'気象庁の公式情報を開く':'Open the official JMA site')+'</a>';
  $('info').innerHTML=h;$('info').className='tyinfo'}
 /* read aloud */
 const EN_DIR={'北':'north','北北東':'north-northeast','北東':'northeast','東北東':'east-northeast','東':'east','東南東':'east-southeast','南東':'southeast','南南東':'south-southeast','南':'south','南南西':'south-southwest','南西':'southwest','西南西':'west-southwest','西':'west','西北西':'west-northwest','北西':'northwest','北北西':'north-northwest'};
@@ -459,18 +557,56 @@ document.querySelectorAll('#spdRow [data-r]').forEach(b=>b.onclick=()=>{S.rate=+
 if(!('speechSynthesis' in window))$('spdRow').style.display='none';
 $('lbtn').onclick=()=>{try{localStorage.setItem('oktLang',L=='ja'?'en':'ja')}catch(e){}save();try{speechSynthesis.cancel()}catch(e){}location.reload()};
 $('alVc').onchange=e=>{S.avc=e.target.checked?1:0;save()};
-let cur=0,timer=null;
+let cur=0,timer=null,RAF=0,AN=null;
 const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
-function light(n){
- cur=n;const k=Math.min(n,4),circles=g.querySelectorAll('circle');
- circles.forEach(el=>{
-  const i=+el.dataset.d;
-  const on=S.pin>=0?i==S.pin:(still||i<=k);
-  el.setAttribute('fill-opacity',on?'.75':'.12');el.setAttribute('stroke-opacity',on?'1':'.35');
-  el.style.filter=on?'drop-shadow(0 0 8px '+COL[i]+')':'none';
-  el.classList.toggle('on',on&&!still);el.classList.toggle('hot',on&&!still&&S.pin<0&&i==k)});
- lg.querySelectorAll('.chip').forEach((c,i)=>c.classList.toggle('lit',S.pin>=0?i==S.pin:(still||i<=k)));}
-function restart(){clearInterval(timer);light(0);if(still)return;timer=setInterval(()=>light((cur+1)%6),700)}
+const SEG=550,HOLD=220,END=1100;
+/* ping: rises a little each day */
+function ping(k){try{if(!AC||AC.state!='running')return;const t=AC.currentTime,o=AC.createOscillator(),o2=AC.createOscillator(),g=AC.createGain();
+ const f=1250*Math.pow(1.12,k);o.type='sine';o.frequency.value=f;o2.type='sine';o2.frequency.value=f*2;
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.22,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+.35);
+ o.connect(g);o2.connect(g);g.connect(AC.destination);o.start(t);o2.start(t);o.stop(t+.4);o2.stop(t+.4)}catch(e){}}
+/* lit: number of days reached (0-5); hot: day that just arrived */
+function light(lit,hot){
+ cur=lit;
+ g.querySelectorAll('circle').forEach(el=>{
+  const i=+el.dataset.d,pin=S.pin>=0;
+  const on=pin?(i==S.pin&&lit>i):i<lit;
+  const dimmed=pin&&i!=S.pin;
+  el.setAttribute('fill',dimmed?'#9aa5b1':COL[i]);el.setAttribute('stroke',dimmed?'#9aa5b1':COL[i]);
+  el.setAttribute('fill-opacity',on?'.8':(dimmed?'.08':'.14'));el.setAttribute('stroke-opacity',on?'1':(dimmed?'.3':'.4'));
+  el.style.filter=on?'drop-shadow(0 0 10px '+COL[i]+')':'none';
+  el.classList.toggle('on',on&&!still&&i!==hot);
+  if(i===hot&&!still){el.classList.remove('pop');void el.getBBox();el.classList.add('pop')}});
+ $('nums').querySelectorAll('text').forEach((tx,j)=>{const i=+tx.textContent-1;tx.style.opacity=(S.pin>=0&&i!=S.pin)?'.35':'1'});
+ lg.querySelectorAll('.chip').forEach((c,i)=>{const pin=S.pin>=0;
+  c.classList.toggle('sel',pin&&i==S.pin);c.classList.toggle('dim',pin&&i!=S.pin);c.classList.toggle('lit',!pin&&i<lit)});}
+function drawArrow(prog){/* prog: segments travelled (float) */
+ const A=$('arw');while(A.firstChild)A.removeChild(A.firstChild);
+ PATHS.forEach(P=>{const p=P.pts;if(p.length<2)return;const m=Math.min(prog,p.length-1);if(m<=0)return;
+  const k=Math.floor(m),f=m-k,trail=p.slice(0,k+1);
+  let h=p[k];if(f>0&&k+1<p.length){h=[p[k][0]+(p[k+1][0]-p[k][0])*f,p[k][1]+(p[k+1][1]-p[k][1])*f];trail.push(h)}
+  const prev=trail.length>1?trail[trail.length-2]:p[0];const ang=Math.atan2(h[1]-prev[1],h[0]-prev[0]);
+  const pt=trail.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ');
+  A.appendChild(sv2('polyline',{class:'ab',points:pt}));A.appendChild(sv2('polyline',{class:'af',points:pt}));
+  const sc=1/Math.max(1,Z.s),L1=22*sc,W1=13*sc,c=Math.cos(ang),s2=Math.sin(ang);
+  const tip=[h[0]+c*L1*.55,h[1]+s2*L1*.55],bl=[h[0]-c*L1*.45-s2*W1,h[1]-s2*L1*.45+c*W1],br=[h[0]-c*L1*.45+s2*W1,h[1]-s2*L1*.45-c*W1];
+  A.appendChild(sv2('polygon',{class:'ah',points:[tip,bl,br].map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}))})}
+function maxSegs(){return PATHS.reduce((a,P)=>Math.max(a,P.pts.length-1),0)}
+function dayAt(seg){for(const P of PATHS)if(P.days[seg-1]!=null)return P.days[seg-1];return seg-1}
+function restart(){
+ cancelAnimationFrame(RAF);clearInterval(timer);
+ const N=maxSegs(),goal=S.pin>=0?Math.min(N,(PATHS[0]?PATHS[0].days.indexOf(S.pin):-1)+1||S.pin+1):N;
+ if(!N){drawArrow(0);light(0);return}
+ if(still){drawArrow(goal);light(S.pin>=0?S.pin+1:5);return}
+ AN={t0:performance.now(),seg:0,goal};drawArrow(0);light(0);
+ const step=now=>{const e=now-AN.t0,per=SEG+HOLD;
+  if(AN.seg>=AN.goal){if(e>=END){AN.t0=now;AN.seg=0;drawArrow(0);light(0)}RAF=requestAnimationFrame(step);return}
+  const inSeg=Math.min(1,e/SEG);drawArrow(AN.seg+inSeg);
+  if(e>=SEG&&!AN.arr){AN.arr=1;const d=dayAt(AN.seg+1);light(Math.max(cur,d+1),d);ping(d)}
+  if(e>=per){AN.seg++;AN.arr=0;AN.t0=now}
+  RAF=requestAnimationFrame(step)};
+ RAF=requestAnimationFrame(step)}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelAnimationFrame(RAF);else restart()});
 
 /* dialogs */
 $('hbtn').onclick=()=>{$('dbody').innerHTML=T.hi;$('dlg').showModal()};
@@ -506,7 +642,7 @@ function beep(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)(
  const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=1000;g.gain.setValueAtTime(.18,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.09);
  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.1)}catch(e){}
  try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}}
-document.addEventListener('pointerdown',e=>{if(e.target.closest('button,#banner,.opt'))beep()},true);
+document.addEventListener('pointerdown',e=>{if(e.target.closest('button,#banner,.opt,.clk,.srcbox a'))beep()},true);
 /* offline / autosave */
 function net(){if(!navigator.onLine)$('net').textContent=T.off}
 addEventListener('offline',net);addEventListener('online',()=>$('net').textContent=T.net);
