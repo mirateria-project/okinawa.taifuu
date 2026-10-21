@@ -50,6 +50,8 @@ button:active,#banner:active{transform:scale(.93) translateY(2px);filter:brightn
 .legend{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
 .chip{border:2px solid var(--c);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 10px;font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px;transition:.2s}
 .chip i{width:12px;height:12px;border-radius:50%;background:var(--c)}
+.chip .cl{display:flex;flex-direction:column;align-items:center;line-height:1.15}
+.chip .cd{font-size:11px;font-weight:700;-webkit-text-stroke:0;opacity:.85}
 .chip.lit{background:var(--c);color:#111}
 .chip.lit i{background:#fff}
 .ctl{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 14px;margin:8px 0}
@@ -116,6 +118,9 @@ dialog::backdrop{background:#0008}
 .tyiss{margin-top:10px;font-size:14px;color:var(--sub)}
 .srcbox{margin-top:12px;padding:10px 12px;border-top:2px dashed var(--line);font-size:13px;color:var(--sub);line-height:1.6}
 .srcbox p{margin:0 0 6px}
+.caut{margin:8px 0 10px;padding:10px 12px;border-radius:12px;background:#fff4c2;border:2px solid #f0b400;color:#5a4300;font-weight:800;font-size:15px;line-height:1.5;text-align:center;animation:cautP 2.6s ease-in-out infinite}
+@keyframes cautP{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(240,180,0,0)}50%{opacity:.55;box-shadow:0 0 14px 2px rgba(240,180,0,.55)}}
+@media (prefers-reduced-motion:reduce){.caut{animation:none}}
 .clk{display:inline-block;margin-top:10px;background:#fff;color:#12263a;border:2px solid #12263a;border-radius:999px;padding:7px 16px;font-size:15px;font-weight:900;text-decoration:none;transition:transform .08s,filter .08s;-webkit-tap-highlight-color:transparent}
 .clk:active{transform:scale(.92) translateY(2px);filter:brightness(.85)}
 .srcbox a{display:block;font-weight:800;color:var(--acc);padding:4px 0;font-size:14px}
@@ -225,6 +230,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 <section class="panel" id="p0">
  <div class="bar"><span id="chk"></span><button class="go" id="re"></button></div>
+ <div class="caut" id="caut" role="note"></div>
  <div class="card ok" id="cbus"><div class="n" id="nbus"></div><div class="s"><span class="lamp"></span><span id="sbus"></span></div><div class="d" id="dbus"></div><a class="clk" id="cbL" href="https://www.bus-okinawa.or.jp/" target="_blank" rel="noopener"></a></div>
  <div class="card ok" id="cyui"><div class="n" id="nyui"></div><div class="s"><span class="lamp"></span><span id="syui"></span></div><div class="d" id="dyui"></div><a class="clk" id="cyL" href="https://www.yui-rail.co.jp/" target="_blank" rel="noopener"></a></div>
 <span id="blink" hidden></span><span id="demoL" hidden></span><span id="demoBus" hidden></span><span id="demoYui" hidden></span>
@@ -277,7 +283,7 @@ const T={ja:{
  ttl:'沖縄 台風・交通',tab0:'運行状況',tab1:'台風進路',re:'いま確認',bus:'バス',yui:'ゆいレール',
  st:{ok:'平常運転',part:'遅れ・一部運休',stop:'運休',unk:'確認できません'},bst:{ok:'平常運転',part:'一部運休',stop:'全路線運休',unk:'確認できません'},
  dok:'通常どおり運行しています',dpart:'一部の会社で運休が出ています',dstop:'運休しています',
- dunk:'情報を取得できません。協会のページで確認してください',dyui:'情報を取得できません。ゆいレールのページで確認してください',dypart:'遅れや一部区間の運転見合わせがあります',ysrc:'ゆいレールの表示：',yunc:'※文面が通常と違います。ゆいレールのページで確認してください',srcNote:'この運行状況は、沖縄県バス協会とゆいレールの公式ホームページを自動で読み取って表示しています。表示がおかしいときは、下の公式ページで確認してください。',lBus:'沖縄県バス協会（公式）',cLk:'🔗 公式ページを見る',lYui:'ゆいレール（公式）',bsrc:'協会の表示：',unc:'※文面が通常と違います。協会のページで確認してください',stale:'※自動確認が止まっている可能性があります',blink:'沖縄県バス協会の運行情報を開く',
+ dunk:'情報を取得できません。協会のページで確認してください',dyui:'情報を取得できません。ゆいレールのページで確認してください',dypart:'遅れや一部区間の運転見合わせがあります',ysrc:'ゆいレールの表示：',yunc:'※文面が通常と違います。ゆいレールのページで確認してください',caut:'⚠ 目安です。正確な情報は公式サイトで確認してください',srcNote:'この運行状況は、沖縄県バス協会とゆいレールの公式ホームページを自動で読み取って表示しています。表示がおかしいときは、下の公式ページで確認してください。',lBus:'沖縄県バス協会（公式）',cLk:'🔗 公式ページを見る',lYui:'ゆいレール（公式）',bsrc:'協会の表示：',unc:'※文面が通常と違います。協会のページで確認してください',stale:'※自動確認が止まっている可能性があります',blink:'沖縄県バス協会の運行情報を開く',
  nodata:'<b>台風データは準備中です</b><br>画面に台風が出ていなくても、台風が来ていないとは限りません。<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">気象庁の公式情報を開く</a>',
  spk:'🔊 読み上げ',pv:'※プレビュー表示です。バス・台風のデータはサンプルで、実際の状況ではありません。',lang:'English',spdL:'読み上げの速さ',rates:['ゆっくり','普通','速い'],spkStop:'⏹ 読み上げを止める',alVcL:'音声でも読み上げる',tyb2:'🌀 台風発生中',
  tyunk:'台風データを取得できません。気象庁の公式情報をご確認ください。',tynone:'現在、気象庁が情報を出している台風・熱帯低気圧はありません。',
@@ -319,7 +325,7 @@ en:{
  ttl:'Okinawa Typhoon & Transit',tab0:'Service status',tab1:'Typhoon track',re:'Check now',bus:'Bus',yui:'Yui Rail',
  st:{ok:'Running',part:'Delays',stop:'Suspended',unk:'Unknown'},bst:{ok:'Running',part:'Partly suspended',stop:'All suspended',unk:'Unknown'},
  dok:'Operating as usual',dpart:'Some companies have suspensions',dstop:'Service is suspended',
- dunk:'Cannot get the status. Please check the association page.',dyui:'Cannot get the status. Please check the Yui Rail website.',dypart:'There are delays or partial suspensions.',ysrc:'Yui Rail says: ',yunc:'* The wording differs from usual. Please check the Yui Rail website.',srcNote:'This status is read automatically from the official websites of the Okinawa Bus Association and Yui Rail. If something looks wrong, please check the official pages below.',lBus:'Okinawa Bus Association (official)',cLk:'🔗 Open official page',lYui:'Yui Rail (official)',bsrc:'Association says: ',unc:'* The wording differs from usual. Please check the association page.',stale:'* Automatic checks may have stopped.',blink:'Open the Okinawa Bus Association status page',
+ dunk:'Cannot get the status. Please check the association page.',dyui:'Cannot get the status. Please check the Yui Rail website.',dypart:'There are delays or partial suspensions.',ysrc:'Yui Rail says: ',yunc:'* The wording differs from usual. Please check the Yui Rail website.',caut:'⚠ This is a guide only. Please check the official websites for accurate information.',srcNote:'This status is read automatically from the official websites of the Okinawa Bus Association and Yui Rail. If something looks wrong, please check the official pages below.',lBus:'Okinawa Bus Association (official)',cLk:'🔗 Open official page',lYui:'Yui Rail (official)',bsrc:'Association says: ',unc:'* The wording differs from usual. Please check the association page.',stale:'* Automatic checks may have stopped.',blink:'Open the Okinawa Bus Association status page',
  nodata:'<b>Typhoon data is not connected yet</b><br>No typhoon shown does not mean none is coming.<br><a href="https://www.jma.go.jp/" target="_blank" rel="noopener">Open the official JMA site</a>',
  spk:'🔊 Read aloud',pv:'* Preview: bus and typhoon data are samples, not the real situation.',lang:'日本語',spdL:'Reading speed',rates:['Slow','Normal','Fast'],spkStop:'⏹ Stop reading',alVcL:'Also read it aloud',tyb2:'🌀 Typhoon active',
  tyunk:'Typhoon data is not available. Please check the official JMA information.',tynone:'No typhoon or tropical depression is currently announced by JMA.',
@@ -399,7 +405,7 @@ function draw(){
  $('ttl').textContent=T.ttl;$('hbtn').textContent=T.home;$('fbtn').textContent=T.feat;$('spk').textContent=(window.speechSynthesis&&speechSynthesis.speaking)?T.spkStop:T.spk;
  $('tab0').textContent=T.tab0;$('tab1').textContent=T.tab1;$('re').textContent=T.re;$('re2').textContent=T.re;
  $('nbus').textContent=T.bus;$('nyui').textContent=T.yui;$('demoL').textContent=T.demoL;
- $('blink').textContent=T.blink;$('srcNote').textContent=T.srcNote;$('lkBus').textContent=T.lBus;$('lkYui').textContent=T.lYui;$('cbL').textContent=T.cLk;$('cyL').textContent=T.cLk;$('src').textContent=T.src;$('net').textContent=T.net;
+ $('blink').textContent=T.blink;$('srcNote').textContent=T.srcNote;$('caut').textContent=T.caut;$('lkBus').textContent=T.lBus;$('lkYui').textContent=T.lYui;$('cbL').textContent=T.cLk;$('cyL').textContent=T.cLk;$('src').textContent=T.src;$('net').textContent=T.net;
  $('dclose').textContent=T.hclose;$('pv').textContent=T.pv;$('pv').hidden=!PREVIEW;$('lbtn').textContent=T.lang;$('spdL').textContent=T.spdL;
  document.querySelectorAll('#spdRow [data-r]').forEach(b=>{const i=+b.dataset.r;b.textContent=T.rates[i];b.classList.toggle('sel',i==S.rate)});
  $('alT').textContent=T.alT;$('alSL').textContent=T.alSL;$('alVL').textContent=T.alVL;$('alTest').textContent=T.alTest;$('alertX').textContent=T.alX;
@@ -441,7 +447,7 @@ async function recheck(){
  try{const r=await fetch('status.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();
   S.btxt=j.text||'';S.bunc=!!j.uncertain;S.bsrc=j.checked||'';S.chk=j.checked?fmt(j.checked):now();S.err=(navigator.onLine===false||j.error)?1:0;
   setState('bus',['ok','part','stop'].includes(j.bus)?j.bus:'unk');
-  S.ytxt=j.ytext||'';S.yunc=!!j.yuncertain;setState('yui',['ok','part','stop'].includes(j.yui)?j.yui:'unk')}
+  S.ytxt=j.ytext||'';S.yunc=!!j.yuncertain;let yv=['ok','part','stop'].includes(j.yui)?j.yui:'unk';const yr=S.ytxt.replace(/遅延証明(書)?/g,'');if(yv=='part'&&S.ytxt&&!/(遅れ|遅延|運休|見合わせ|運転を見合|中止|停止|運行を休)/.test(yr)){yv='ok';S.ytxt='';S.yunc=0}setState('yui',yv)}
  catch(e){S.err=1}
  try{const r=await fetch('typhoon.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();S.typ=j;S.tyerr=(navigator.onLine===false||j.error)?1:0}catch(e){S.tyerr=1}
  drawTy();restart();
@@ -452,7 +458,7 @@ $('re').onclick=recheck;$('re2').onclick=recheck;
 /* typhoon (real data from typhoon.json) */
 const g=$('circles'),lg=$('legend');
 for(let i=0;i<5;i++){
- const b=document.createElement('button');b.className='chip';b.style.setProperty('--c',COL[i]);b.innerHTML='<i></i>'+T.day(i+1);b.dataset.i=i;
+ const b=document.createElement('button');b.className='chip';b.style.setProperty('--c',COL[i]);b.innerHTML='<i></i><span class="cl">'+T.day(i+1)+'<small class="cd"></small></span>';b.dataset.i=i;
  b.onclick=()=>{S.pin=S.pin==i?-1:i;save();restart()};lg.appendChild(b)}
 const NSV='http://www.w3.org/2000/svg';
 const sv2=(n,a,tx)=>{const e=document.createElementNS(NSV,n);for(const k in a)e.setAttribute(k,a[k]);if(tx!=null)e.textContent=tx;return e};
@@ -491,7 +497,9 @@ function tyText(t){
  const K='<div class="tykey">'+kv('d',ja?'本島まで':'To Okinawa',Math.round(dist(n.c)),'km')+kv('g',ja?'最大瞬間風速':'Max gust',n.gust,'m/s')+kv('w',ja?'最大風速':'Max wind',n.wind,'m/s')+kv('v',ja?'進む速さ':'Speed',spv,n.spd!=null?'km/h':'')+kv('s',ja?'大きさ':'Size',szv,(n.scale&&n.scale!='-')?'':(n.storm?'km':''))+kv('p',ja?'中心気圧':'Pressure',n.hpa,'hPa')+'</div>';
  return '<div class="tyhd">'+tyName(t)+'</div><div class="tynear">'+(within(t)?T.tyhit(b.h,Math.round(b.d)):T.tyfar(Math.round(dist(n.c))))+'</div>'+(far?'':K)+'<details class="tymore"'+(far?'':' open')+'><summary>'+(ja?'くわしい情報':'More details')+'</summary><div class="tygrid">'+R.join('')+'</div>'+F+'</details>'}
 let PATHS=[];
-function drawTy(){
+function chipDates(){try{const t=tyList().find(x=>dayFc(x).length)||null;const iss=t&&new Date(t.issue||t.issued||(S.typ&&(S.typ.issued||S.typ.time))||'');const ds=t?dayFc(t):[];
+ lg.querySelectorAll('.chip').forEach((b,i)=>{const c=b.querySelector('.cd');if(!c)return;let x='';const f=ds.find(e=>e.h==24*(i+1));if(f&&iss&&!isNaN(iss)){const d=new Date(iss.getTime()+f.h*3600000);x=(d.getMonth()+1)+'/'+d.getDate()}c.textContent=x;c.hidden=!x})}catch(e){}}
+function drawTy(){chipDates();
  const w=$('tyw'),tt=$('tyt'),list=tyList();PATHS=[];
  [g,w,tt,$('nums')].forEach(e=>{while(e.firstChild)e.removeChild(e.firstChild)});
  $('lbl').querySelectorAll('.tl').forEach(e=>e.remove());
@@ -560,11 +568,17 @@ $('alVc').onchange=e=>{S.avc=e.target.checked?1:0;save()};
 let cur=0,timer=null,RAF=0,AN=null;
 const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
 const SEG=550,HOLD=220,END=1100;
-/* ping: rises a little each day */
-function ping(k){try{if(!AC||AC.state!='running')return;const t=AC.currentTime,o=AC.createOscillator(),o2=AC.createOscillator(),g=AC.createGain();
+/* sound: soft "gyuin" while the arrow grows, soft "pin" on arrival (quiet so speech stays clear) */
+function acOK(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state!='running')AC.resume();return AC.state=='running'}catch(e){return false}}
+function ping(k){try{if(!acOK())return;const t=AC.currentTime,o=AC.createOscillator(),o2=AC.createOscillator(),g=AC.createGain();
  const f=1250*Math.pow(1.12,k);o.type='sine';o.frequency.value=f;o2.type='sine';o2.frequency.value=f*2;
- g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.07,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+.35);
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.045,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+.35);
  o.connect(g);o2.connect(g);g.connect(AC.destination);o.start(t);o2.start(t);o.stop(t+.4);o2.stop(t+.4)}catch(e){}}
+function whoosh(k,ms){try{if(!acOK())return;const t=AC.currentTime,d=ms/1000,o=AC.createOscillator(),fl=AC.createBiquadFilter(),g=AC.createGain();
+ const f0=260*Math.pow(1.08,k);o.type='sawtooth';o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f0*3.2,t+d);
+ fl.type='lowpass';fl.Q.value=6;fl.frequency.setValueAtTime(500,t);fl.frequency.exponentialRampToValueAtTime(2600,t+d);
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.022,t+d*.35);g.gain.exponentialRampToValueAtTime(.012,t+d*.9);g.gain.exponentialRampToValueAtTime(.0001,t+d+.04);
+ o.connect(fl);fl.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.06)}catch(e){}}
 /* lit: number of days reached (0-5); hot: day that just arrived */
 function light(lit,hot){
  cur=lit;
@@ -601,9 +615,10 @@ function restart(){
  AN={t0:performance.now(),seg:0,goal};drawArrow(0);light(0);
  const step=now=>{const e=now-AN.t0,per=SEG+HOLD;
   if(AN.seg>=AN.goal){if(e>=END){AN.t0=now;AN.seg=0;drawArrow(0);light(0)}RAF=requestAnimationFrame(step);return}
+  if(!AN.wh){AN.wh=1;whoosh(dayAt(AN.seg+1),SEG)}
   const inSeg=Math.min(1,e/SEG);drawArrow(AN.seg+inSeg);
   if(e>=SEG&&!AN.arr){AN.arr=1;const d=dayAt(AN.seg+1);light(Math.max(cur,d+1),d);ping(d)}
-  if(e>=per){AN.seg++;AN.arr=0;AN.t0=now}
+  if(e>=per){AN.seg++;AN.arr=0;AN.wh=0;AN.t0=now}
   RAF=requestAnimationFrame(step)};
  RAF=requestAnimationFrame(step)}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelAnimationFrame(RAF);else restart()});
@@ -643,6 +658,7 @@ function beep(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)(
  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.1)}catch(e){}
  try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}}
 document.addEventListener('pointerdown',e=>{if(e.target.closest('button,#banner,.opt,.clk,.srcbox a'))beep()},true);
+['touchend','click'].forEach(ev=>document.addEventListener(ev,()=>{try{acOK();if(AC&&!AC._u){const b=AC.createBuffer(1,1,22050),sr=AC.createBufferSource();sr.buffer=b;sr.connect(AC.destination);sr.start(0);AC._u=1}}catch(e){}},true));
 /* offline / autosave */
 function net(){if(!navigator.onLine)$('net').textContent=T.off}
 addEventListener('offline',net);addEventListener('online',()=>$('net').textContent=T.net);
