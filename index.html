@@ -47,6 +47,18 @@ button:active,#banner:active{transform:scale(.93) translateY(2px);filter:brightn
 .zc{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px;z-index:2}
 .zc button{width:40px;height:40px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-size:20px;font-weight:800;line-height:1}
 .map svg{display:block;width:100%;height:auto;transform-origin:0 0}
+.swc{fill:#ff2d2d;fill-opacity:.07;stroke:#e00000;stroke-width:calc(4px*var(--inv,1));transform-box:fill-box;transform-origin:center}
+.swc.swpop{animation:swpop .45s ease-out}
+@keyframes swpop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+.mk{display:flex;flex-direction:column;gap:2px}.mko{display:flex;flex-wrap:wrap;gap:0 10px}
+.mk i{display:inline-block;width:20px;height:12px;border-radius:50%;flex:none}
+.kfc{border:2px dashed #fff;background:#8899aa55}.ksw{border:2px solid #e00000}
+.co{font-size:calc(26px*var(--inv,1));font-weight:900;paint-order:stroke;stroke:#fff;stroke-width:calc(7px*var(--inv,1));stroke-linejoin:round}
+.col{stroke:#fff;stroke-width:calc(3px*var(--inv,1));fill:none;filter:drop-shadow(0 0 1.5px #0009)}
+.cod{stroke:#fff;stroke-width:calc(2px*var(--inv,1))}
+.mapkey{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;font-weight:700;color:var(--sub,#55657f);padding:2px 4px}
+.mapkey span{display:inline-flex;align-items:center;gap:6px}
+
 .legend{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
 .chip{border:2px solid var(--c);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 10px;font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px;transition:.2s}
 .chip i{width:12px;height:12px;border-radius:50%;background:var(--c)}
@@ -252,6 +264,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   <polygon id="oisl" class="ld"/>
     <circle id="ring" fill="none"/><text id="ringT" class="gt"></text>
   <g id="tyw"></g>
+  <g id="swa"></g>
   <g id="tyt"></g>
   <g id="circles"></g>
   <g id="arw"></g>
@@ -262,6 +275,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  <div class="zc"><button id="zin" aria-label="zoom in">＋</button><button id="zout" aria-label="zoom out">－</button><button id="zrs" aria-label="reset">⟲</button><button id="zok" aria-label="Okinawa" style="font-size:18px">🏝</button></div>
  </div>
  <div class="legend" id="legend"></div>
+ <div class="mapkey" id="mapkey"></div>
  
  <div class="info" id="info"></div>
  <div class="note" id="src"></div>
@@ -272,7 +286,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script>
 const PREVIEW=/claude/i.test(location.hostname)||location.protocol=='file:';
 (function(){if(!PREVIEW)return;const MS={bus:'ok',text:'平常通り運行しております。',uncertain:false,yui:'ok',ytext:'通常どおり運行しています',yuncertain:false,error:false,checked:new Date().toISOString()};
-const MT={"typhoons": [{"id": "TC2630", "number": "2630", "cat": "TY", "issue": "2026-10-15T13:05:00+09:00", "fc": [{"h": 24, "c": [20.0, 131.0], "r": 90}, {"h": 48, "c": [22.5, 128.5], "r": 150}, {"h": 72, "c": [25.5, 126.5], "r": 220}, {"h": 96, "c": [29.0, 126.0], "r": 330}, {"h": 120, "c": [33.0, 128.5], "r": 450}], "now": {"c": [18.0, 134.0], "hpa": 950, "wind": 40, "gust": 55, "spd": 20, "spdnote": null, "course": "西北西", "scale": "大型", "int": "強い", "loc": "フィリピンの東", "storm": 140, "gale": 500}}, {"id": "TC2631", "number": "a", "cat": "TD", "issue": "2026-10-15T13:05:00+09:00", "fc": [], "now": {"c": [10.0, 150.0], "hpa": 1004, "wind": null, "gust": null, "spd": null, "spdnote": "ゆっくり", "course": "西", "scale": null, "int": null, "loc": "マリアナ諸島", "storm": null, "gale": null}}], "checked": "2026-10-17T09:16:29+00:00", "error": false};MT.checked=new Date().toISOString();
+const MT={"typhoons": [{"id": "TC2630", "number": "2630", "cat": "TY", "issue": "2026-10-15T13:05:00+09:00", "fc": [{"h": 24, "c": [20.0, 131.0], "r": 90, "sw": 230}, {"h": 48, "c": [22.5, 128.5], "r": 150, "sw": 300}, {"h": 72, "c": [25.5, 126.5], "r": 220, "sw": 380}, {"h": 96, "c": [29.0, 126.0], "r": 330, "sw": 480}, {"h": 120, "c": [33.0, 128.5], "r": 450, "sw": 600}], "now": {"c": [18.0, 134.0], "hpa": 950, "wind": 40, "gust": 55, "spd": 20, "spdnote": null, "course": "西北西", "scale": "大型", "int": "強い", "loc": "フィリピンの東", "storm": 140, "gale": 500}}, {"id": "TC2631", "number": "a", "cat": "TD", "issue": "2026-10-15T13:05:00+09:00", "fc": [], "now": {"c": [10.0, 150.0], "hpa": 1004, "wind": null, "gust": null, "spd": null, "spdnote": "ゆっくり", "course": "西", "scale": null, "int": null, "loc": "マリアナ諸島", "storm": null, "gale": null}}], "checked": "2026-10-17T09:16:29+00:00", "error": false};MT.checked=new Date().toISOString();
 const of=window.fetch;window.fetch=function(u,o){u=String(u);
  if(u.includes('status.json'))return Promise.resolve(new Response(JSON.stringify(MS),{status:200}));
  if(u.includes('typhoon.json'))return Promise.resolve(new Response(JSON.stringify(MT),{status:200}));
@@ -400,7 +414,8 @@ const KX=23.23,KY=25.64,GP=(lo,la)=>[(lo-116)*KX,(38-la)*KY],GR=km=>km/111*KY;
 let S={rate:1,tab:0,bus:'unk',yui:'unk',ytxt:'',yunc:0,speed:8,pin:-1,chk:'',as:1,av:1,avc:0,btxt:'',bunc:0,bsrc:'',err:0,typ:null,tyerr:0};
 try{Object.assign(S,JSON.parse(localStorage.getItem('okt')||'{}'))}catch(e){}
 function save(){try{localStorage.setItem('okt',JSON.stringify(S))}catch(e){}}
-function now(){const d=new Date();return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')}
+function chkTxt(){const d=S.chkAt?new Date(S.chkAt):null;if(!d||isNaN(d))return S.chk||now();const t=d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'),n=new Date();return (d.getMonth()+1)+'/'+d.getDate()+' '+t}
+function now(){const d=new Date();return (d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')}
 function draw(){
  $('ttl').textContent=T.ttl;$('hbtn').textContent=T.home;$('fbtn').textContent=T.feat;$('spk').textContent=(window.speechSynthesis&&speechSynthesis.speaking)?T.spkStop:T.spk;
  $('tab0').textContent=T.tab0;$('tab1').textContent=T.tab1;$('re').textContent=T.re;$('re2').textContent=T.re;
@@ -418,7 +433,7 @@ function draw(){
   $('d'+k).textContent=d;}
  const mk=(k,opts)=>opts.map(o=>`<button data-k="${k}" data-v="${o}">${k=='bus'?T.bus:T.yui}:${(k=='bus'?T.bst:T.st)[o]}</button>`).join('');
  $('demoBus').innerHTML=mk('bus',['ok','part','stop']);$('demoYui').innerHTML=mk('yui',['ok','stop']);
- $('chk').textContent=T.chk+(S.chk||now())+(S.err?'　'+T.off:'');$('chk2').textContent=$('chk').textContent;
+ $('chk').textContent=T.chk+chkTxt()+(S.err?'　'+T.off:'');$('chk2').textContent=$('chk').textContent;
  
  show(S.tab);
 }
@@ -441,11 +456,11 @@ $('alertX').onclick=()=>{$('alertbar').hidden=true};
 $('alS').onchange=e=>{S.as=e.target.checked?1:0;save()};
 $('alV').onchange=e=>{S.av=e.target.checked?1:0;save();if(!S.av)$('alertbar').hidden=true};
 $('alTest').onclick=()=>alertUser('bus','stop');
-const fmt=iso=>{const d=new Date(iso);return isNaN(d)?now():d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')};
+const fmt=iso=>{const d=new Date(iso);return isNaN(d)?now():(d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')};
 async function recheck(){
  const bs=[$('re'),$('re2')];bs.forEach(b=>b.disabled=true);
  try{const r=await fetch('status.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();
-  S.btxt=j.text||'';S.bunc=!!j.uncertain;S.bsrc=j.checked||'';S.chk=j.checked?fmt(j.checked):now();S.err=(navigator.onLine===false||j.error)?1:0;
+  S.btxt=j.text||'';S.bunc=!!j.uncertain;S.bsrc=j.checked||'';S.chk=j.checked?fmt(j.checked):now();S.chkAt=j.checked||new Date().toISOString();S.err=(navigator.onLine===false||j.error)?1:0;
   setState('bus',['ok','part','stop'].includes(j.bus)?j.bus:'unk');
   S.ytxt=j.ytext||'';S.yunc=!!j.yuncertain;let yv=['ok','part','stop'].includes(j.yui)?j.yui:'unk';const yr=S.ytxt.replace(/遅延証明(書)?/g,'');if(yv=='part'&&S.ytxt&&!/(遅れ|遅延|運休|見合わせ|運転を見合|中止|停止|運行を休)/.test(yr)){yv='ok';S.ytxt='';S.yunc=0}setState('yui',yv)}
  catch(e){S.err=1}
@@ -459,7 +474,7 @@ $('re').onclick=recheck;$('re2').onclick=recheck;
 const g=$('circles'),lg=$('legend');
 for(let i=0;i<5;i++){
  const b=document.createElement('button');b.className='chip';b.style.setProperty('--c',COL[i]);b.innerHTML='<i></i><span class="cl">'+T.day(i+1)+'<small class="cd"></small></span>';b.dataset.i=i;
- b.onclick=()=>{S.pin=S.pin==i?-1:i;save();restart()};lg.appendChild(b)}
+ b.onclick=()=>{S.pin=S.pin==i?-1:i;save();drawTy();restart()};lg.appendChild(b)}
 const NSV='http://www.w3.org/2000/svg';
 const sv2=(n,a,tx)=>{const e=document.createElementNS(NSV,n);for(const k in a)e.setAttribute(k,a[k]);if(tx!=null)e.textContent=tx;return e};
 const OKI_C=[127.7,26.2];
@@ -499,6 +514,35 @@ function tyText(t){
 let PATHS=[];
 function chipDates(){try{const t=tyList().find(x=>dayFc(x).length)||null;const iss=t&&new Date(t.issue||t.issued||(S.typ&&(S.typ.issued||S.typ.time))||'');const ds=t?dayFc(t):[];
  lg.querySelectorAll('.chip').forEach((b,i)=>{const c=b.querySelector('.cd');if(!c)return;let x='';const f=ds.find(e=>e.h==24*(i+1));if(f&&iss&&!isNaN(iss)){const d=new Date(iss.getTime()+f.h*3600000);x=(d.getMonth()+1)+'/'+d.getDate()}c.textContent=x;c.hidden=!x})}catch(e){}}
+
+/* 暴風警戒域（日ごとの赤い丸）と、吹き出し */
+function callout(x,y,ang,len,txt,col){
+ const inv=1/Math.max(1,Z.s),L1=len*inv,ex=x+Math.cos(ang)*L1,ey=y+Math.sin(ang)*L1,right=Math.cos(ang)>=0;
+ const lb=$('lbl');lb.appendChild(sv2('line',{class:'col tl',x1:x,y1:y,x2:ex,y2:ey}));
+ lb.appendChild(sv2('circle',{class:'cod tl',cx:x,cy:y,r:5*inv,fill:col}));
+ lb.appendChild(sv2('text',{class:'co tl',x:ex+(right?6:-6)*inv,y:ey,'text-anchor':right?'start':'end','dominant-baseline':'central',fill:col},txt))}
+function drawSw(list){const G=$('swa');while(G.firstChild)G.removeChild(G.firstChild);
+ list.forEach(t=>dayFc(t).forEach(f=>{if(!f.sw)return;const d=f.h/24-1,q=GP(f.c[1],f.c[0]);
+  const el=sv2('circle',{class:'swc',cx:q[0],cy:q[1],r:GR(f.sw)});el.dataset.d=d;G.appendChild(el)}))}
+function dayPick(t){const fc=dayFc(t);if(!fc.length)return null;if(S.pin>=0){const f=fc.find(x=>x.h/24-1==S.pin);if(f)return f}return fc.find(x=>x.h==48)||fc[0]}
+function drawCallouts(list){const ja=L=='ja',t=list[0];if(!t)return;const n=t.now,pc=GP(n.c[1],n.c[0]);
+ if(n.storm){const r=GR(n.storm),a=0.8;callout(pc[0]+Math.cos(a)*r,pc[1]+Math.sin(a)*r,0.6,60,ja?'暴風域':'Storm area','#d10000')}
+ if(n.gale){const r=GR(n.gale),a=0.05;callout(pc[0]+Math.cos(a)*r,pc[1]+Math.sin(a)*r,0,45,ja?'強風域':'Gale area','#a37a00')}
+ const f=dayPick(t);if(!f)return;const q=GP(f.c[1],f.c[0]);
+ if(S.fcOn!==0&&f.r){const r=Math.max(14,GR(f.r)),a=-0.15;callout(q[0]+Math.cos(a)*r,q[1]+Math.sin(a)*r,-0.25,Math.max(40,(S.swOn!==0&&f.sw?GR(f.sw)-r:0)+25),ja?'予報円':'Forecast circle','#12263a')}
+ if(S.swOn!==0&&f.sw){const r=GR(f.sw),a=0.3;callout(q[0]+Math.cos(a)*r,q[1]+Math.sin(a)*r,0.25,30,ja?'暴風警戒域':'Storm warning','#d10000')}}
+function applyLayers(){$('circles').style.display=S.fcOn===0?'none':'';$('swa').style.display=S.swOn===0?'none':''}
+
+function mapKey(){const ja=L=='ja',k=$('mapkey');if(k.dataset.b)return;k.dataset.b=1;
+ k.innerHTML='<div class="mk"><span><i class="kfc"></i>'+(ja?'白い点線の丸：予報円（台風の中心が来る範囲）':'Dashed circle: forecast circle (where the center may go)')+'</span>'+
+ '<span><i class="ksw"></i>'+(ja?'赤い丸：暴風警戒域（その日に暴風が来るおそれ）':'Red circle: storm warning area for that day')+'</span></div>'+
+ '<div class="mko"><label class="opt"><input type="checkbox" id="kFc"><span>'+(ja?'予報円':'Forecast circles')+'</span></label>'+
+ '<label class="opt"><input type="checkbox" id="kSw"><span>'+(ja?'暴風警戒域':'Storm warning')+'</span></label>'+
+ '<label class="opt"><input type="checkbox" id="kMu"><span>'+(ja?'効果音を消す':'Mute sounds')+'</span></label></div>';
+ $('kFc').checked=S.fcOn!==0;$('kSw').checked=S.swOn!==0;$('kMu').checked=!!S.mute;
+ $('kFc').onchange=e=>{S.fcOn=e.target.checked?1:0;save();drawTy()};
+ $('kSw').onchange=e=>{S.swOn=e.target.checked?1:0;save();drawTy()};
+ $('kMu').onchange=e=>{S.mute=e.target.checked?1:0;save()}}
 function drawTy(){chipDates();
  const w=$('tyw'),tt=$('tyt'),list=tyList();PATHS=[];
  [g,w,tt,$('nums')].forEach(e=>{while(e.firstChild)e.removeChild(e.firstChild)});
@@ -512,12 +556,15 @@ function drawTy(){chipDates();
   PATHS.push({pts,days:fc.map(f=>f.h/24-1)});
   tt.appendChild(sv2('polyline',{class:'trk',points:pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}));
   fc.forEach(f=>{const d=f.h/24-1,q=GP(f.c[1],f.c[0]);
-   const el=sv2('circle',{cx:q[0],cy:q[1],r:Math.max(14,GR(f.r||0)),fill:COL[d],'fill-opacity':.28,stroke:COL[d]});
-   el.dataset.d=d;el.style.strokeWidth='calc(6px*var(--inv,1))';el.style.transition='all .2s';g.appendChild(el);
-   $('nums').appendChild(sv2('text',{class:'lb',x:q[0],y:q[1],'text-anchor':'middle','dominant-baseline':'central','font-weight':900,fill:'#12263a',stroke:'#fff','paint-order':'stroke'},d+1))});
+   const el=sv2('circle',{cx:q[0],cy:q[1],r:Math.max(14,GR(f.r||0)),fill:COL[d],'fill-opacity':.1,stroke:'#fff'});
+   el.dataset.d=d;el.style.strokeWidth='calc(4px*var(--inv,1))';el.style.strokeDasharray='calc(12px*var(--inv,1)) calc(9px*var(--inv,1))';el.style.transition='all .2s';g.appendChild(el);
+   $('nums').appendChild(sv2('text',{class:'lb',x:q[0],y:q[1],'text-anchor':'middle','dominant-baseline':'central','font-weight':900,fill:COL[d],stroke:'#12263a','paint-order':'stroke'},d+1))});
   w.appendChild(sv2('circle',{class:'cur',cx:pc[0],cy:pc[1],r:8,fill:'#ff3b5c'}));
   w.appendChild(sv2('circle',{class:'sm',cx:pc[0],cy:pc[1],r:8,fill:'#fff',stroke:'#12263a'}));
-  $('lbl').appendChild(sv2('text',{class:'gl tl',x:pc[0]+14,y:pc[1]-12,'text-anchor':'start'},tyName(t)))});
+  if(list.filter(within).length>1)$('lbl').appendChild(sv2('text',{class:'gl tl',x:pc[0]+14,y:pc[1]-12,'text-anchor':'start'},tyName(t)))});
+ drawSw(list);drawCallouts(list);applyLayers();
+
+ mapKey();
  $('p1').classList.toggle('nodata',!list.length);
  const bd=$('tyb');if(list.length){bd.textContent=list.some(within)?T.tyb:T.tyb2;bd.classList.add('on')}else bd.classList.remove('on');
  let h;
@@ -570,11 +617,11 @@ const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
 const SEG=550,HOLD=220,END=1100;
 /* sound: soft "gyuin" while the arrow grows, soft "pin" on arrival (quiet so speech stays clear) */
 function acOK(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state!='running')AC.resume();return AC.state=='running'}catch(e){return false}}
-function ping(k){try{if(!acOK())return;const t=AC.currentTime,o=AC.createOscillator(),o2=AC.createOscillator(),g=AC.createGain();
+function ping(k){try{if(S.mute||!acOK())return;const t=AC.currentTime,o=AC.createOscillator(),o2=AC.createOscillator(),g=AC.createGain();
  const f=1250*Math.pow(1.12,k);o.type='sine';o.frequency.value=f;o2.type='sine';o2.frequency.value=f*2;
  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.045,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+.35);
  o.connect(g);o2.connect(g);g.connect(AC.destination);o.start(t);o2.start(t);o.stop(t+.4);o2.stop(t+.4)}catch(e){}}
-function whoosh(k,ms){try{if(!acOK())return;const t=AC.currentTime,d=ms/1000,o=AC.createOscillator(),fl=AC.createBiquadFilter(),g=AC.createGain();
+function whoosh(k,ms){try{if(S.mute||!acOK())return;const t=AC.currentTime,d=ms/1000,o=AC.createOscillator(),fl=AC.createBiquadFilter(),g=AC.createGain();
  const f0=260*Math.pow(1.08,k);o.type='sawtooth';o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f0*3.2,t+d);
  fl.type='lowpass';fl.Q.value=6;fl.frequency.setValueAtTime(500,t);fl.frequency.exponentialRampToValueAtTime(2600,t+d);
  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.022,t+d*.35);g.gain.exponentialRampToValueAtTime(.012,t+d*.9);g.gain.exponentialRampToValueAtTime(.0001,t+d+.04);
@@ -586,11 +633,12 @@ function light(lit,hot){
   const i=+el.dataset.d,pin=S.pin>=0;
   const on=pin?(i==S.pin&&lit>i):i<lit;
   const dimmed=pin&&i!=S.pin;
-  el.setAttribute('fill',dimmed?'#9aa5b1':COL[i]);el.setAttribute('stroke',dimmed?'#9aa5b1':COL[i]);
-  el.setAttribute('fill-opacity',on?'.8':(dimmed?'.08':'.14'));el.setAttribute('stroke-opacity',on?'1':(dimmed?'.3':'.4'));
+  el.setAttribute('fill',dimmed?'#9aa5b1':COL[i]);el.setAttribute('stroke','#fff');
+  el.setAttribute('fill-opacity',on?'.3':(dimmed?'.04':'.08'));el.setAttribute('stroke-opacity',on?'1':(dimmed?'.3':'.55'));
   el.style.filter=on?'drop-shadow(0 0 10px '+COL[i]+')':'none';
   el.classList.toggle('on',on&&!still&&i!==hot);
   if(i===hot&&!still){el.classList.remove('pop');void el.getBBox();el.classList.add('pop')}});
+ $('swa').querySelectorAll('circle').forEach(el=>{const i=+el.dataset.d,show=S.pin>=0?(i==S.pin&&lit>i):i<lit;el.style.display=show?'':'none';if(i===hot&&show&&!still){el.classList.remove('swpop');void el.getBBox();el.classList.add('swpop')}});
  $('nums').querySelectorAll('text').forEach((tx,j)=>{const i=+tx.textContent-1;tx.style.opacity=(S.pin>=0&&i!=S.pin)?'.35':'1'});
  lg.querySelectorAll('.chip').forEach((c,i)=>{const pin=S.pin>=0;
   c.classList.toggle('sel',pin&&i==S.pin);c.classList.toggle('dim',pin&&i!=S.pin);c.classList.toggle('lit',!pin&&i<lit)});}
