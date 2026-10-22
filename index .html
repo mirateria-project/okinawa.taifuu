@@ -171,6 +171,8 @@ dialog::backdrop{background:#0008}
 .legend .chip.sel i{background:#fff;box-shadow:0 0 6px #fff}
 .legend .chip.dim{background:#e3e7ec;color:#9aa5b1;border-color:var(--c);opacity:.7;filter:saturate(.35)}
 .legend .chip.dim i{background:#b5bec8}
+.chip.nodata,.chip.nodata.lit,.chip.nodata.sel,.chip.nodata.dim{background:#d5d9de!important;color:#8a939c!important;border-color:#b5bec8!important;border-style:dashed!important;opacity:.6!important;filter:grayscale(1)!important;box-shadow:none!important;transform:none!important;-webkit-text-stroke:0!important;pointer-events:none;cursor:default}
+.chip.nodata i{background:#b5bec8!important;box-shadow:none!important}
 #arw .ab{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:calc(12px*var(--inv,1))}
 #arw .af{fill:none;stroke:#e0002a;stroke-linecap:round;stroke-linejoin:round;stroke-width:calc(6px*var(--inv,1))}
 #arw .ah{fill:#e0002a;stroke:#fff;stroke-linejoin:round;stroke-width:calc(3px*var(--inv,1))}
@@ -474,7 +476,7 @@ $('re').onclick=recheck;$('re2').onclick=recheck;
 const g=$('circles'),lg=$('legend');
 for(let i=0;i<5;i++){
  const b=document.createElement('button');b.className='chip';b.style.setProperty('--c',COL[i]);b.innerHTML='<i></i><span class="cl">'+T.day(i+1)+'<small class="cd"></small></span>';b.dataset.i=i;
- b.onclick=()=>{S.pin=S.pin==i?-1:i;save();drawTy();restart()};lg.appendChild(b)}
+ b.onclick=()=>{if(b.disabled||b.classList.contains('nodata'))return;S.pin=S.pin==i?-1:i;save();drawTy();restart()};lg.appendChild(b)}
 const NSV='http://www.w3.org/2000/svg';
 const sv2=(n,a,tx)=>{const e=document.createElementNS(NSV,n);for(const k in a)e.setAttribute(k,a[k]);if(tx!=null)e.textContent=tx;return e};
 const OKI_C=[127.7,26.2];
@@ -513,7 +515,7 @@ function tyText(t){
  return '<div class="tyhd">'+tyName(t)+'</div><div class="tynear">'+(within(t)?T.tyhit(b.h,Math.round(b.d)):T.tyfar(Math.round(dist(n.c))))+'</div>'+(far?'':K)+'<details class="tymore"'+(far?'':' open')+'><summary>'+(ja?'くわしい情報':'More details')+'</summary><div class="tygrid">'+R.join('')+'</div>'+F+'</details>'}
 let PATHS=[];
 function chipDates(){try{const t=tyList().find(x=>dayFc(x).length)||null;const iss=t&&new Date(t.issue||t.issued||(S.typ&&(S.typ.issued||S.typ.time))||'');const ds=t?dayFc(t):[];
- lg.querySelectorAll('.chip').forEach((b,i)=>{const c=b.querySelector('.cd');if(!c)return;let x='';const f=ds.find(e=>e.h==24*(i+1));if(f&&iss&&!isNaN(iss)){const d=new Date(iss.getTime()+f.h*3600000);x=(d.getMonth()+1)+'/'+d.getDate()}c.textContent=x;c.hidden=!x})}catch(e){}}
+ lg.querySelectorAll('.chip').forEach((b,i)=>{const has=ds.some(e=>e.h==24*(i+1));b.disabled=!has;b.classList.toggle('nodata',!has);b.setAttribute('aria-disabled',!has);if(!has&&S.pin==i)S.pin=-1;const c=b.querySelector('.cd');if(!c)return;let x='';const f=ds.find(e=>e.h==24*(i+1));if(f&&iss&&!isNaN(iss)){const d=new Date(iss.getTime()+f.h*3600000);x=(d.getMonth()+1)+'/'+d.getDate()}c.textContent=x;c.hidden=!x})}catch(e){}}
 
 /* 暴風警戒域（日ごとの赤い丸）と、吹き出し */
 function callout(x,y,ang,len,txt,col){
