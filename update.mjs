@@ -4,6 +4,12 @@
 // /typhoon.json … 気象庁の台風情報（実況と1〜5日目の予報）
 // どちらも無料の公開ページ・公開データだけを使います。
 
+const JMA = "https://www.jma.go.jp/bosai/typhoon/data/";
+const BUS = "https://www.bus-okinawa.or.jp/";
+const YUI = "https://www.yui-rail.co.jp/";
+const HDR = { "User-Agent": "Mozilla/5.0 (okinawa-taifuu app; +https://github.com/toshiaki-1124/okinawa.taifuu)", "Accept-Language": "ja" };
+const iso = () => new Date().toISOString();
+
 /* ---------- 共通 ---------- */
 async function get(url) {
   const r = await fetch(url, { headers: HDR, signal: AbortSignal.timeout(9000) });
