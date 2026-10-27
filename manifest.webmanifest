@@ -1,0 +1,33 @@
+{
+  "id": "./",
+  "name": "沖縄 台風・交通",
+  "short_name": "OKT",
+  "description": "沖縄のバス・ゆいレールの運行状況と、台風・竜巻の情報",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f2f9ff",
+  "theme_color": "#1e90ff",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
