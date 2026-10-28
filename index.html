@@ -321,7 +321,7 @@ header{flex-wrap:wrap;row-gap:6px}#ttl{white-space:nowrap}header .top-actions{fl
 .panic .pz{display:none!important}
 </style>
 <script>(function(){try{var h=document.head;document.querySelectorAll('link[rel="apple-touch-icon"],link[rel="icon"]').forEach(function(l){if(l.parentNode!==h)h.appendChild(l)});0}catch(e){}})();</script><style>
-#cld{pointer-events:none;opacity:.8}#cld .spin{transform-box:fill-box;transform-origin:center}#cld.anim .spin{animation:cspin 28s linear infinite}@keyframes cspin{to{transform:rotate(-360deg)}}@media (prefers-reduced-motion:reduce){#cld.anim .spin{animation:none}}#svg.mtr #cld,#svg.mtr #dln .dlp{display:none}
+.map{background:#0f345e}#svg .sea{fill:#0f345e}#cld{pointer-events:none;opacity:.8}#cld .spin{transform-box:fill-box;transform-origin:center}#cld.anim .spin{animation:cspin 28s linear infinite}@keyframes cspin{to{transform:rotate(-360deg)}}@media (prefers-reduced-motion:reduce){#cld.anim .spin{animation:none}}#svg.mtr #cld,#svg.mtr #dln .dlp{display:none}
 .nb{fill:#12263a;fill-opacity:.85;stroke:#fff;stroke-width:calc(3px*var(--inv,1))}
 .dlp{fill:#fff;fill-opacity:.95;stroke:#1e6bff;stroke-width:calc(3px*var(--inv,1))}
 .dlt{stroke-width:calc(5px*var(--inv,1))}
@@ -427,7 +427,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   <rect class="sea" x="0" y="0" width="65536" height="65536"/>
   <g id="geo"></g>
   <polygon id="oisl" class="ld"/>
-  <g id="tiles0"></g><g id="tiles"></g><g id="ttiles"></g>
+  <defs><filter id="navyF" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0.316 -0.786 -0.079 0 0.570 -0.264 -0.267 -0.089 0 0.680 -0.319 -1.073 0.642 0 0.910 0 0 0 1 0"/></filter></defs><g id="tiles0" filter="url(#navyF)"></g><g id="tiles" filter="url(#navyF)"></g><g id="ttiles"></g>
   <circle id="ring" fill="none"/><text id="ringT" class="gt"></text>
   <g id="tyw"></g>
   <g id="cld"></g>
@@ -566,7 +566,7 @@ en:{
 document.documentElement.lang=L;
 const $=id=>document.getElementById(id);
 const COL=['#ff3b5c','#ff9500','#ffd60a','#2bd96b','#2f80ff'];
-const VER='3.4.0',VDATE='2026-10-28';
+const VER='3.4.1',VDATE='2026-10-28';
 Object.assign(T,L=='ja'?{
  ver:'バージョン '+VER+'（'+VDATE.replace(/-/g,'/')+'）',
  eHead:'🌀 暴風域',eIn:'入っています',eInFor:h=>'入ってから約'+h+'時間',eInF:'入っているおそれ',eSoon:(d,h)=>d?'あと'+d+'日'+h+'時間':h?'あと約'+h+'時間':'まもなく',
@@ -1124,12 +1124,18 @@ function cloudTex(){if(CL.img)return CL.img;const N=512,c=document.createElement
   const g=Math.round(150+105*Math.pow(d,.7));              /* infrared look: thick = white, thin = grey */
   D[k]=g;D[k+1]=g;D[k+2]=Math.min(255,g+6);D[k+3]=Math.round(255*Math.min(1,Math.pow(d,1.15)*1.15))}
  x.putImageData(im,0,0);try{CL.img=c.toDataURL('image/png')}catch(_){CL.img=''}
+ const AL=new Uint8ClampedArray(N*N);for(let i=0;i<N*N;i++)AL[i]=D[i*4+3];
  /* soft shadow copy so thin cloud still shows on a pale map */
  for(let k=0;k<D.length;k+=4){D[k]=28;D[k+1]=44;D[k+2]=66;D[k+3]=Math.round(D[k+3]*.42)}x.putImageData(im,0,0);try{CL.sh=c.toDataURL('image/png')}catch(_){CL.sh=''}
+ try{const m=document.createElement('canvas');m.width=m.height=N;const mx=m.getContext('2d'),mi=mx.createImageData(N,N),MD=mi.data;
+  for(let i=0;i<N*N;i++){MD[i*4]=10;MD[i*4+1]=26;MD[i*4+2]=46;MD[i*4+3]=AL[i]>90?255:0}mx.putImageData(mi,0,0);
+  const o=document.createElement('canvas');o.width=o.height=N;const ox=o.getContext('2d');for(let a=0;a<16;a++){const t=a/16*2*Math.PI;ox.drawImage(m,Math.cos(t)*4,Math.sin(t)*4)}
+  ox.globalCompositeOperation='destination-out';ox.drawImage(m,0,0);CL.ol=o.toDataURL('image/png')}catch(_){CL.ol=''}
  return CL.img}
 function cloudDraw(list){const G=$('cld');while(G.firstChild)G.removeChild(G.firstChild);if(S.cldOn===0){cloudBuild();return}const src=cloudTex();if(!src){cloudBuild();return}
  list.forEach(t=>{if(isExtra(t))return;const n=t.now,km=+n.gale?n.gale*1.1:+n.storm?n.storm*3:350,q=GP(n.c[1],n.c[0]),r=GR(Math.max(150,km),+n.c[0]);
   const gg=sv2('g',{transform:'translate('+q[0].toFixed(1)+','+q[1].toFixed(1)+')'}),sp=sv2('g',{class:'spin'});
+  if(CL.ol){const ol=sv2('image',{x:-r,y:-r,width:2*r,height:2*r,preserveAspectRatio:'none',opacity:.45});ol.setAttribute('href',CL.ol);sp.appendChild(ol)}
   if(CL.sh){const o=r*.035,sh=sv2('image',{x:-r+o,y:-r+o*1.3,width:2*r,height:2*r,preserveAspectRatio:'none'});sh.setAttribute('href',CL.sh);sp.appendChild(sh)}
   const im=sv2('image',{x:-r,y:-r,width:2*r,height:2*r,preserveAspectRatio:'none'});im.setAttribute('href',src);sp.appendChild(im);gg.appendChild(sp);G.appendChild(gg)});cloudBuild()}
 /* keep the cloud note just left of the map credit so they never overlap */
