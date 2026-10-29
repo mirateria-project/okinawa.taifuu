@@ -678,7 +678,7 @@ en:{
 document.documentElement.lang=L;
 const $=id=>document.getElementById(id);
 const COL=['#ff3b5c','#ff9500','#ffd60a','#2bd96b','#2f80ff'];
-const VER='3.12.0',VDATE='2026-10-30';
+const VER='3.12.1',VDATE='2026-10-30';
 Object.assign(T,L=='ja'?{
  ver:'バージョン '+VER+'（'+VDATE.replace(/-/g,'/')+'）',
  eHead:'🌀 暴風域',eIn:'入っています',eInFor:h=>'入ってから約'+h+'時間',eInF:'入っているおそれ',eSoon:(d,h)=>d?'あと'+d+'日'+h+'時間':h?'あと約'+h+'時間':'まもなく',
@@ -1827,6 +1827,13 @@ $('madW').onclick=e=>{e.stopPropagation();const u=AD&&AD.link;adClose();if(u&&/^
 $('mapAd').addEventListener('click',e=>{if(e.target.id=='mapAd')adClose()});
 {const _sh=show;show=function(i){_sh(i);if(i==1)setTimeout(()=>{adMaybe()},900)}}
 setTimeout(()=>{if(S.tab==1)adMaybe()},1600);
+/* v3.12.1: "new features" notice, shown once after an update (not on first install) */
+(function(){const NEWS={ja:['過去の台風の進路が、最初から出るようになりました（直近3つ・チェックで表示）','地図の吹き出しと下の文字の「暴風域に入るまでの時間」をそろえました','地図に「沖縄本島」の文字を入れました','更新したときに、このお知らせが出るようになりました'],
+ en:['Past typhoon tracks now appear right away (last 3, turn on with the checkbox)','The map balloon and the text below now show the same time to the storm area','Added the "Okinawa Is." label on the map','A notice like this now appears after each update']};
+ const seen=S.seenVer;if(FIRST){S.seenVer=VER;save();return}if(seen===VER)return;
+ const done=()=>{S.seenVer=VER;save()};
+ const ja=L=='ja',li=(ja?NEWS.ja:NEWS.en).map(x=>'<li style="margin:6px 0">'+x+'</li>').join('');
+ setTimeout(()=>{try{$('dbody').innerHTML='<div style="font-size:20px;font-weight:900;margin-bottom:4px">🎉 '+(ja?'新しい機能が追加されました':'New features added')+'</div><div style="font-size:13px;color:var(--sub);margin-bottom:6px">'+(ja?'バージョン ':'Version ')+VER+'</div><ul style="margin:0;padding-left:20px;font-size:16px;font-weight:700;line-height:1.5">'+li+'</ul>';if(!$('dlg').open)$('dlg').showModal();$('dlg').addEventListener('close',done,{once:true})}catch(e){}},1200)})();
 </script>
 </body>
 </html>
