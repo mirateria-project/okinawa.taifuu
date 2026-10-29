@@ -2,12 +2,13 @@
 // status.json と typhoon.json を作って、GitHub Pages で公開します。
 // /status.json  … バス（沖縄県バス協会）とゆいレールの運行状況
 // /typhoon.json … 気象庁の台風情報（実況と1〜5日目の予報）
+// /past.json    … 直近に終わった台風3つの進路（デジタル台風の公開データ）
 // どちらも無料の公開ページ・公開データだけを使います。
 
 const JMA = "https://www.jma.go.jp/bosai/typhoon/data/";
 const BUS = "https://www.bus-okinawa.or.jp/";
 const YUI = "https://www.yui-rail.co.jp/";
-const HDR = { "User-Agent": "Mozilla/5.0 (okinawa-taifuu app; +https://github.com/toshiaki-1124/okinawa.taifuu)", "Accept-Language": "ja" };
+const HDR = { "User-Agent": "Mozilla/5.0 (okinawa-taifuu app; +https://github.com/mirateria-project/okinawa.taifuu)", "Accept-Language": "ja" };
 const iso = () => new Date().toISOString();
 
 /* ---------- 共通 ---------- */
@@ -194,11 +195,50 @@ async function typhoon() {
   return { typhoons, checked: iso(), error: arr.length > 0 && typhoons.length === 0 && bad > 0, partial: bad > 0 };
 }
 
-/* ---------- 実行：2つのファイルを書き出す ---------- */
+
+/* ---------- 過去の台風の進路（デジタル台風／国立情報学研究所の公開GeoJSON。元データは気象庁） ---------- */
+// 直近に終わった台風3つの進路を past.json に書き出す。前回の past.json は公開中のサイトから読んで使い回す（6時間ごとに取り直し）。
+const DT = "https://agora.ex.nii.ac.jp/digital-typhoon/geojson/wnp/";
+const SITE = (() => { const r = process.env.GITHUB_REPOSITORY || "mirateria-project/okinawa.taifuu"; const [o, n] = r.split("/"); return "https://" + o.toLowerCase() + ".github.io/" + n + "/"; })();
+async function dtTrack(n4) { // n4 = "2630"
+  const r = await fetch(DT + "20" + n4 + ".en.json", { headers: HDR, signal: AbortSignal.timeout(9000) });
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  const j = await r.json();
+  const p = (j.features || []).map((f) => { const c = f.geometry && f.geometry.coordinates, t = f.properties && f.properties.time; return c && isFinite(+t) ? [+t * 1000, +c[1], +c[0]] : null; })
+    .filter((x) => x && isFinite(x[1]) && isFinite(x[2])).sort((a, b) => a[0] - b[0]);
+  if (p.length < 2) return null;
+  return { k: "TC" + n4, n: n4, name: (j.properties && j.properties.name) || null, p: p.map((x) => [x[0], +x[1].toFixed(2), +x[2].toFixed(2)]), end: p[p.length - 1][0], got: Date.now() };
+}
+async function past(active) {
+  let prev = null;
+  try { const r = await fetch(SITE + "past.json?t=" + Date.now(), { signal: AbortSignal.timeout(9000) }); if (r.ok) prev = await r.json(); } catch {}
+  const old = {}; ((prev && prev.tracks) || []).forEach((t) => { if (t && t.n) old[t.n] = t; });
+  const act = new Set(active.map((x) => String(x)).filter((x) => /^\d{4}$/.test(x)));
+  let last = Math.max(0, ...[...act].map(Number), Number(prev && prev.last) || 0);
+  // 新しく番号がついた台風があるか確かめる（台風がない時期も、次の番号を1つだけ見に行く）
+  for (let i = 0; i < 3 && last && !act.size; i++) { const nx = String(last + 1).padStart(4, "0"); if (act.has(nx) || old[nx]) { last++; continue; }
+    try { const t = await dtTrack(nx); if (t) { old[nx] = t; last++; continue; } } catch {} break; }
+  if (!last) return { tracks: [], last: null, checked: iso() };
+  const yy = Math.floor(last / 100), out = [];
+  for (let k = last; k > yy * 100 && out.length < 3; k--) {
+    const n4 = String(k).padStart(4, "0");
+    if (act.has(n4)) continue; // 今も続いている台風は「過去」に入れない
+    let t = old[n4];
+    if (!t || !t.got || Date.now() - t.got > 6 * 3600000) { try { t = (await dtTrack(n4)) || t; } catch {} }
+    if (t && t.p && t.p.length >= 2) out.push(t);
+  }
+  return { tracks: out, last: String(last).padStart(4, "0"), checked: iso(), src: "Digital Typhoon (NII) / JMA" };
+}
+
+/* ---------- 実行：3つのファイルを書き出す ---------- */
 import { writeFileSync } from "node:fs";
 const save = (name, obj) => writeFileSync(new URL("./" + name, import.meta.url), JSON.stringify(obj));
 try { save("status.json", await status()); }
 catch (e) { console.error(e); save("status.json", { bus: "unk", text: "", uncertain: true, yui: "unk", ytext: "", yunc: true, error: true, checked: iso() }); }
-try { save("typhoon.json", await typhoon()); }
+let TY = null;
+try { TY = await typhoon(); save("typhoon.json", TY); }
 catch (e) { console.error(e); save("typhoon.json", { typhoons: null, error: true, checked: iso() }); }
+try { save("past.json", await past(((TY && TY.typhoons) || []).map((t) => t.number))); }
+catch (e) { console.error(e); save("past.json", { tracks: [], error: true, checked: iso() }); }
 console.log("done", iso());

@@ -399,6 +399,7 @@ body.mapmax{overflow:hidden}
 .swe small{font-size:11px;font-weight:800}
 #info .tyhd{line-height:1.45}
 /* v3.11 */
+#psoBox{padding:6px 4px;font-size:14px}#psoBox input{width:22px;height:22px}#mpbody #psoBox{margin:2px 0 0}
 .tyk b,.tyk span{overflow:hidden}
 #mpanel .tyk.d b{color:#12263a!important}
 #mpanel .tyk span{color:#4a5b6c}
@@ -565,6 +566,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  <div class="fc5" id="fc5"></div>
  <label class="gtopt"><input type="checkbox" id="gtHide"><span id="gtL"></span></label>
  <div class="whenbox" id="whenBox" hidden></div>
+ <label class="opt pso" id="psoBox"><input type="checkbox" id="kPs"><span id="kPsL"></span></label>
  <div class="info" id="info2"></div>
  <div class="trbox" id="trBox"></div>
  <label class="opt fol"><input type="checkbox" id="fol"><span id="folL"></span></label>
@@ -628,7 +630,7 @@ const T={ja:{
 `,hclose:'閉じる',
  ban:'新商品のお知らせ（ここにバナー）',banimg:'ここに画像が表示されます',
  info:'<b>サンプル台風</b><br>強さ：強い／中心気圧 960hPa／最大風速 40m/s<br>沖縄本島に最も近づく予想：3日目',
- src:'台風の情報は、気象庁の公開データを10分ごとに自動で取得して表示しています。海岸線は概略です。出典：気象庁ホームページ',
+ src:'台風の情報は、気象庁の公開データを10分ごとに自動で取得して表示しています。海岸線は概略です。出典：気象庁ホームページ／過去の台風の進路：デジタル台風（国立情報学研究所）',
  net:'通信がなくても開けます（運行状況は最後に取得した内容を表示します）。',off:'オフライン：前回の情報を表示中',
  hi:'<b>iPhone</b><br>Safariで共有ボタン→「ホーム画面に追加」<br><br><b>Android</b><br>Chromeのメニュー→「ホーム画面に追加」<div class="ph">説明イラスト（差し替え予定）</div>',
  tyb:'🌀 台風接近',
@@ -667,7 +669,7 @@ en:{
 `,hclose:'Close',
  ban:'New product news (banner here)',banimg:'Image will appear here',
  info:'<b>Sample typhoon</b><br>Strong / 960 hPa / max wind 40 m/s<br>Closest to Okinawa Island: Day 3',
- src:'Typhoon information is fetched automatically every 10 minutes from public JMA data. Coastlines are approximate. Source: Japan Meteorological Agency website',
+ src:'Typhoon information is fetched automatically every 10 minutes from public JMA data. Coastlines are approximate. Source: Japan Meteorological Agency website / Past tracks: Digital Typhoon (NII)',
  net:'Opens without a connection (shows the last information received).',off:'Offline: showing last known info',
  hi:'<b>iPhone</b><br>Safari: Share button → "Add to Home Screen"<br><br><b>Android</b><br>Chrome menu → "Add to Home screen"<div class="ph">Guide illustration (to be added)</div>',
  tyb:'🌀 Typhoon nearby',
@@ -676,7 +678,7 @@ en:{
 document.documentElement.lang=L;
 const $=id=>document.getElementById(id);
 const COL=['#ff3b5c','#ff9500','#ffd60a','#2bd96b','#2f80ff'];
-const VER='3.11.0',VDATE='2026-10-29';
+const VER='3.12.0',VDATE='2026-10-30';
 Object.assign(T,L=='ja'?{
  ver:'バージョン '+VER+'（'+VDATE.replace(/-/g,'/')+'）',
  eHead:'🌀 暴風域',eIn:'入っています',eInFor:h=>'入ってから約'+h+'時間',eInF:'入っているおそれ',eSoon:(d,h)=>d?'あと'+d+'日'+h+'時間':h?'あと約'+h+'時間':'まもなく',
@@ -744,11 +746,11 @@ Object.assign(T,L=='ja'?{
  dh:hr=>{let d=Math.floor(hr/24),h=Math.round(hr-d*24);if(h==24){d++;h=0}return '約'+(d?d+'日':'')+(h||!d?Math.max(1,h)+'時間':'')},
  extHead:n=>n?n+'日目以降もまっすぐ来たら':'まっすぐ来たら',
  extSt:(n,t,st,who)=>(n?n+'日目以降もまっすぐ来たら ':'まっすぐ来たら ')+t+'で'+(st?'暴風域に':who+'に最接近'),
- extArr:t=>t+'で到着（目安）',fcSt:t=>'予報では '+t+'で暴風域に',
+ extArr:t=>t+'で到着（目安）',extTo:(t,st,who)=>t+'で'+(st?'暴風域に':who+'に最接近')+'（目安）',fcHead:'予報では',fcSt:t=>'予報では '+t+'で暴風域に',
  pastNm:n=>(+String(n).slice(-2))+'号',pastLbl:n=>n+'（過去の進路）',
  pastEta:(n,t,who,km)=>n+'と同じ進路なら '+t+'後に'+who+'へ最接近（約'+km+'km）（目安）',
  pastShort:t=>'同じ進路なら'+t+'で最接近（目安）',
- pastOn:'過去の台風の進路（直近3つ）',pastNone:'（記録がたまると出ます）',cReset:'キャラを元の位置にもどす',
+ pastOn:'過去の台風の進路（直近3つ）',pastNone:'過去の台風の進路（まだ記録なし）',cReset:'キャラを元の位置にもどす',
  oarea:'📍 あなたの地域の台風（ハリケーン・サイクロン）は、このアプリの対象外です。気象庁が発表する北西太平洋の台風だけを表示しています。',
  p0n:'📍 現在地が沖縄の外なので、運行状況（沖縄だけの情報）は小さく表示しています。'
 }:{
@@ -759,11 +761,12 @@ Object.assign(T,L=='ja'?{
  dh:hr=>{let d=Math.floor(hr/24),h=Math.round(hr-d*24);if(h==24){d++;h=0}return '~'+(d?d+'d ':'')+(h||!d?Math.max(1,h)+'h':'')},
  extHead:n=>n?'If it keeps coming straight after day '+n:'If it comes straight',
  extSt:(n,t,st,who)=>(n?'Straight on after day '+n+': ':'If it comes straight: ')+t+' to '+(st?'the storm area':'closest to '+who),
+ extTo:(t,st,who)=>t+' to '+(st?'the storm area':'closest to '+who)+' (estimate)',fcHead:'Forecast:',
  extArr:t=>'arrives in '+t+' (estimate)',fcSt:t=>'Forecast: storm area in '+t,
  pastNm:n=>'No. '+(+String(n).slice(-2)),pastLbl:n=>n+' (past track)',
  pastEta:(n,t,who,km)=>'Same track as '+n+': closest to '+who+' in '+t+' (~'+km+' km) (estimate)',
  pastShort:t=>'same track: closest in '+t+' (est.)',
- pastOn:'Past typhoon tracks (last 3)',pastNone:' (shown once recorded)',cReset:'Put the characters back',
+ pastOn:'Past typhoon tracks (last 3)',pastNone:'Past typhoon tracks (none yet)',cReset:'Put the characters back',
  oarea:'📍 Typhoons (hurricanes / cyclones) in your region are not covered. This app shows only Northwest Pacific typhoons announced by JMA.',
  p0n:'📍 You are outside Okinawa, so the service status (Okinawa only) is shown small.'
 });
@@ -857,7 +860,7 @@ const ZMIN=2,ZMAX=12;
  const ell=(lo,la,rx,ry,an)=>{const A=an*Math.PI/180,r=[];for(let t=0;t<360;t+=24){const u=t*Math.PI/180,x=rx*Math.cos(u),y=ry*Math.sin(u),dx=x*Math.cos(A)-y*Math.sin(A),dy=x*Math.sin(A)+y*Math.cos(A);r.push([lo+dx/(111.32*Math.cos(la*Math.PI/180)),la+dy/111])}return r};
  [[129.37,28.30,27,9,42],[128.95,27.80,12,8,70],[128.60,27.37,10,5,40],[128.42,27.04,4,3,0],[127.97,27.05,3,3,0],[127.80,26.72,4,3,0],[126.80,26.34,7,4,0],[127.35,26.19,6,2.5,80],[125.32,24.78,11,7,45],[124.18,24.43,15,7,45],[123.82,24.33,14,10,0],[123.00,24.46,6,2.5,0],[123.78,24.05,2,2,0],[131.27,25.90,4,4,0]].forEach(d=>mk('polygon',{class:'ld',points:pts(ell(d[0],d[1],d[2],d[3],d[4]))}));
  /* place names drawn by the app (the map tiles have none): [ja,en,lon,lat,anchor,min zoom,max zoom,kind]  kind c=city s=sea; list order = priority */
- const lab=[['沖縄本島','Okinawa',128.55,26.55,'start',5,99],
+ const lab=[['沖縄本島','Okinawa',128.55,26.55,'start',5,99,'k'],['沖縄','Okinawa',127.2,26.5,'end',0,5,'k'],
  ['日本','Japan',138.0,36.4,'middle',0,5.4],['中国','China',111.5,31.0,'middle',0,99],['台湾','Taiwan',120.4,24.7,'middle',0,99],['フィリピン','Philippines',121.2,16.6,'middle',0,99],
  ['韓国','South Korea',127.9,36.3,'middle',0,99],['北朝鮮','North Korea',126.9,40.2,'middle',0,99],['ロシア','Russia',134.5,48.8,'middle',0,99],['モンゴル','Mongolia',104.0,46.5,'middle',0,99],
  ['ベトナム','Vietnam',106.5,13.6,'middle',0,99],['ラオス','Laos',102.8,19.4,'middle',3.6,99],['タイ','Thailand',101.0,15.6,'middle',0,99],['カンボジア','Cambodia',104.9,12.6,'middle',4.2,99],['ミャンマー','Myanmar',96.0,21.0,'middle',0,99],
@@ -940,6 +943,7 @@ async function recheck(){
   S.ytxt=j.ytext||'';S.yunc=!!j.yuncertain;let yv=['ok','part','stop'].includes(j.yui)?j.yui:'unk';const yr=S.ytxt.replace(/遅延証明(書)?/g,'');if(yv=='part'&&S.ytxt&&!/(遅れ|遅延|運休|見合わせ|運転を見合|中止|停止|運行を休)/.test(yr)){yv='ok';S.ytxt='';S.yunc=0}setState('yui',yv)}
  catch(e){S.err=1}
  try{const r=await fetch('typhoon.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();S.typ=j;S.tyerr=(navigator.onLine===false||j.error)?1:0;tyHistUpd(j)}catch(e){S.tyerr=1}
+ try{const r=await fetch('past.json?t='+Date.now(),{cache:'no-store'});if(r.ok){const j=await r.json();if(j&&Array.isArray(j.tracks)&&!j.error)S.pastSrv=j.tracks.filter(x=>x&&Array.isArray(x.p)&&x.p.length>=2).slice(0,3)}}catch(e){}
  tornado();cloudTimes();drawTy();afterData();restart();
  bs.forEach(b=>b.disabled=false);save();draw()}
 $('re').onclick=recheck;$('re2').onclick=recheck;
@@ -1037,6 +1041,9 @@ function closest(t,ref){const iss=issueOf(t);if(!iss)return null;const P=[{h:0,l
  return best&&{d:best.d,at:new Date(iss.getTime()+best.h*3600000),h:best.h}}
 const NB=x=>'<span style="display:inline-block">'+x+'</span> ';
 /* time to reach you: the JMA forecast points first (day 1..5), then a straight line from the last forecast point at its last speed (day 4 -> 5) */
+function etaOne(t,ref){if(!t||isExtra(t))return null;const nw=Date.now(),D=distRef(t.now.c),st=+t.now.storm||0;if(st&&D<=st)return {in:1};
+ const e=eta(t,ref);if(e&&e.tin&&e.tin.getTime()>nw)return {fc:1,st:1,hr:(e.tin.getTime()-nw)/3600000};
+ if(!(e&&e.tin)){const x=fcExt(t,ref);if(x&&!x.away)return {hr:x.st?x.hSt:x.hArr,st:x.st,n:x.n}}return null}
 function fcExt(t,ref){if(!t||isExtra(t)||!inArea(ref))return null;const iss=issueOf(t);
  const fc=dayFc(t),P=[{h:0,c:[+t.now.c[0],+t.now.c[1]],sw:+t.now.storm||0}].concat(fc.map(f=>({h:+f.h,c:[+f.c[0],+f.c[1]],sw:+f.sw||0})));
  const last=P[P.length-1],dl=hav([last.c[1],last.c[0]],ref),n=fc.length;let v=null;
@@ -1054,7 +1061,7 @@ function pastEta(tr,t,ref){if(!t||isExtra(t)||!tr||!tr.p||tr.p.length<2||!inArea
  if(!j||j.d>500)return null;
  let cl=null;for(let i=j.i;i<p.length-1;i++){const st=Math.max(4,Math.ceil(hav(at(i,0),at(i,1))/10));for(let s=0;s<=st;s++){const f=s/st;if(i==j.i&&f<j.f)continue;const q=at(i,f),d=hav(ref,q);if(!cl||d<cl.d)cl={d,tm:tAt(i,f),q}}}
  if(!cl||cl.d>800)return null;const iss=issueOf(t),el=iss?Math.max(0,(Date.now()-iss.getTime())/3600000):0,h=(cl.tm-tAt(j.i,j.f))/3600000-el;if(h<1)return null;return {h,d:cl.d,q:cl.q}}
-const PAST=()=>{if(PREVIEW&&!S.past.length){const n=Date.now(),H=3600000;return [{k:'pv',n:'2629',p:[[n-150*H,13.2,141.5],[n-138*H,14.4,139.6],[n-126*H,15.9,137.6],[n-114*H,17.6,135.4],[n-102*H,19.5,133.2],[n-90*H,21.4,131.2],[n-78*H,23.3,129.6],[n-66*H,25.1,128.3],[n-54*H,26.9,127.6],[n-42*H,28.8,127.9],[n-30*H,30.9,129.4],[n-18*H,33.0,131.9],[n-6*H,35.2,135.6]],end:n}]}return S.past};
+const PAST=()=>{if(Array.isArray(S.pastSrv)&&S.pastSrv.length)return S.pastSrv;if(PREVIEW&&!S.past.length){const n=Date.now(),H=3600000;return [{k:'pv',n:'2629',p:[[n-150*H,13.2,141.5],[n-138*H,14.4,139.6],[n-126*H,15.9,137.6],[n-114*H,17.6,135.4],[n-102*H,19.5,133.2],[n-90*H,21.4,131.2],[n-78*H,23.3,129.6],[n-66*H,25.1,128.3],[n-54*H,26.9,127.6],[n-42*H,28.8,127.9],[n-30*H,30.9,129.4],[n-18*H,33.0,131.9],[n-6*H,35.2,135.6]],end:n}]}return S.past};
 const WHO=()=>S.me?(L=='ja'?'現在地':'you'):(L=='ja'?'沖縄本島':'Okinawa Island');
 const inArea=r=>{let lo=+r[0];if(lo<0)lo+=360;return lo>=95&&lo<=185&&r[1]>=-5&&r[1]<=60};
 function fitKeys(){document.querySelectorAll('.tyk b,.tyk span').forEach(el=>{if(!el.offsetWidth)return;el.style.fontSize='';let f=parseFloat(getComputedStyle(el).fontSize)||12,n=0;while(el.scrollWidth>el.clientWidth+1&&f>7&&n<24){f-=.5;el.style.fontSize=f+'px';n++}})}
@@ -1122,10 +1129,7 @@ function tyText(t){
  const spv=n.spd!=null?n.spd:(n.spdnote?(ja?n.spdnote:(n.spdnote=='ゆっくり'?'slow':'stationary')):null);
  const hasSc=!!(n.scale&&n.scale!='-'),szv=hasSc?(ja?n.scale:(EN_SC[n.scale]||n.scale)):(n.storm?n.storm:null);
  const K1='<div class="tykey">'+kv('d',S.me?(ja?'現在地まで':'To you'):(ja?'本島まで':'To Okinawa'),Math.round(S.me?distRef(n.c):dist(n.c)),'km')+kv('g',ja?'最大瞬間風速':'Max gust',n.gust,'m/s')+kv('w',ja?'最大風速':'Max wind',n.wind,'m/s')+kv('v',ja?'進む速さ':'Speed',spv,n.spd!=null?'km/h':'')+kv('s',hasSc?(ja?'大きさ':'Size'):(ja?'暴風半径':'Storm r.'),szv,hasSc?'':(n.storm?'km':''))+kv('p',ja?'中心気圧':'Pressure',n.hpa,'hPa')+'</div>';
- let swe='';{const ref=REF(),D=distRef(n.c),st=+n.storm||0,e=eta(t,ref),nw=Date.now();
-  if(st&&D<=st)swe='<span class="swe">'+T.swIn+'</span>';
-  else if(e&&e.tin&&e.tin.getTime()>nw)swe='<span class="swe">'+T.fcSt(T.dh((e.tin.getTime()-nw)/3600000))+'</span>';
-  else if(!(e&&e.tin)){const x=fcExt(t,ref);if(x&&!x.away){const hr=x.st?x.hSt:x.hArr;swe='<span class="swe">'+T.extSt(x.n,T.dh(hr),x.st,WHO())+'<small>'+T.swNote+'</small></span>'}}}
+ let swe='';{const o=etaOne(t,REF());if(o&&o.in)swe='<span class="swe">'+T.swIn+'</span>';else if(o&&o.fc)swe='<span class="swe">'+T.fcSt(T.dh(o.hr))+'</span>';else if(o)swe='<span class="swe">'+T.extSt(o.n,T.dh(o.hr),o.st,WHO())+'<small>'+T.swNote+'</small></span>'}
  let pst='';if(S.pastOn)PAST().forEach(tr=>{const r=pastEta(tr,t,REF());if(r)pst+='<div class="typast">'+T.pastEta(T.pastNm(tr.n),T.dh(r.h),WHO(),Math.round(r.d))+'</div>'});
  return '<div class="tyhd">'+tyName(t)+swe+'</div><div class="tynear">'+(within(t)?T.tyhit(b.h,Math.round(b.d)):T.tyfar(Math.round(distRef(n.c))))+'</div>'+pst+(far?'':K1)+''}
 let PATHS=[];
@@ -1187,7 +1191,7 @@ function drawPast(t0){const G=$('past');while(G.firstChild)G.removeChild(G.first
   const inV=q=>q[0]>vb[0]&&q[0]<vb[0]+vb[2]&&q[1]>vb[1]&&q[1]<vb[1]+vb[3],cand=[];
   for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i];for(const f of [0,.5]){const q=[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f];if(inV(q))cand.push(q)}}
   const step=Math.max(1,Math.ceil(cand.length/9)),txt=T.pastLbl(nm)+(r?'\n'+T.pastShort(T.dh(r.h)):'');let best=null;
-  for(let i=0;i<cand.length;i+=step){const q=cand[i],res=calloutC(q[0],q[1],0,-2.4,34,txt,'#4a5563');if(!res)continue;if(!best||res.bad<best.bad){if(best)best.els.forEach(e=>e.remove());best=res}else res.els.forEach(e=>e.remove());if(best.bad===0)break}})}
+  for(let i=0;i<cand.length;i+=step){const q=cand[i],res=calloutC(q[0],q[1],0,-2.4,34,txt,'#4a5563');if(!res)continue;if(!best||res.bad<best.bad){if(best)best.els.forEach(e=>e.remove());best=res}else res.els.forEach(e=>e.remove());if(best.bad===0)break}});try{geoDeclutter()}catch(e){}}
 function applyLayers(){$('circles').style.display=S.fcOn===0?'none':'';$('swa').style.display=S.swOn===0?'none':'';$('tyw').classList.toggle('nogale',S.galeOn===0);$('ttiles').style.display=S.mode=='tr'?'':'none'}
 
 function mapKey(){const ja=L=='ja',k=$('mapkey');if(k.dataset.b){updKey();return}k.dataset.b=1;
@@ -1200,7 +1204,6 @@ function mapKey(){const ja=L=='ja',k=$('mapkey');if(k.dataset.b){updKey();return
  '<label class="opt"><input type="checkbox" id="kFc"><span>'+(ja?'予報円':'Forecast circles')+'</span></label>'+
  '<label class="opt"><input type="checkbox" id="kSw"><span>'+(ja?'暴風警戒域':'Storm warning')+'</span></label>'+
  '<label class="opt"><input type="checkbox" id="kGa"><span>'+T.galeOn+'</span></label>'+
- '<label class="opt"><input type="checkbox" id="kPs"><span id="kPsL"></span></label>'+
  '<label class="opt"><input type="checkbox" id="kMu"><span>'+(ja?'効果音を消す':'Mute sounds')+'</span></label>'+
  '<button type="button" class="ghost" id="kCr" hidden>'+T.cReset+'</button></div>';
  $('kFc').checked=S.fcOn!==0;$('kSw').checked=S.swOn!==0;$('kGa').checked=S.galeOn!==0;$('kMu').checked=!!S.mute;
@@ -1216,7 +1219,7 @@ function updKey(){const near=tyAll().some(t=>!isExtra(t)&&within(t)),has=tyAll()
  ['kFc','kSw','kGa'].forEach(id=>{const e=$(id);if(e)e.closest('label').style.display=near?'':'none'});
  document.querySelectorAll('#mapkey .kn').forEach(e=>e.style.display=near?'':'none');
  const k8=$('k8');if(k8)k8.style.display=(!near&&has)?'':'none';
- {const l=$('kPsL');if(l)l.textContent=T.pastOn+(PAST().length?'':T.pastNone);const c=$('kCr');if(c)c.hidden=!Object.keys(S.cpos||{}).length}cloudLabel()}
+ {const l=$('kPsL');if(l)l.textContent=PAST().length?T.pastOn:T.pastNone;const c=$('kCr');if(c)c.hidden=!Object.keys(S.cpos||{}).length}cloudLabel()}
 
 /* typhoon chooser */
 function drawSel(){const box=$('tysel'),a=tyAll();box.innerHTML='';box.hidden=a.length<2;if(a.length<2)return;const cur=tyList()[0];
@@ -1253,13 +1256,14 @@ function drawTy(){chipDates();
  const ref=REF(),rq=GP(ref[0],ref[1]),D=$('dln');
  {const R8=GR(800,ref[1]),rr=$('ring'),rt=$('ringT');rr.setAttribute('cx',rq[0]);rr.setAttribute('cy',rq[1]);rr.setAttribute('r',R8);rt.setAttribute('x',rq[0]+R8*.72);rt.setAttribute('y',rq[1]-R8*.72)}
  D.appendChild(sv2('circle',{class:'me',cx:rq[0],cy:rq[1],r:px(S.me?9:7)}));
- if(S.me)$('lbl').appendChild(sv2('text',{class:'gl tl mel',x:rq[0]+px(14),y:rq[1]+px(22),'text-anchor':'start'},L=='ja'?'現在地':'You'));
+ $('lbl').appendChild(sv2('text',{class:'gl tl mel',x:rq[0]+px(14),y:rq[1]+px(22),'text-anchor':'start'},S.me?(L=='ja'?'現在地':'You'):(L=='ja'?'沖縄本島':'Okinawa Is.')));
  const t0=list[0];
  if(t0){const pc=GP(t0.now.c[1],t0.now.c[0]),km=Math.round(distRef(t0.now.c));
   const x=fcExt(t0,ref);
   if(x&&!x.away){const lp=GP(x.last.c[1],x.last.c[0]);D.appendChild(sv2('line',{class:'dlb',x1:lp[0],y1:lp[1],x2:rq[0],y2:rq[1]}));D.appendChild(sv2('line',{class:'dl',x1:lp[0],y1:lp[1],x2:rq[0],y2:rq[1]}));
-   DL={pc:lp,rq,km,hr:x.hArr,n:x.n}}
-  else DL={pc,rq:pc,km,hr:null,n:0,noLine:1};placeDist();
+   DL={pc:lp,rq,km}}
+  else DL={pc,rq:pc,km,noLine:1};
+  {const o=etaOne(t0,ref);DL.o=o;DL.hr=o&&!o.in?o.hr:null;DL.n=o&&o.n||0}placeDist();
   $('dbadge').hidden=false;$('dbadge').innerHTML='<span>'+(S.me?T.toMe:T.toOki)+'</span><b>'+(L=='ja'?'約':'~')+km+'<small>km</small></b>'}
  else{$('dbadge').hidden=true;DL=null;placeDist()}
  cloudDraw(list);drawSw(list);drawCallouts(list);placeDist();try{drawPast(t0)}catch(e){}applyLayers();drawSel();
@@ -1432,9 +1436,9 @@ function cloudTiles(){}function cloudTimes(){}function cloudLabel(){}
 
 
 function geoDeclutter(){const all=[...sv.querySelectorAll('#lbl text.gfb')];all.forEach(e=>e.style.visibility='');if(S.noGt)return;
- const ts=all.filter(e=>{const ok=V.z>=+(e.dataset.mz||0)&&V.z<+(e.dataset.xz||99);if(!ok)e.style.visibility='hidden';return ok});
+ const ts=all.filter(e=>{const ok=V.z>=+(e.dataset.mz||0)&&V.z<+(e.dataset.xz||99)&&!(e.classList.contains('gk')&&!S.me);if(!ok)e.style.visibility='hidden';return ok});
  const box=[];const add=b=>{if(b&&b.width)box.push([b.x,b.y,b.width,b.height])};
- sv.querySelectorAll('#lbl text.tl,#lbl rect,#dlab rect,#swa text,#tyw text').forEach(e=>{try{add(e.getBBox())}catch(_){}});
+ sv.querySelectorAll('#lbl text.tl,#lbl rect,#dlab rect,#swa text,#tyw text,#past text').forEach(e=>{try{add(e.getBBox())}catch(_){}});
  sv.querySelectorAll('#nums circle').forEach(c=>{const r=+c.getAttribute('r'),x=+c.getAttribute('cx'),y=+c.getAttribute('cy');box.push([x-r,y-r,2*r,2*r])});
  try{const rr=px(10);PATHS.forEach(P=>P.pts.forEach((q,i)=>{const a=i?P.pts[i-1]:q,n=Math.max(1,Math.ceil(Math.hypot(q[0]-a[0],q[1]-a[1])/px(18)));for(let j=0;j<=n;j++){const x=a[0]+(q[0]-a[0])*j/n,y=a[1]+(q[1]-a[1])*j/n;box.push([x-rr,y-rr,2*rr,2*rr])}}))}catch(_){}
  try{if(DL){const a=DL.pc,b=DL.rq,n=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/px(18)),rr=px(7);for(let j=0;j<=n;j++){const x=a[0]+(b[0]-a[0])*j/n,y=a[1]+(b[1]-a[1])*j/n;box.push([x-rr,y-rr,2*rr,2*rr])}}}catch(_){}
@@ -1453,7 +1457,7 @@ function placeDist(){const G=$('dlab');while(G.firstChild)G.removeChild(G.firstC
  const {pc,rq,km,hr}=DL,ja=L=='ja',k=K();if(DL.noLine&&S.mode=='tr')return;const vb=(sv.getAttribute('viewBox')||'0 0 1 1').split(' ').map(Number);
  const zc=document.querySelector('.map .zc'),zb=zc?(zc.offsetTop+zc.offsetHeight+8):56;
  const top=vb[1]+zb/k,bot=vb[1]+vb[3]-(charBand()+6)/k,lft=vb[0]+8/k,rgt=vb[0]+vb[2]-8/k;
- const l1=(ja?'約':'~')+km+'km',l2=hr!=null?T.extHead(DL.n||0):'',l3=hr!=null?T.extArr(T.dh(hr)):'',fs=px(30),fs2=px(19);
+ const o=DL.o,l1=(ja?'約':'~')+km+'km',l2=o&&o.in?T.swIn:(hr!=null?(o.fc?T.fcHead:T.extHead(DL.n||0)):''),l3=hr!=null?T.extTo(T.dh(hr),o.st,WHO()):'',fs=px(30),fs2=px(19);
  const wd=(x,f)=>[...x].reduce((a,ch)=>a+(ch.charCodeAt(0)>255?1:.6),0)*f;
  const tw=Math.max(wd(l1,fs),l2?wd(l2,fs2):0,l3?wd(l3,fs2):0)+px(26),th=l2?px(96):px(46);
  const obs=[];
@@ -1482,7 +1486,7 @@ function placeDist(){const G=$('dlab');while(G.firstChild)G.removeChild(G.firstC
  try{numDeclutter()}catch(e){}try{geoDeclutter()}catch(e){}}
 /* v3.9: labels never cover each other. Priority: 現在地 > distance balloon > day numbers (shrink, then hide) */
 function numBoxes(){return [...$('nums').children].map(g=>{const c=g.querySelector('circle');return{g,x:+c.getAttribute('cx'),y:+c.getAttribute('cy'),r:+c.getAttribute('r')}})}
-function placeMel(){const m=sv.querySelector('#lbl text.mel');if(!m||!S.me)return;const me=GP(S.me.lon,S.me.lat),ns=numBoxes();
+function placeMel(){const m=sv.querySelector('#lbl text.mel');if(!m)return;const R0=REF(),me=GP(R0[0],R0[1]),ns=numBoxes();
  const pts=[];PATHS.forEach(P=>P.pts.forEach((q,i)=>{if(i){const a=P.pts[i-1],n=Math.ceil(Math.hypot(q[0]-a[0],q[1]-a[1])/px(14));for(let j=0;j<=n;j++)pts.push([a[0]+(q[0]-a[0])*j/n,a[1]+(q[1]-a[1])*j/n])}}));
  if(DL){const pc=DL.pc,n=Math.ceil(Math.hypot(me[0]-pc[0],me[1]-pc[1])/px(14));for(let j=0;j<=n;j++)pts.push([me[0]+(pc[0]-me[0])*j/n,me[1]+(pc[1]-me[1])*j/n])}
  const vb=sv.getAttribute('viewBox').split(' ').map(Number);let best=null;
@@ -1528,7 +1532,7 @@ addEventListener('resize',()=>{clearTimeout(sizeMap.t);sizeMap.t=setTimeout(size
 /* ---------- full-screen map with a see-through panel ---------- */
 function fitNote(){const e=$('fc5');if(!e||!e.offsetWidth)return;let f=13;e.style.fontSize=f+'px';while(e.scrollWidth>e.clientWidth+1&&f>8){f-=.5;e.style.fontSize=f+'px'}}
 addEventListener('resize',()=>setTimeout(fitNote,200));
-const MPH={},MPI=['whenBox','fc5','tysel','info'];
+const MPH={},MPI=['whenBox','fc5','tysel','info','psoBox'];
 function updPB(){const p=$('mpanel');let h=0;if(document.body.classList.contains('mapmax')&&!p.hidden){const a=mp.getBoundingClientRect(),b=p.getBoundingClientRect();h=Math.max(p.offsetHeight,Math.ceil(a.bottom-b.top))}mp.style.setProperty('--pbh',h+'px');try{fitKeys()}catch(e){}}
 function panelUI(){const p=$('mpanel');p.classList.toggle('col',!!S.pcol);$('mphd').textContent=S.pcol?T.pOpen:T.pClose;updPB()}
 function abh(){const a=$('alertbar'),on=a&&!a.hidden&&document.body.classList.contains('mapmax');document.body.style.setProperty('--abh',(on?a.offsetHeight:0)+'px');document.body.classList.toggle('hasab',!!on)}
