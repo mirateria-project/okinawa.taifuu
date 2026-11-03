@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -545,6 +544,14 @@ body.mapmax{overflow:hidden}
 .jsb{fill:none;stroke:#7b3fe4;stroke-opacity:.38;stroke-width:calc(6px*var(--inv,1));stroke-linecap:round;stroke-linejoin:round}
 .jsf{fill:none;stroke:#fff;stroke-width:calc(3.2px*var(--inv,1));stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 1.5px #5a1fc0)}
 .jsf.js{stroke:#ffe14d}
+.jbg{opacity:.22}.jbf{fill:#9b5cff;stroke:#9b5cff;stroke-width:.6}
+.jbe{fill:none;stroke:#fff;stroke-opacity:.9;stroke-width:calc(5.5px*var(--inv,1));stroke-linecap:round}
+.jbl{fill:none;stroke:#6a1fd6;stroke-width:calc(2.6px*var(--inv,1));stroke-linecap:round}
+.jau{fill:none;stroke:#4a14a8;stroke-opacity:.85;stroke-linecap:round;stroke-linejoin:round}
+.jaf{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round}.jaf.js{stroke:#ffe14d}
+.jmv{fill:none;stroke:#ff2bd6;stroke-width:calc(2px*var(--inv,1));stroke-linecap:round;stroke-dasharray:16 84;animation:jmv 1.6s linear infinite}
+@keyframes jmv{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+#simMvW[hidden]{display:none!important}
 /* v4.4.2: Shi-chan off */
 body.noshi #mcS,body.noshi #mcSp,body.noshi #pzS,body.noshi #gd,body.noshi #gdB,body.noshi #gdP,body.noshi #bub{display:none!important}
 .zipp{display:flex;flex-direction:column;gap:6px;margin:14px 0 0;padding:12px;border:2px dashed var(--line);border-radius:14px}
@@ -709,7 +716,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  <div class="legend" id="legend"></div>
  <div class="fc5" id="fc5"></div>
  <label class="gtopt"><input type="checkbox" id="gtHide"><span id="gtL"></span></label>
- <div class="simbox" id="simBox"><div class="simh" id="simHd"></div><label class="opt"><input type="checkbox" id="simJ"><span id="simJL"></span></label><label class="opt"><input type="checkbox" id="simHi"><span id="simHL"></span></label><div class="simd"><button type="button" class="go" id="drw"></button><button type="button" class="ghost" id="drwU"></button><button type="button" class="ghost" id="drwC"></button></div><div class="simn" id="simN"></div></div>
+ <div class="simbox" id="simBox"><div class="simh" id="simHd"></div><label class="opt"><input type="checkbox" id="simJ"><span id="simJL"></span></label><label class="opt" id="simMvW" hidden><input type="checkbox" id="simMv"><span id="simMvL"></span></label><label class="opt"><input type="checkbox" id="simHi"><span id="simHL"></span></label><div class="simd"><button type="button" class="go" id="drw"></button><button type="button" class="ghost" id="drwU"></button><button type="button" class="ghost" id="drwC"></button></div><div class="simn" id="simN"></div></div>
  <div class="whenbox" id="whenBox" hidden></div>
  <label class="opt pso" id="psoBox"><input type="checkbox" id="kPs"><span id="kPsL"></span></label>
  <div class="info" id="info2"></div>
@@ -769,7 +776,7 @@ const T={ja:{
 <li>バス協会の発表をそのまま表示</li>
 <li>5分ごとに自動更新。「いま確認」でもすぐ確認</li>
 <li>運休になったら、音と画面でお知らせ（オン・オフを選べる）</li>
-<li>台風の地図は、2本指やダブルタップで拡大・縮小</li> <li>進路シミュレーション：偏西風（流れる線）と太平洋高気圧を表示して、自分で予想の線を引ける。あとで本物の進路と答え合わせ</li>
+<li>台風の地図は、2本指やダブルタップで拡大・縮小</li> <li>進路シミュレーション：偏西風（矢印と紫の帯）と太平洋高気圧を表示して、自分で予想の線を引ける。あとで本物の進路と答え合わせ</li>
 <li>通信がなくても開ける（最後に取得した内容を表示）</li>
 <li>ホーム画面に追加して、アプリのように使える</li>
 <li>日本語・英語（自動で切り替え。右上のボタンでも切り替え）</li>
@@ -826,7 +833,7 @@ en:{
 document.documentElement.lang=L;
 const $=id=>document.getElementById(id);
 const COL=['#ff3b5c','#ff9500','#ffd60a','#2bd96b','#2f80ff'];
-const VER='4.5.0',VDATE='2026-11-04';
+const VER='4.6.0',VDATE='2026-11-04';
 Object.assign(T,L=='ja'?{
  ver:'バージョン '+VER+'（'+VDATE.replace(/-/g,'/')+'）',
  eHead:'🌀 暴風域',eIn:'入っています',eInFor:h=>'入ってから約'+h+'時間',eInF:'入っているおそれ',eSoon:(d,h)=>d?'あと'+d+'日'+h+'時間':h?'あと約'+h+'時間':'まもなく',
@@ -1387,14 +1394,14 @@ function mapKey(){const ja=L=='ja',k=$('mapkey');if(k.dataset.b){updKey();return
  '<label class="opt"><input type="checkbox" id="kSw"><span>'+(ja?'暴風警戒域':'Storm warning')+'</span></label>'+
  '<label class="opt"><input type="checkbox" id="kGa"><span>'+T.galeOn+'</span></label>'+
  '<label class="opt"><input type="checkbox" id="kMu"><span>'+(ja?'効果音を消す':'Mute sounds')+'</span></label>'+
- '<label class="opt"><input type="checkbox" id="kSc"><span>'+(ja?'しーちゃんを出す':'Show Shi-chan')+'</span></label>'+
+ '<label class="opt"><input type="checkbox" id="kSc"><span>'+(ja?'しーちゃんをいつも出す':'Always show Shi-chan')+'</span></label>'+
  '<button type="button" class="ghost" id="kCr" hidden>'+T.cReset+'</button></div>';
  $('kFc').checked=S.fcOn!==0;$('kSw').checked=S.swOn!==0;$('kGa').checked=S.galeOn!==0;$('kMu').checked=!!S.mute;
  $('kFc').onchange=e=>{S.fcOn=e.target.checked?1:0;save();drawTy()};
  $('kSw').onchange=e=>{S.swOn=e.target.checked?1:0;save();drawTy()};
  $('kGa').onchange=e=>{S.galeOn=e.target.checked?1:0;save();drawTy()};
  $('kMu').onchange=e=>{S.mute=e.target.checked?1:0;save()};
- $('kSc').checked=S.shiOff!==1;$('kSc').onchange=e=>{S.shiOff=e.target.checked?0:1;save();applyShi()};
+ $('kSc').checked=S.shiOn===1;$('kSc').onchange=e=>{S.shiOn=e.target.checked?1:0;S.shiOff=e.target.checked?0:1;save();applyShi()};
  $('kPs').checked=!!S.pastOn;$('kPs').onchange=e=>{S.pastOn=e.target.checked?1:0;save();drawTy()};
  $('kCr').onclick=()=>{S.cpos={};save();applyCpos();drawTy()};
  $('kCl').checked=S.cldOn!==0;$('kCl').onchange=e=>{S.cldOn=e.target.checked?1:0;save();drawTy()};updKey()}
@@ -2056,7 +2063,7 @@ function contour(LA,LO,val,lev){const out=[],nA=LA.length,nO=LO.length,P=(i,k)=>
  return out}
 const segPath=a=>a.map(q=>'M'+q[0].toFixed(1)+' '+q[1].toFixed(1)+'L'+q[2].toFixed(1)+' '+q[3].toFixed(1)).join('');
 function drawLayers(){const ja=L=='ja',gs=$('gSst'),gh=$('gHigh'),gj=$('gJet');[gs,gh,gj].forEach(e=>{while(e.firstChild)e.removeChild(e.firstChild)});
- ['lyH','lyJ','lyT'].forEach(id=>$(id).classList.toggle('sel',!!S[id]));try{$('simJ').checked=!!S.lyJ;$('simHi').checked=!!S.lyH}catch(_){}
+ ['lyH','lyJ','lyT'].forEach(id=>$(id).classList.toggle('sel',!!S[id]));try{$('simJ').checked=!!S.lyJ;$('simHi').checked=!!S.lyH;$('simMvW').hidden=!S.lyJ;$('simMv').checked=!!S.jetMv}catch(_){}
  const notes=[],tm=layerTime(),when=d=>{const x=new Date(d);return (x.getMonth()+1)+'/'+x.getDate()+' '+x.getHours()+(ja?'時':':00')};
  if(S.lyT){const d=SSTD.d;if(d&&d.v){const nO=STLO.length,dx=Math.abs(GP(STLO[1],10)[0]-GP(STLO[0],10)[0]);
    d.v.forEach((v,i)=>{if(v==null||v<26)return;const a=STLA[Math.floor(i/nO)],o=STLO[i%nO],q=GP(o,a);gs.appendChild(sv2('circle',{cx:q[0],cy:q[1],r:dx*1.15,fill:v>=29.5?'url(#sst3)':v>=28?'url(#sst2)':'url(#sst1)'}))});
@@ -2074,17 +2081,25 @@ function drawLayers(){const ja=L=='ja',gs=$('gSst'),gh=$('gHigh'),gj=$('gJet');[
   if(S.lyJ){const nA=UPLA.length,UV=[];for(let n=0;n<nA*nO;n++){const w=d.ws[n]&&d.ws[n][k],dr=d.wd[n]&&d.wd[n][k];UV.push(w==null||dr==null?null:[-w*Math.sin(dr*Math.PI/180),-w*Math.cos(dr*Math.PI/180)])}
    const uv=(lo,la)=>{const fi=(la-UPLA[0])/5,fj=(lo-UPLO[0])/5;if(fi<0||fj<0||fi>=nA-1||fj>=nO-1)return null;const i0=Math.floor(fi),j0=Math.floor(fj),ti=fi-i0,tj=fj-j0,c=[UV[i0*nO+j0],UV[i0*nO+j0+1],UV[(i0+1)*nO+j0],UV[(i0+1)*nO+j0+1]];if(c.some(x=>!x))return null;
     const w=[(1-ti)*(1-tj),(1-ti)*tj,ti*(1-tj),ti*tj];return [c[0][0]*w[0]+c[1][0]*w[1]+c[2][0]*w[2]+c[3][0]*w[3],c[0][1]*w[0]+c[1][1]*w[1]+c[2][1]*w[2]+c[3][1]*w[3]]};
-   let best=null,cnt=0;const NS2='http://www.w3.org/2000/svg';
-   for(let la0=16.25;la0<=53;la0+=2.5)for(let lo0=97.5+((la0*4)%2?1.25:0);lo0<=183;lo0+=2.5){if(cnt>=150)break;const q0=uv(lo0,la0);if(!q0)continue;const sp0=Math.hypot(q0[0],q0[1]);if(sp0<28)continue;
-    let lo=lo0,la=la0,pts=[GP(lo,la)],spS=0,nS=0;for(let st=0;st<12;st++){const q=uv(lo,la);if(!q)break;const sp=Math.hypot(q[0],q[1]);if(sp<18)break;spS+=sp;nS++;lo+=q[0]/sp*1.3/Math.max(.35,Math.cos(la*Math.PI/180));la+=q[1]/sp*1.3;pts.push(GP(lo,la))}
-    if(pts.length<5)continue;cnt++;let Lw=0;for(let m=1;m<pts.length;m++)Lw+=Math.hypot(pts[m][0]-pts[m-1][0],pts[m][1]-pts[m-1][1]);
-    const dp='M'+pts.map(f4).join('L'),spA=spS/nS,P=Lw/2,dur=Math.min(3.6,Math.max(1.1,95/spA));
-    gj.appendChild(sv2('path',{class:'jsb',d:dp}));
-    const fl=sv2('path',{class:'jsf'+(spA>=50?' js':''),d:dp,'stroke-dasharray':(P*.26).toFixed(2)+' '+(P*.74).toFixed(2)});
-    const an=document.createElementNS(NS2,'animate');an.setAttribute('attributeName','stroke-dashoffset');an.setAttribute('from',P.toFixed(2));an.setAttribute('to','0');an.setAttribute('dur',dur.toFixed(2)+'s');an.setAttribute('begin',(-Math.random()*dur).toFixed(2)+'s');an.setAttribute('repeatCount','indefinite');fl.appendChild(an);gj.appendChild(fl);
+   let best=null,cnt=0;const TH=28,mv=!!S.jetMv,spd=(i,j)=>{const w=d.ws[i*nO+j];return w&&w[k]!=null?w[k]:null};
+   /* v4.6.0: band where the westerlies blow (purple), with a line on both sides like river banks */
+   let bp='';for(let i=0;i<nA-1;i++)for(let j=0;j<nO-1;j++){const v=[spd(i,j),spd(i,j+1),spd(i+1,j+1),spd(i+1,j)];if(v.some(x=>x==null)||v.every(x=>x<TH))continue;
+    const c=[GP(UPLO[j],UPLA[i]),GP(UPLO[j+1],UPLA[i]),GP(UPLO[j+1],UPLA[i+1]),GP(UPLO[j],UPLA[i+1])],pl=[];
+    for(let e=0;e<4;e++){const a=v[e],b=v[(e+1)%4];if(a>=TH)pl.push(c[e]);if((a>=TH)!=(b>=TH)){const f=(TH-a)/(b-a),p=c[e],q=c[(e+1)%4];pl.push([p[0]+(q[0]-p[0])*f,p[1]+(q[1]-p[1])*f])}}
+    if(pl.length>2)bp+='M'+pl.map(f4).join('L')+'Z'}
+   if(bp){const g=sv2('g',{class:'jbg'});g.appendChild(sv2('path',{class:'jbf',d:bp}));gj.appendChild(g)}
+   const edge=segPath(contour(UPLA,UPLO,spd,TH));if(edge){gj.appendChild(sv2('path',{class:'jbe',d:edge}));gj.appendChild(sv2('path',{class:'jbl',d:edge}))}
+   /* v4.6.0: still arrows (no movement = phone stays cool). Weak wind = thin small arrow, strong wind = thick big arrow */
+   const df=sv2('defs',{});[['jahW','#fff'],['jahY','#ffe14d']].forEach(m=>{const mk=sv2('marker',{id:m[0],viewBox:'0 0 10 10',refX:'2',refY:'5',markerWidth:'3',markerHeight:'3',orient:'auto',markerUnits:'strokeWidth'});mk.appendChild(sv2('path',{d:'M0 0L10 5L0 10Z',fill:m[1],stroke:'#4a14a8','stroke-width':'1.3','stroke-linejoin':'round'}));df.appendChild(mk)});gj.appendChild(df);
+   for(let la0=17.5;la0<=52.5;la0+=5)for(let lo0=100+(((la0-17.5)/5)%2?2.5:0);lo0<=180;lo0+=5){if(cnt>=90)break;const q0=uv(lo0,la0);if(!q0)continue;const sp0=Math.hypot(q0[0],q0[1]);if(sp0<TH)continue;
+    let lo=lo0,la=la0,pts=[GP(lo,la)],spS=0,nS=0;for(let st=0;st<4;st++){const q=uv(lo,la);if(!q)break;const sp=Math.hypot(q[0],q[1]);if(sp<18)break;spS+=sp;nS++;lo+=q[0]/sp*1.15/Math.max(.35,Math.cos(la*Math.PI/180));la+=q[1]/sp*1.15;pts.push(GP(lo,la))}
+    if(pts.length<3)continue;cnt++;const dp='M'+pts.map(f4).join('L'),spA=spS/nS,sg=spA>=50,w=(1.6+Math.min(1,Math.max(0,(spA-TH)/40))*5.4).toFixed(2);
+    gj.appendChild(sv2('path',{class:'jau',d:dp,style:'stroke-width:calc('+(+w+2.4).toFixed(2)+'px*var(--inv,1))'}));
+    gj.appendChild(sv2('path',{class:'jaf'+(sg?' js':''),d:dp,'marker-end':'url(#'+(sg?'jahY':'jahW')+')',style:'stroke-width:calc('+w+'px*var(--inv,1))'}));
+    if(mv)gj.appendChild(sv2('path',{class:'jmv',d:dp,pathLength:'100',style:'animation-delay:-'+(Math.random()*1.6).toFixed(2)+'s'}));
     if(!best||sp0>best.w)best={w:sp0,q:pts[Math.floor(pts.length/2)]}}
    if(best)gj.appendChild(sv2('text',{class:'jet',x:best.q[0],y:best.q[1]-px(16),'text-anchor':'middle'},ja?'偏西風':'Westerlies'));
-   notes.push('💨 '+(ja?'偏西風＝流れる線（台風を東へ流す）':'Westerlies = flowing lines (push east)')+'・'+tl+(d.fake?(ja?'（見本）':' (sample)'):''))}}
+   notes.push('💨 '+(ja?'偏西風＝紫の帯の中（矢印が太いほど風が強い・台風を東へ流す）':'Westerlies = inside the purple band (thicker arrow = stronger, pushes typhoons east)')+'・'+tl+(d.fake?(ja?'（見本）':' (sample)'):''))}}
  if(S.view=='world'){const w=WLD.at?new Date(WLD.at):null;notes.push('🌍 '+(ja?'海外：GDACS（国連・EU）・アメリカ気象局':'Abroad: GDACS (UN/EU), US NWS')+(w?' '+(w.getMonth()+1)+'/'+w.getDate()+' '+w.getHours()+':'+String(w.getMinutes()).padStart(2,'0')+(ja?'取得':''):(ja?' 取得中…':' loading…'))+(WLD.fake?(ja?'（見本）':' (sample)'):''));notes.push(ja?'細い白点線＝予報（その国の気象機関）／灰色＝通った道':'thin white dots = forecast / grey = past track')}
  const n=$('lyrN');n.innerHTML=notes.map(x=>'<span>'+x+'</span>').join('');n.hidden=!notes.length}
 async function lyToggle(id){S[id]=S[id]?0:1;save();drawLayers();if(S[id]){if(id=='lyT')await sstLoad();else await upLoad();drawLayers();try{placeDist()}catch(e){}}}
@@ -2288,7 +2303,7 @@ function guide(target,txt,intro,opt){if(!txt||S.shiOff===1)return;gdClear();try{
 $('gd').addEventListener('click',()=>{if(GD.woke){GD.woke=0;return}gdHide()});
 /* first time only: Shi-chan tells you about press-and-hold */
 function gdHint(){const go=()=>{if(GD.busy)return;if($('dlg').open||!$('busW').hidden||!$('swAl').hidden){setTimeout(go,1500);return}S.gdHint=1;save();guide($('zmax'),GT.intro,1)};setTimeout(go,2600)}
-applyShi();gdHint();
+if(!S.shiSeen){S.shiSeen=1;if(S.shiOff!==1)S.shiOff=0}else S.shiOff=S.shiOn===1?0:1;save();applyShi();gdHint();
 /* iPhone plays no sound until the screen is touched: if Shi-chan came in silently, the first touch plays her hops and voice */
 ['touchend','click'].forEach(ev=>document.addEventListener(ev,e=>{if(!GD.pend||$('gd').hidden)return;const t=GD.pend;GD.pend=0;if(e.target.closest&&e.target.closest('#gd'))GD.woke=1;gdClear();acOK();
  for(let i=0;i<3;i++)GD.t.push(setTimeout(()=>gdHop(i),i*130));gdSay(t,()=>{GD.t.push(setTimeout(gdHide,1400))})},true));
@@ -2301,15 +2316,16 @@ function wake(){clearTimeout(idT);idT=setTimeout(sleepNow,45000);if(!IDLE)return
 ['pointerdown','keydown','wheel'].forEach(ev=>document.addEventListener(ev,wake,{capture:true,passive:true}));
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)wake()});
 $('zzz').dataset.t=L=='ja'?'💤 省エネ中（さわると動きます）':'💤 Power saving (touch to move)';wake();
-S.lyH=S.lyJ=S.lyT=0;S.view='auto';S.pin=-1;
+S.lyH=S.lyJ=S.lyT=0;S.jetMv=0;S.view='auto';S.pin=-1;
 /* ---------- v4.4.0: course simulation. Westerlies / Pacific High start OFF every time.
    Draw mode: drag a finger on the map to draw a straight line. Lines are kept on this phone. ---------- */
 (function(){const ja=L=='ja',ul=$('ulines'),mpE=document.querySelector('.map');if(!ul||!mpE)return;
  if(!Array.isArray(S.ul))S.ul=[];S.drw=0;
- const TX=ja?{hd:'🧪 進路シミュレーション<small>チェックを入れると地図に出ます。自分で進路を予想して線を引き、あとで本物の進路と答え合わせ</small>',j:'💨 偏西風（流れる線）',h:'H 太平洋高気圧（オレンジ線の内側）',dOn:'✏️ 線を引く',dOff:'✅ 線を引き終わる',u:'↩️ 1本消す',c:'🗑️ 全部消す',tip:'指でなぞって線を引く',cf:'もう一度押すと全部消えます',n:(c,d)=>c?'引いた線：'+c+'本（'+d+'〜）。地図を動かすときは「線を引き終わる」を押してね':'まだ線はありません。「線を引く」を押して、地図を指でなぞってね'}
-  :{hd:'🧪 Course simulation<small>Tick to show on the map. Draw your own forecast line, then check it against the real track later</small>',j:'💨 Westerlies (flowing lines)',h:'H Pacific High (inside orange line)',dOn:'✏️ Draw lines',dOff:'✅ Done drawing',u:'↩️ Undo 1',c:'🗑️ Clear all',tip:'Drag your finger to draw',cf:'Tap again to delete all',n:(c,d)=>c?'Your lines: '+c+' (since '+d+'). Tap "Done drawing" to move the map':'No lines yet. Tap "Draw lines" and drag on the map'};
+ const TX=ja?{hd:'🧪 進路シミュレーション<small>チェックを入れると地図に出ます。自分で進路を予想して線を引き、あとで本物の進路と答え合わせ</small>',j:'💨 偏西風（矢印）',h:'H 太平洋高気圧（オレンジ線の内側）',dOn:'✏️ 線を引く',dOff:'✅ 線を引き終わる',u:'↩️ 1本消す',c:'🗑️ 全部消す',tip:'指でなぞって線を引く',cf:'もう一度押すと全部消えます',n:(c,d)=>c?'引いた線：'+c+'本（'+d+'〜）。地図を動かすときは「線を引き終わる」を押してね':'まだ線はありません。「線を引く」を押して、地図を指でなぞってね'}
+  :{hd:'🧪 Course simulation<small>Tick to show on the map. Draw your own forecast line, then check it against the real track later</small>',j:'💨 Westerlies (arrows)',h:'H Pacific High (inside orange line)',dOn:'✏️ Draw lines',dOff:'✅ Done drawing',u:'↩️ Undo 1',c:'🗑️ Clear all',tip:'Drag your finger to draw',cf:'Tap again to delete all',n:(c,d)=>c?'Your lines: '+c+' (since '+d+'). Tap "Done drawing" to move the map':'No lines yet. Tap "Draw lines" and drag on the map'};
  $('simHd').innerHTML=TX.hd;$('simJL').textContent=TX.j;$('simHL').textContent=TX.h;$('drwU').textContent=TX.u;$('drwC').textContent=TX.c;
  $('simJ').checked=!!S.lyJ;$('simHi').checked=!!S.lyH;
+ $('simMvL').textContent=ja?'▶️ 偏西風を動かして見る（スマホが熱くなりやすい）':'▶️ Animate the westerlies (phone may get warm)';$('simMvW').hidden=!S.lyJ;$('simMv').onchange=e=>{S.jetMv=e.target.checked?1:0;drawLayers()};
  const wide=()=>{try{if(V.z>4.6){fit(112,12,162,47,.03);manual()}}catch(_){}};
  $('simJ').onchange=e=>{if(!!S.lyJ!=e.target.checked){lyToggle('lyJ');if(e.target.checked)wide()}};
  $('simHi').onchange=e=>{if(!!S.lyH!=e.target.checked){lyToggle('lyH');if(e.target.checked)wide()}};
@@ -2381,8 +2397,8 @@ $('mapAd').addEventListener('click',e=>{if(e.target.id=='mapAd')adClose()});
 {const _sh=show;show=function(i){_sh(i);if(i==1)setTimeout(()=>{adMaybe()},900)}}
 setTimeout(()=>{if(S.tab==1)adMaybe()},1600);
 /* v3.12.1: "new features" notice, shown once after an update (not on first install) */
-(function(){const NEWS={ja:['富士山と桜島の横に、噴火警戒レベル（5段階）を出しました','「1日目〜5日目の進路は気象庁の予報です」と分かるように書き換えました','地図の下のチェックで、しーちゃんを出す・出さないを選べるようにしました','1日目〜5日目のボタンを押すと、しーちゃんがその日の予報円を指さして教えてくれます','しーちゃんは声を出さず、吹き出しで話すようにしました','🌍を押すと、しーちゃんが世界の台風・ハリケーン・竜巻を紹介して、ひとつずつ指さしで教えてくれます','アプリを開くと、しーちゃんがアップで登場して、跳ねてきて案内します（音は画面にさわると鳴ります）','45秒さわらないと動きを止めて、スマホが熱くなりにくくしました（さわるとまた動きます）','ボタンを長押しすると、しーちゃんが跳ねてきて、吹き出しで説明してくれます','画面を台風の地図ひとつにまとめました。バス・ゆいレールは地図の上の「運行状況」ボタンから見られます','バナーを地図のすぐ上に移しました（全画面のときは地図の一番上）','🌍で、世界の台風・ハリケーン・サイクロンと竜巻を見られます','世界の地図の陸地のギザギザを直しました','地図の桜島をタップすると、いまの桜島（気象庁の火山カメラ）を見られます','しーちゃんを2本の指で、少し大きく・小さくできます','地図の富士山をタップすると、富士山のライブカメラを開けます','地域（都道府県）を選べるようになりました。現在地を使うと県名が出ます'],
- en:['Volcanic alert level (5 steps) next to Mt. Fuji and Sakurajima','The note now says days 1–5 are the JMA forecast track','A check box under the map now lets you show or hide Shi-chan','Press a day button: Shi-chan points to that day\'s forecast circle','Shi-chan now talks in speech bubbles only (no voice)','Press 🌍: Shi-chan tells you about the storms around the world and points to each one','When the app opens, Shi-chan appears close up, hops over and greets you (her sound plays when you touch the screen)','After 45 s without touching, animations stop so the phone stays cooler (touch to start them again)','Press and hold a button: Shi-chan hops over and explains it','Everything is now on the typhoon map. Bus and Yui Rail: the "Transit" button on the map','The banner now sits right above the map (top of the map in full screen)','🌍 shows typhoons, hurricanes, cyclones and tornadoes around the world','Fixed the jagged coastlines on the world map','Tap Sakurajima on the map to open the JMA volcano cameras','Pinch Shi-chan with two fingers to make her a little bigger or smaller','Tap Mt. Fuji on the map to open its live cameras','Choose your prefecture; using your location shows your prefecture']};
+(function(){const NEWS={ja:['偏西風を、止まった矢印にしました（太い矢印ほど風が強い）','偏西風が流れる範囲を、上下の線と紫の帯で分かるようにしました','偏西風の動きは「動かして見る」にチェックした人だけ（スマホが熱くなりにくい）','しーちゃんは最初に開いた時だけ登場。次からは地図の下の「しーちゃんをいつも出す」にチェックした人だけ出ます','富士山と桜島の横に、噴火警戒レベル（5段階）を出しました','「1日目〜5日目の進路は気象庁の予報です」と分かるように書き換えました','地図の下のチェックで、しーちゃんを出す・出さないを選べるようにしました','1日目〜5日目のボタンを押すと、しーちゃんがその日の予報円を指さして教えてくれます','しーちゃんは声を出さず、吹き出しで話すようにしました','🌍を押すと、しーちゃんが世界の台風・ハリケーン・竜巻を紹介して、ひとつずつ指さしで教えてくれます','アプリを開くと、しーちゃんがアップで登場して、跳ねてきて案内します（音は画面にさわると鳴ります）','45秒さわらないと動きを止めて、スマホが熱くなりにくくしました（さわるとまた動きます）','ボタンを長押しすると、しーちゃんが跳ねてきて、吹き出しで説明してくれます','画面を台風の地図ひとつにまとめました。バス・ゆいレールは地図の上の「運行状況」ボタンから見られます','バナーを地図のすぐ上に移しました（全画面のときは地図の一番上）','🌍で、世界の台風・ハリケーン・サイクロンと竜巻を見られます','世界の地図の陸地のギザギザを直しました','地図の桜島をタップすると、いまの桜島（気象庁の火山カメラ）を見られます','しーちゃんを2本の指で、少し大きく・小さくできます','地図の富士山をタップすると、富士山のライブカメラを開けます','地域（都道府県）を選べるようになりました。現在地を使うと県名が出ます'],
+ en:['Westerlies are now still arrows (thicker = stronger wind)','The westerly band is shown with lines on both sides and a purple fill','Westerly movement only if you tick "Animate" (keeps the phone cooler)','Shi-chan appears on first launch only; after that, tick "Always show Shi-chan" under the map','Volcanic alert level (5 steps) next to Mt. Fuji and Sakurajima','The note now says days 1–5 are the JMA forecast track','A check box under the map now lets you show or hide Shi-chan','Press a day button: Shi-chan points to that day\'s forecast circle','Shi-chan now talks in speech bubbles only (no voice)','Press 🌍: Shi-chan tells you about the storms around the world and points to each one','When the app opens, Shi-chan appears close up, hops over and greets you (her sound plays when you touch the screen)','After 45 s without touching, animations stop so the phone stays cooler (touch to start them again)','Press and hold a button: Shi-chan hops over and explains it','Everything is now on the typhoon map. Bus and Yui Rail: the "Transit" button on the map','The banner now sits right above the map (top of the map in full screen)','🌍 shows typhoons, hurricanes, cyclones and tornadoes around the world','Fixed the jagged coastlines on the world map','Tap Sakurajima on the map to open the JMA volcano cameras','Pinch Shi-chan with two fingers to make her a little bigger or smaller','Tap Mt. Fuji on the map to open its live cameras','Choose your prefecture; using your location shows your prefecture']};
  const seen=S.seenVer;if(FIRST){S.seenVer=VER;save();return}if(seen===VER)return;
  const done=()=>{S.seenVer=VER;save()};
  const ja=L=='ja',li=(ja?NEWS.ja:NEWS.en).map(x=>'<li style="margin:6px 0">'+x+'</li>').join('');
@@ -2398,5 +2414,3 @@ setTimeout(()=>{if(S.tab==1)adMaybe()},1600);
 </script>
 </body>
 </html>
-
-</body></html>
