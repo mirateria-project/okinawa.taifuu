@@ -3,6 +3,7 @@
 // /status.json  … バス（沖縄県バス協会）とゆいレールの運行状況
 // /typhoon.json … 気象庁の台風情報（実況と1〜5日目の予報）
 // /past.json    … 直近に終わった台風3つの進路（デジタル台風の公開データ）
+// typhoon.json には、台風情報がまだ出ていない熱帯低気圧（🥚台風のたまご）も egg:true で入れます（気象庁の天気図より）
 // どちらも無料の公開ページ・公開データだけを使います。
 
 const JMA = "https://www.jma.go.jp/bosai/typhoon/data/";
@@ -196,6 +197,52 @@ async function typhoon() {
 }
 
 
+
+/* ---------- 🥚台風のたまご（気象庁の天気図「地上実況図」に出ている熱帯低気圧） ---------- */
+// 気象庁が台風情報を出していない段階の熱帯低気圧も、天気図（防災情報XML・地上実況図）から拾う。
+const FEEDS = ["https://www.data.jma.go.jp/developer/xml/feed/regular.xml", "https://www.data.jma.go.jp/developer/xml/feed/regular_l.xml"];
+export function chartLink(feed) {
+  const es = feed.split(/<entry[\s>]/).slice(1);
+  for (const e of es) {
+    const title = (/<title>([^<]*)<\/title>/.exec(e) || [])[1] || "";
+    const link = (/<link[^>]*href="([^"]+)"/.exec(e) || [])[1] || (/<id>([^<]+)<\/id>/.exec(e) || [])[1] || "";
+    if (/地上実況図/.test(title) || /VZSA50/.test(link)) return link;
+  }
+  return null;
+}
+export function eggsFromXml(x) {
+  const time = (/<TargetDateTime>([^<]+)<\/TargetDateTime>/.exec(x) || [])[1] || (/<ReportDateTime>([^<]+)<\/ReportDateTime>/.exec(x) || [])[1] || null;
+  const out = [];
+  x.split(/<Item[\s>]/).slice(1).forEach((it) => {
+    it = it.split(/<\/Item>/)[0];
+    const types = [...it.matchAll(/<Type>([^<]*)<\/Type>/g)].map((m) => m[1]);
+    if (!types.some((t) => /熱帯低気圧/.test(t)) || types.some((t) => /^台風$/.test(t))) return;
+    const m = /<jmx_eb:Coordinate[^>]*>\s*([+-]\d+(?:\.\d+)?)([+-]\d+(?:\.\d+)?)/.exec(it);
+    if (!m) return;
+    const la = +m[1], lo = +m[2];
+    if (!isFinite(la) || !isFinite(lo)) return;
+    const hpa = num((/<jmx_eb:Pressure[^>]*>([^<]+)</.exec(it) || [])[1]);
+    const dir = txt((/<jmx_eb:Direction[^>]*>([^<]+)</.exec(it) || [])[1]);
+    let spd = num((/<jmx_eb:Speed[^>]*unit="km\/h"[^>]*>([^<]+)</.exec(it) || [])[1]);
+    if (spd == null) { const kt = num((/<jmx_eb:Speed[^>]*unit="ノット"[^>]*>([^<]+)</.exec(it) || [])[1]); if (kt != null) spd = Math.round(kt * 1.852); }
+    const slow = /ほとんど停滞|停滞/.test(it);
+    out.push({ c: [la, lo], hpa, dir, spd, slow, time });
+  });
+  return out;
+}
+async function eggs(tys) {
+  let link = null;
+  for (const f of FEEDS) { try { link = chartLink(await getText(f)); } catch {} if (link) break; }
+  if (!link) return [];
+  const list = eggsFromXml(await getText(link));
+  // 台風情報がもう出ているもの（気象庁が追っている熱帯低気圧・台風）とは重ねない
+  const far = (e) => tys.every((t) => { const c = t.now && t.now.c; if (!c) return true; const r = Math.PI / 180, x = Math.sin((c[0] - e.c[0]) * r / 2) ** 2 + Math.cos(e.c[0] * r) * Math.cos(c[0] * r) * Math.sin((c[1] - e.c[1]) * r / 2) ** 2; return 2 * 6371 * Math.asin(Math.sqrt(x)) > 400; });
+  return list.filter(far).filter((e) => e.c[0] > -5 && e.c[0] < 50 && e.c[1] > 95 && e.c[1] < 185).map((e, i) => ({
+    id: "EGG" + (i + 1), number: "", egg: true, cat: "TD", issue: e.time, fc: [],
+    now: { c: e.c, hpa: e.hpa, wind: null, gust: null, spd: null, spdnote: e.slow ? "ほとんど停滞" : (e.spd != null ? e.spd + "km/h" : null), course: e.dir, scale: null, int: null, loc: null, storm: null, gale: null },
+  }));
+}
+
 /* ---------- 過去の台風の進路（デジタル台風／国立情報学研究所の公開GeoJSON。元データは気象庁） ---------- */
 // 直近に終わった台風3つの進路を past.json に書き出す。前回の past.json は公開中のサイトから読んで使い回す（6時間ごとに取り直し）。
 const DT = "https://agora.ex.nii.ac.jp/digital-typhoon/geojson/wnp/";
@@ -237,8 +284,8 @@ const save = (name, obj) => writeFileSync(new URL("./" + name, import.meta.url),
 try { save("status.json", await status()); }
 catch (e) { console.error(e); save("status.json", { bus: "unk", text: "", uncertain: true, yui: "unk", ytext: "", yunc: true, error: true, checked: iso() }); }
 let TY = null;
-try { TY = await typhoon(); save("typhoon.json", TY); }
+try { TY = await typhoon(); try { const e = await eggs(TY.typhoons || []); if (e.length) TY.typhoons = TY.typhoons.concat(e); TY.eggs = e.length; } catch (e) { console.error("egg", e); } save("typhoon.json", TY); }
 catch (e) { console.error(e); save("typhoon.json", { typhoons: null, error: true, checked: iso() }); }
-try { save("past.json", await past(((TY && TY.typhoons) || []).map((t) => t.number))); }
+try { save("past.json", await past(((TY && TY.typhoons) || []).filter((t) => !t.egg).map((t) => t.number))); }
 catch (e) { console.error(e); save("past.json", { tracks: [], error: true, checked: iso() }); }
 console.log("done", iso());
