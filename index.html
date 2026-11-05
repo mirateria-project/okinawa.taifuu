@@ -402,6 +402,7 @@ body.mapmax{overflow:hidden}
 .tyk b,.tyk span{overflow:hidden}
 #mpanel .tyk.d b{color:#12263a!important}
 #mpanel .tyk span{color:#4a5b6c}
+#mpanel .simbox{background:linear-gradient(135deg,#f3ecffee,#e6f4ffee)!important;border-color:#b9a2f0!important;color:#12263a}
 .dl{stroke:#ffd60a!important;stroke-width:calc(5px*var(--inv,1))!important;stroke-dasharray:calc(14px*var(--inv,1)) calc(9px*var(--inv,1))!important}
 .dlb{stroke:#12263a!important;stroke-width:calc(9px*var(--inv,1))!important;stroke-opacity:.9!important;stroke-dasharray:calc(16px*var(--inv,1)) calc(7px*var(--inv,1))}
 .dll{stroke:#12263a!important}
@@ -833,7 +834,7 @@ en:{
 document.documentElement.lang=L;
 const $=id=>document.getElementById(id);
 const COL=['#ff3b5c','#ff9500','#ffd60a','#2bd96b','#2f80ff'];
-const VER='4.7.0',VDATE='2026-11-06';
+const VER='4.7.1',VDATE='2026-11-06';
 Object.assign(T,L=='ja'?{
  ver:'バージョン '+VER+'（'+VDATE.replace(/-/g,'/')+'）',
  eHead:'🌀 暴風域',eIn:'入っています',eInFor:h=>'入ってから約'+h+'時間',eInF:'入っているおそれ',eSoon:(d,h)=>d?'あと'+d+'日'+h+'時間':h?'あと約'+h+'時間':'まもなく',
@@ -1673,7 +1674,7 @@ function geoDeclutter(){const all=[...sv.querySelectorAll('#lbl text.gfb')];all.
 /* ---------- distance balloon: placed beside the line where nothing else is ---------- */
 let DL=null;
 function charBand(){const a=$('mcA'),s2=$('mcS'),mh=mp.clientHeight||0;let h=0;[a,s2].forEach(e=>{if(!e||!e.offsetHeight)return;if(S.cpos&&S.cpos[e.id]){const tp=e.offsetTop;if(tp>mh*.55)h=Math.max(h,mh-tp)}else h=Math.max(h,e.offsetHeight+(parseFloat(getComputedStyle(e).bottom)||0))});return h}
-function placeDist(){const G=$('dlab');while(G.firstChild)G.removeChild(G.firstChild);try{placeMel()}catch(e){}if(!DL){try{numDeclutter()}catch(e){}try{geoDeclutter()}catch(e){}return}
+function placeDist(){const G=$('dlab');while(G.firstChild)G.removeChild(G.firstChild);try{placeMel()}catch(e){}try{ringPlace()}catch(e){}if(!DL){try{numDeclutter()}catch(e){}try{geoDeclutter()}catch(e){}return}
  sv.querySelectorAll('#lbl text.gfb').forEach(e=>e.style.visibility='');
  const {pc,rq,km,hr}=DL,ja=L=='ja',k=K();if(DL.noLine&&S.mode=='tr')return;const vb=(sv.getAttribute('viewBox')||'0 0 1 1').split(' ').map(Number);
  const zc=document.querySelector('.map .zc'),zb=zc?(zc.offsetTop+zc.offsetHeight+8):56;
@@ -1704,6 +1705,7 @@ function placeDist(){const G=$('dlab');while(G.firstChild)G.removeChild(G.firstC
   G.appendChild(sv2('text',{class:'dlt2',x:cx,y:cy+th*.07,'text-anchor':'middle','dominant-baseline':'central'},l2));
   G.appendChild(sv2('text',{class:'dlt3',x:cx,y:cy+th*.31,'text-anchor':'middle','dominant-baseline':'central'},l3))}
  else G.appendChild(sv2('text',{class:'dlt',x:cx,y:cy,'text-anchor':'middle','dominant-baseline':'central'},l1));
+ try{let mw=0;G.querySelectorAll('text').forEach(t=>{const b=t.getBBox();if(b.width>mw)mw=b.width});const rc=G.querySelector('rect.dlp'),nw=mw+px(30);if(rc&&nw>tw){rc.setAttribute('width',nw);rc.setAttribute('x',cx-nw/2)}}catch(_){}
  try{numDeclutter()}catch(e){}try{geoDeclutter()}catch(e){}}
 /* v3.9: labels never cover each other. Priority: 現在地 > distance balloon > day numbers (shrink, then hide) */
 function numBoxes(){return [...$('nums').children].map(g=>{const c=g.querySelector('circle');return{g,x:+c.getAttribute('cx'),y:+c.getAttribute('cy'),r:+c.getAttribute('r')}})}
@@ -1722,7 +1724,12 @@ function placeMel(){const m=sv.querySelector('#lbl text.mel');if(!m)return;const
   if(!best||sc<best.sc)best={sc,dx,dy,an}});
  if(best){m.setAttribute('x',me[0]+px(best.dx));m.setAttribute('y',me[1]+px(best.dy));m.setAttribute('text-anchor',best.an)}
  /* the 800km ring label is the least important: hide it if it touches 現在地 */
- const rt=$('ringT');if(rt){rt.style.visibility='';try{const a=rt.getBBox(),b=m.getBBox();if(a.x<b.x+b.width+px(4)&&a.x+a.width+px(4)>b.x&&a.y<b.y+b.height+px(4)&&a.y+a.height+px(4)>b.y)rt.style.visibility='hidden'}catch(_){}}}
+ ringPlace()}
+function ringPlace(){const rt=$('ringT'),rr=$('ring');if(!rt||!rr)return;rt.style.visibility='';const cx=+rr.getAttribute('cx'),cy=+rr.getAttribute('cy'),R=+rr.getAttribute('r');if(!R)return;
+ const ob=[];sv.querySelectorAll('#saku,#fuji,#lbl text,#nums circle,#dlab rect,#tyt text,#wld text,#wld .wst,#geo text').forEach(e=>{if(e.style&&e.style.visibility=='hidden')return;try{const b=e.getBBox();if(b.width)ob.push(b)}catch(_){}});
+ const g=px(4),free=a=>!ob.some(b=>a.x<b.x+b.width+g&&a.x+a.width+g>b.x&&a.y<b.y+b.height+g&&a.y+a.height+g>b.y);
+ for(const d of [-45,-30,-60,45,30,60,0,-15,15,135,-135,90]){const r=d*Math.PI/180;rt.setAttribute('x',cx+R*Math.cos(r));rt.setAttribute('y',cy+R*Math.sin(r));rt.setAttribute('text-anchor',Math.abs(d)>95?'end':'start');try{if(free(rt.getBBox()))return}catch(_){return}}
+ rt.style.visibility='hidden'}
 /* the characters on the map, as boxes in map units (so numbers and names never hide behind them) */
 function charRects(){const out=[];try{const vb=sv.getAttribute('viewBox').split(' ').map(Number),mr=mp.getBoundingClientRect(),k=vb[2]/(mr.width||1);
  ['mcA','mcS'].forEach(id=>{const e=$(id);if(!e||!e.offsetWidth)return;const r=e.getBoundingClientRect();out.push([vb[0]+(r.left-mr.left)*k,vb[1]+(r.top-mr.top)*k,r.width*k,r.height*k])})}catch(_){}return out}
@@ -2150,7 +2157,8 @@ function wLabel(G,q,r,a,b){const vb=sv.getAttribute('viewBox').split(' ').map(Nu
  g.remove()}
 function stKind(la,lo){if(lo<0)lo+=360;if(la<0||(lo>=30&&lo<100))return 'cyc';if(lo>=100&&lo<180)return 'ty';return 'hu'}
 function drawWorld(){const G=$('wld');while(G.firstChild)G.removeChild(G.firstChild);G._t=[];if(S.mode=='tr')return;const ja=L=='ja',jma=tyAll().map(t=>[+t.now.c[1],+t.now.c[0]]);
- let list=(WLD.st||[]).filter(o=>isFinite(o.lat)&&isFinite(o.lon)&&!jma.some(p=>hav(p,[o.lon,o.lat])<500));
+ const nmK=x=>String(x||'').toUpperCase().replace(/[-\s]*\d+$/,'').replace(/[^A-Z]/g,''),jn=tyAll().map(t=>nmK(t.nameEn)).filter(Boolean);
+ let list=(WLD.st||[]).filter(o=>isFinite(o.lat)&&isFinite(o.lon)&&!jma.some(p=>hav(p,[o.lon,o.lat])<500)&&!(nmK(o.nm)&&jn.includes(nmK(o.nm))));
  /* zoomed out to the world: the JMA typhoons are drawn the same simple way (the detailed circles come back when you zoom in) */
  if(V.z<3)list=tyAll().filter(t=>!isExtra(t)).map(t=>({nm:tyName(t),jma:1,lat:+t.now.c[0],lon:+t.now.c[1],w:+t.now.wind||null,tr:[],fc:dayFc(t).slice(0,3).map(f=>[+f.c[0],+f.c[1]])})).concat(list).sort((a,b)=>(b.w||0)-(a.w||0));
  const src=cloudTex();G._t=list.map(o=>{const q=GP(o.lon,o.lat),r=px(20);return [q[0]-r,q[1]-r,2*r,2*r]});
@@ -2185,7 +2193,7 @@ async function vlcLoad(){if(Date.now()-vlcAt<3*3600e3)return;vlcAt=Date.now();
  try{const r=await fetch('https://www.jma.go.jp/bosai/volcano/data/warning.json',{cache:'no-store'});if(!r.ok)throw 0;const J=await r.json();
   let any=0;Object.keys(VLC).forEach(k=>{const f=vlcFind(J,k,VLC[k].ja);if(f){VLC[k].lv=f.lv;if(f.dt)VLC[k].dt=f.dt;any=1}});
   if(any){vlcOK=1;S.vlc={};Object.keys(VLC).forEach(k=>S.vlc[k]={lv:VLC[k].lv,dt:VLC[k].dt});save()}}catch(e){}
- try{drawFuji();drawSaku()}catch(e){}}
+ try{drawFuji();drawSaku()}catch(e){}try{ringPlace()}catch(e){}}
 /* a small 5-step gauge to the right of the mountain: lit up to the current level */
 function vlcGauge(g,code,w,h){const v=VLC[code];if(!v||!v.lv)return;const cw=px(17),ch=px(9.5),gp=px(2),x0=w*.62,yb=h*.25;
  for(let i=1;i<=5;i++){const y=yb-i*(ch+gp);g.appendChild(sv2('rect',{x:x0,y,width:cw,height:ch,rx:px(1.5),fill:i<=v.lv?VLCOL[i]:'#5b6b7d',
@@ -2408,7 +2416,7 @@ setTimeout(()=>{if(S.tab==1)adMaybe()},1600);
 /* v3.12.1: "new features" notice, shown once after an update (not on first install) */
 (function(){const NEWS={ja:['🥚台風のたまご：気象庁が台風情報を出す前の熱帯低気圧も、天気図から見つけて地図に出すようにしました','偏西風を、止まった矢印にしました（太い矢印ほど風が強い）','偏西風が流れる範囲を、上下の線と紫の帯で分かるようにしました','偏西風の動きは「動かして見る」にチェックした人だけ（スマホが熱くなりにくい）','しーちゃんは最初に開いた時だけ登場。次からは地図の下の「しーちゃんをいつも出す」にチェックした人だけ出ます','富士山と桜島の横に、噴火警戒レベル（5段階）を出しました','「1日目〜5日目の進路は気象庁の予報です」と分かるように書き換えました','地図の下のチェックで、しーちゃんを出す・出さないを選べるようにしました','1日目〜5日目のボタンを押すと、しーちゃんがその日の予報円を指さして教えてくれます','しーちゃんは声を出さず、吹き出しで話すようにしました','🌍を押すと、しーちゃんが世界の台風・ハリケーン・竜巻を紹介して、ひとつずつ指さしで教えてくれます','アプリを開くと、しーちゃんがアップで登場して、跳ねてきて案内します（音は画面にさわると鳴ります）','45秒さわらないと動きを止めて、スマホが熱くなりにくくしました（さわるとまた動きます）','ボタンを長押しすると、しーちゃんが跳ねてきて、吹き出しで説明してくれます','画面を台風の地図ひとつにまとめました。バス・ゆいレールは地図の上の「運行状況」ボタンから見られます','バナーを地図のすぐ上に移しました（全画面のときは地図の一番上）','🌍で、世界の台風・ハリケーン・サイクロンと竜巻を見られます','世界の地図の陸地のギザギザを直しました','地図の桜島をタップすると、いまの桜島（気象庁の火山カメラ）を見られます','しーちゃんを2本の指で、少し大きく・小さくできます','地図の富士山をタップすると、富士山のライブカメラを開けます','地域（都道府県）を選べるようになりました。現在地を使うと県名が出ます'],
  en:['🥚Typhoon eggs: tropical depressions are now shown from the JMA weather chart, even before JMA issues typhoon information','Westerlies are now still arrows (thicker = stronger wind)','The westerly band is shown with lines on both sides and a purple fill','Westerly movement only if you tick "Animate" (keeps the phone cooler)','Shi-chan appears on first launch only; after that, tick "Always show Shi-chan" under the map','Volcanic alert level (5 steps) next to Mt. Fuji and Sakurajima','The note now says days 1–5 are the JMA forecast track','A check box under the map now lets you show or hide Shi-chan','Press a day button: Shi-chan points to that day\'s forecast circle','Shi-chan now talks in speech bubbles only (no voice)','Press 🌍: Shi-chan tells you about the storms around the world and points to each one','When the app opens, Shi-chan appears close up, hops over and greets you (her sound plays when you touch the screen)','After 45 s without touching, animations stop so the phone stays cooler (touch to start them again)','Press and hold a button: Shi-chan hops over and explains it','Everything is now on the typhoon map. Bus and Yui Rail: the "Transit" button on the map','The banner now sits right above the map (top of the map in full screen)','🌍 shows typhoons, hurricanes, cyclones and tornadoes around the world','Fixed the jagged coastlines on the world map','Tap Sakurajima on the map to open the JMA volcano cameras','Pinch Shi-chan with two fingers to make her a little bigger or smaller','Tap Mt. Fuji on the map to open its live cameras','Choose your prefecture; using your location shows your prefecture']};
- const seen=S.seenVer;if(FIRST){S.seenVer=VER;save();return}if(seen===VER)return;
+ const seen=S.seenVer;if(FIRST){S.seenVer=VER;save();return}if(seen===VER||String(seen||'').split('.').slice(0,2).join('.')===VER.split('.').slice(0,2).join('.')){if(seen!==VER){S.seenVer=VER;save()}return}
  const done=()=>{S.seenVer=VER;save()};
  const ja=L=='ja',li=(ja?NEWS.ja:NEWS.en).map(x=>'<li style="margin:6px 0">'+x+'</li>').join('');
  setTimeout(()=>{try{$('dbody').innerHTML='<div style="font-size:20px;font-weight:900;margin-bottom:4px">🎉 '+(ja?'新しい機能が追加されました':'New features added')+'</div><div style="font-size:13px;color:var(--sub);margin-bottom:6px">'+(ja?'バージョン ':'Version ')+VER+'</div><ul style="margin:0;padding-left:20px;font-size:16px;font-weight:700;line-height:1.5">'+li+'</ul>';if(!$('dlg').open)$('dlg').showModal();$('dlg').addEventListener('close',done,{once:true})}catch(e){}},1200)})();
