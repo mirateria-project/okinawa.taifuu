@@ -355,7 +355,7 @@ header{flex-wrap:wrap;row-gap:6px}#ttl{white-space:nowrap}header .top-actions{fl
 #info.top .tyhd{font-size:15px;line-height:1.35}
 #info.top .swe{font-size:13px;margin-left:4px}
 #info.top .tynear{font-size:11.5px;line-height:1.3;margin:0}
-#info.top .tykey{grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;margin:4px 0 0}
+#info.top .tykey{grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;margin:4px 0 0}#info.top .tykey.aw{grid-template-columns:repeat(5,minmax(0,1fr))}
 #info.top .tyk{padding:2px 1px;border-radius:8px;border-width:1.5px}
 #info.top .tyk span{font-size:9px;letter-spacing:-.04em;white-space:nowrap;overflow:hidden}
 #info.top .tyk b{font-size:14px;line-height:1.15;white-space:nowrap}
@@ -835,7 +835,7 @@ en:{
 document.documentElement.lang=L;
 const $=id=>document.getElementById(id);
 const COL=['#ff3b5c','#ff9500','#ffd60a','#2bd96b','#2f80ff'];
-const VER='4.7.2',VDATE='2026-11-06';
+const VER='4.7.5',VDATE='2026-11-06';
 Object.assign(T,L=='ja'?{
  ver:'バージョン '+VER+'（'+VDATE.replace(/-/g,'/')+'）',
  eHead:'🌀 暴風域',eIn:'入っています',eInFor:h=>'入ってから約'+h+'時間',eInF:'入っているおそれ',eSoon:(d,h)=>d?'あと'+d+'日'+h+'時間':h?'あと約'+h+'時間':'まもなく',
@@ -901,7 +901,7 @@ Object.assign(T,L=='ja'?{
  swSoon:st=>st?'まもなく暴風域に':'まもなく現在地に',
  dlEta:hr=>{let d=Math.floor(hr/24),h=Math.round(hr-d*24);if(h==24){d++;h=0}return 'このまま来たら 約'+(d?d+'日':'')+(h||!d?Math.max(1,h)+'時間':'')+'で到着'},
  dh:hr=>{let d=Math.floor(hr/24),h=Math.round(hr-d*24);if(h==24){d++;h=0}return '約'+(d?d+'日':'')+(h||!d?Math.max(1,h)+'時間':'')},
- extHead:n=>n?n+'日目以降もまっすぐ来たら':'まっすぐ来たら',
+ extHead:n=>n?n+'日目以降もまっすぐ来たら':'まっすぐ来たら',awayHd:w=>w+'から遠ざかっています',
  extSt:(n,t,st,who)=>(n?n+'日目以降もまっすぐ来たら ':'まっすぐ来たら ')+t+'で'+(st?'暴風域に':who+'に最接近'),
  extArr:t=>t+'で到着（目安）',extTo:(t,st,who)=>t+'で'+(st?'暴風域に':who+'に最接近')+'（目安）',fcHead:'予報では',fcSt:t=>'予報では '+t+'で暴風域に',
  pastNm:n=>(+String(n).slice(-2))+'号',pastLbl:n=>n+'（過去の進路）',
@@ -916,7 +916,7 @@ Object.assign(T,L=='ja'?{
  swSoon:st=>st?'Storm area very soon':'Reaching you very soon',
  dlEta:hr=>{let d=Math.floor(hr/24),h=Math.round(hr-d*24);if(h==24){d++;h=0}return 'At this speed: ~'+(d?d+'d ':'')+(h||!d?Math.max(1,h)+'h':'')},
  dh:hr=>{let d=Math.floor(hr/24),h=Math.round(hr-d*24);if(h==24){d++;h=0}return '~'+(d?d+'d ':'')+(h||!d?Math.max(1,h)+'h':'')},
- extHead:n=>n?'If it keeps coming straight after day '+n:'If it comes straight',
+ extHead:n=>n?'If it keeps coming straight after day '+n:'If it comes straight',awayHd:w=>'Moving away from '+w,
  extSt:(n,t,st,who)=>(n?'Straight on after day '+n+': ':'If it comes straight: ')+t+' to '+(st?'the storm area':'closest to '+who),
  extTo:(t,st,who)=>t+' to '+(st?'the storm area':'closest to '+who)+' (estimate)',fcHead:'Forecast:',
  extArr:t=>'arrives in '+t+' (estimate)',fcSt:t=>'Forecast: storm area in '+t,
@@ -1235,13 +1235,22 @@ const NB=x=>'<span style="display:inline-block">'+x+'</span> ';
 function etaOne(t,ref){if(!t||t.egg||isExtra(t))return null;const nw=Date.now(),D=distRef(t.now.c),st=+t.now.storm||0;if(st&&D<=st)return {in:1};
  const e=eta(t,ref);if(e&&e.tin&&e.tin.getTime()>nw)return {fc:1,st:1,hr:(e.tin.getTime()-nw)/3600000};
  if(!(e&&e.tin)){const x=fcExt(t,ref);if(x&&!x.away)return {hr:x.st?x.hSt:x.hArr,st:x.st,n:x.n}}return null}
+function isAwayTy(t){try{const x=fcExt(t,REF());return !!(x&&x.awayC)}catch(e){return false}}
+function courseDeg(c){if(c==null)return null;if(typeof c=='object')c=c.jp||c.ja||c.en||'';c=String(c).trim();
+ const J={'北':0,'北北東':22.5,'北東':45,'東北東':67.5,'東':90,'東南東':112.5,'南東':135,'南南東':157.5,'南':180,'南南西':202.5,'南西':225,'西南西':247.5,'西':270,'西北西':292.5,'北西':315,'北北西':337.5};
+ const E={N:0,NNE:22.5,NE:45,ENE:67.5,E:90,ESE:112.5,SE:135,SSE:157.5,S:180,SSW:202.5,SW:225,WSW:247.5,W:270,WNW:292.5,NW:315,NNW:337.5};
+ const j=c.replace(/[へ方向\s]/g,'');if(J[j]!=null)return J[j];const e=c.toUpperCase().replace(/[^NSEW]/g,'');return E[e]!=null?E[e]:null}
+function bearing(c,ref){/* c=[lat,lon], ref=[lon,lat] -> degrees from north */const r=Math.PI/180,la1=+c[0]*r,la2=+ref[1]*r,dl=(+ref[0]-+c[1])*r;
+ return (Math.atan2(Math.sin(dl)*Math.cos(la2),Math.cos(la1)*Math.sin(la2)-Math.sin(la1)*Math.cos(la2)*Math.cos(dl))/r+360)%360}
 function fcExt(t,ref){if(!t||isExtra(t)||!inArea(ref))return null;const iss=issueOf(t);
  const fc=dayFc(t),P=[{h:0,c:[+t.now.c[0],+t.now.c[1]],sw:+t.now.storm||0}].concat(fc.map(f=>({h:+f.h,c:[+f.c[0],+f.c[1]],sw:+f.sw||0})));
  const last=P[P.length-1],dl=hav([last.c[1],last.c[0]],ref),n=fc.length;let v=null;
  if(P.length>=2){const a=P[P.length-2];v=hav([a.c[1],a.c[0]],[last.c[1],last.c[0]])/Math.max(1,last.h-a.h);
   /* moving away from you at the end of the forecast: no estimate */
   if(hav([a.c[1],a.c[0]],ref)<=dl+1)return {away:1,last,n}}
- else v=+t.now.spd>0?+t.now.spd:null;
+ else{v=+t.now.spd>0?+t.now.spd:null;
+  /* no forecast points: use the course (e.g. 北東). Heading away from you -> no "if it comes straight" */
+  const cb=courseDeg(t.now.course);if(cb!=null){const br=bearing(last.c,ref);let df=Math.abs(cb-br)%360;if(df>180)df=360-df;if(df>90)return {away:1,awayC:1,last,n}}}
  if(!v||v<1)return {away:1,last,n};
  const el=iss?Math.max(0,(Date.now()-iss.getTime())/3600000):0,st=last.sw||(n?0:+t.now.storm||0);
  return {last,n,v,d:dl,st:!!st,hArr:Math.max(0,last.h+dl/v-el),hSt:Math.max(0,last.h+Math.max(0,dl-st)/v-el)}}
@@ -1310,9 +1319,9 @@ function tyText(t){
  if(isExtra(t)){return '<div class="tyhd">'+tyName(t)+'</div><div class="exnote">🌀→ '+T.extra+'</div><div class="tygrid">'+
   (n.hpa?'<div class="tyr"><span>'+(ja?'中心気圧':'Central pressure')+'</span><b>'+n.hpa+' hPa</b></div>':'')+
   '<div class="tyr"><span>'+TOREF()+'</span><b>'+(ja?'約':'~')+Math.round(distRef(n.c))+'km</b></div></div>'}
- const far=!within(t)&&tyList().some(within);
+ const far=!within(t)&&tyList().some(within),AW=isAwayTy(t);
  const row=(k,v)=>{if(v!=null&&v!==''&&v!=='-')R.push('<div class="tyr"><span>'+k+'</span><b>'+v+'</b></div>')};
- row(TOREF(),(ja?'約':'~')+Math.round(distRef(n.c))+'km');
+ if(!AW)row(TOREF(),(ja?'約':'~')+Math.round(distRef(n.c))+'km');
  const cs=ja?n.course:(EN_DIR[n.course]||n.course);
  if(n.spd!=null)row(ja?'進む方向・速さ':'Movement',(cs?cs+(ja?'へ ':' '):'')+n.spd+'km/h');
  else if(n.spdnote)row(ja?'進む方向・速さ':'Movement',(cs?cs+(ja?'へ ':' '):'')+(ja?n.spdnote:(n.spdnote=='ゆっくり'?'slowly':'almost stationary')));
@@ -1328,10 +1337,10 @@ function tyText(t){
  const na=ja?'発表なし':'n/a',kv=(c,k,v,u)=>'<div class="tyk '+c+'"><span>'+k+'</span>'+(v!=null&&v!==''?'<b>'+v+'<small> '+u+'</small></b>':'<b class="na">'+na+'</b>')+'</div>';
  const spv=n.spd!=null?n.spd:(n.spdnote?(ja?n.spdnote:(n.spdnote=='ゆっくり'?'slow':'stationary')):null);
  const hasSc=!!(n.scale&&n.scale!='-'),szv=hasSc?(ja?n.scale:(EN_SC[n.scale]||n.scale)):(n.storm?n.storm:null);
- const K1='<div class="tykey">'+kv('d',TOREF(1),Math.round(distRef(n.c)),'km')+kv('g',ja?'最大瞬間風速':'Max gust',n.gust,'m/s')+kv('w',ja?'最大風速':'Max wind',n.wind,'m/s')+kv('v',ja?'進む速さ':'Speed',spv,n.spd!=null?'km/h':'')+kv('s',hasSc?(ja?'大きさ':'Size'):(ja?'暴風半径':'Storm r.'),szv,hasSc?'':(n.storm?'km':''))+kv('p',ja?'中心気圧':'Pressure',n.hpa,'hPa')+'</div>';
+ const K1='<div class="tykey'+(AW?' aw':'')+'">'+(AW?'':kv('d',TOREF(1),Math.round(distRef(n.c)),'km'))+kv('g',ja?'最大瞬間風速':'Max gust',n.gust,'m/s')+kv('w',ja?'最大風速':'Max wind',n.wind,'m/s')+kv('v',ja?'進む速さ':'Speed',spv,n.spd!=null?'km/h':'')+kv('s',hasSc?(ja?'大きさ':'Size'):(ja?'暴風半径':'Storm r.'),szv,hasSc?'':(n.storm?'km':''))+kv('p',ja?'中心気圧':'Pressure',n.hpa,'hPa')+'</div>';
  let swe='';{const o=etaOne(t,REF());if(o&&o.in)swe='<span class="swe">'+T.swIn+'</span>';else if(o&&o.fc)swe='<span class="swe">'+T.fcSt(T.dh(o.hr))+'</span>';else if(o)swe='<span class="swe">'+T.extSt(o.n,T.dh(o.hr),o.st,WHO())+'<small>'+T.swNote+'</small></span>'}
  let pst='';if(S.pastOn)PAST().forEach(tr=>{const r=pastEta(tr,t,REF());if(r)pst+='<div class="typast">'+T.pastEta(T.pastNm(tr.n),T.dh(r.h),WHO(),Math.round(r.d))+'</div>'});
- return '<div class="tyhd">'+tyName(t)+swe+'</div><div class="tynear">'+(within(t)?T.tyhit(b.h,Math.round(b.d)):T.tyfar(Math.round(distRef(n.c))))+'</div>'+pst+(far?'':K1)+''}
+ return '<div class="tyhd">'+tyName(t)+swe+'</div><div class="tynear">'+(within(t)?T.tyhit(b.h,Math.round(b.d)):(AW?T.awayHd(PLN()):T.tyfar(Math.round(distRef(n.c)))))+'</div>'+pst+(far?'':K1)+''}
 let PATHS=[];
 function chipDates(){try{const t=tyList().find(x=>!isExtra(x))||tyList()[0]||null;const iss=t&&issueOf(t);const all=t?dayAll(t):[];const ja=L=='ja';
  lg.querySelectorAll('.chip').forEach((b,i)=>{const x=all[i],has=!!(x&&x.f&&!x.ex);b.disabled=!has;b.classList.toggle('nodata',!has);b.classList.toggle('exday',!!(x&&x.ex));b.setAttribute('aria-disabled',!has);if(!has&&S.pin==i)S.pin=-1;const c=b.querySelector('.cd');if(!c)return;
@@ -1466,9 +1475,9 @@ function drawTy(){chipDates();
   const x=fcExt(t0,ref);
   if(x&&!x.away){const lp=GP(x.last.c[1],x.last.c[0]);D.appendChild(sv2('line',{class:'dlb',x1:lp[0],y1:lp[1],x2:rq[0],y2:rq[1]}));D.appendChild(sv2('line',{class:'dl',x1:lp[0],y1:lp[1],x2:rq[0],y2:rq[1]}));
    DL={pc:lp,rq,km}}
-  else DL={pc,rq:pc,km,noLine:1};
+  else DL={pc,rq:pc,km,noLine:1,away:!!(x&&x.awayC)};
   {const o=etaOne(t0,ref);DL.o=o;DL.hr=o&&!o.in?o.hr:null;DL.n=o&&o.n||0}placeDist();
-  $('dbadge').hidden=false;$('dbadge').innerHTML='<span>'+TOREF()+'</span><b>'+(L=='ja'?'約':'~')+km+'<small>km</small></b>'}
+  $('dbadge').hidden=!!DL.away;$('dbadge').innerHTML='<span>'+TOREF()+'</span><b>'+(L=='ja'?'約':'~')+km+'<small>km</small></b>'}
  else{$('dbadge').hidden=true;DL=null;placeDist()}
  try{drawLayers()}catch(e){}try{drawWorld();drawFuji()}catch(e){}try{drawSaku()}catch(e){}cloudDraw(list);drawSw(list);drawCallouts(list);placeDist();try{drawPast(t0)}catch(e){}applyLayers();drawSel();
  mapKey();
@@ -1683,9 +1692,9 @@ function placeDist(){const G=$('dlab');while(G.firstChild)G.removeChild(G.firstC
  const {pc,rq,km,hr}=DL,ja=L=='ja',k=K();if(DL.noLine&&S.mode=='tr')return;const vb=(sv.getAttribute('viewBox')||'0 0 1 1').split(' ').map(Number);
  const zc=document.querySelector('.map .zc'),zb=zc?(zc.offsetTop+zc.offsetHeight+8):56;
  const top=vb[1]+zb/k,bot=vb[1]+vb[3]-(charBand()+6)/k,lft=vb[0]+8/k,rgt=vb[0]+vb[2]-8/k;
- const o=DL.o,l1=(ja?'約':'~')+km+'km',l2=o&&o.in?T.swIn:(hr!=null?(o.fc?T.fcHead:T.extHead(DL.n||0)):''),l3=hr!=null?T.extTo(T.dh(hr),o.st,WHO()):'',fs=px(30),fs2=px(19);
+ const o=DL.o,l1=DL.away?T.awayHd(WHO()):(ja?'約':'~')+km+'km',l2=DL.away?'':o&&o.in?T.swIn:(hr!=null?(o.fc?T.fcHead:T.extHead(DL.n||0)):''),l3=hr!=null?T.extTo(T.dh(hr),o.st,WHO()):'',fs=px(30),fs2=px(19);
  const wd=(x,f)=>[...x].reduce((a,ch)=>a+(ch.charCodeAt(0)>255?1:.6),0)*f;
- const tw=Math.max(wd(l1,fs),l2?wd(l2,fs2):0,l3?wd(l3,fs2):0)+px(26),th=l2?px(96):px(46);
+ const tw=Math.max(wd(l1,fs),l2?wd(l2,fs2):0,l3?wd(l3,fs2):0)+px(26),th=l3?px(96):l2?px(74):px(46);
  const obs=[];
  PATHS.forEach(P=>P.pts.forEach((q,i)=>{obs.push([q[0],q[1],px(i?27:26)]);if(i){const a=P.pts[i-1],n=Math.ceil(Math.hypot(q[0]-a[0],q[1]-a[1])/px(16));for(let j=1;j<n;j++)obs.push([a[0]+(q[0]-a[0])*j/n,a[1]+(q[1]-a[1])*j/n,px(7)])}}));
  obs.push([rq[0],rq[1],px(16)]);
@@ -1705,9 +1714,9 @@ function placeDist(){const G=$('dlab');while(G.firstChild)G.removeChild(G.firstC
  const ex=Math.max(cx-tw/2,Math.min(ax,cx+tw/2)),ey=Math.max(cy-th/2,Math.min(ay,cy+th/2));
  G.appendChild(sv2('line',{class:'dll',x1:ax,y1:ay,x2:ex,y2:ey}));G.appendChild(sv2('circle',{class:'dla',cx:ax,cy:ay,r:px(6)}));
  G.appendChild(sv2('rect',{class:'dlp',x:cx-tw/2,y:cy-th/2,width:tw,height:th,rx:px(18)}));
- if(l2){G.appendChild(sv2('text',{class:'dlt',x:cx,y:cy-th*.25,'text-anchor':'middle','dominant-baseline':'central'},l1));
-  G.appendChild(sv2('text',{class:'dlt2',x:cx,y:cy+th*.07,'text-anchor':'middle','dominant-baseline':'central'},l2));
-  G.appendChild(sv2('text',{class:'dlt3',x:cx,y:cy+th*.31,'text-anchor':'middle','dominant-baseline':'central'},l3))}
+ if(l2){G.appendChild(sv2('text',{class:'dlt',x:cx,y:cy-th*(l3?.25:.18),'text-anchor':'middle','dominant-baseline':'central'},l1));
+  G.appendChild(sv2('text',{class:'dlt2',x:cx,y:cy+th*(l3?.07:.22),'text-anchor':'middle','dominant-baseline':'central'},l2));
+  if(l3)G.appendChild(sv2('text',{class:'dlt3',x:cx,y:cy+th*.31,'text-anchor':'middle','dominant-baseline':'central'},l3))}
  else G.appendChild(sv2('text',{class:'dlt',x:cx,y:cy,'text-anchor':'middle','dominant-baseline':'central'},l1));
  try{let mw=0;G.querySelectorAll('text').forEach(t=>{const b=t.getBBox();if(b.width>mw)mw=b.width});const rc=G.querySelector('rect.dlp'),nw=mw+px(30);if(rc&&nw>tw){rc.setAttribute('width',nw);rc.setAttribute('x',cx-nw/2)}}catch(_){}
  try{numDeclutter()}catch(e){}try{geoDeclutter()}catch(e){}}
