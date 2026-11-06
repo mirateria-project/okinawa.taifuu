@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -834,7 +835,7 @@ en:{
 document.documentElement.lang=L;
 const $=id=>document.getElementById(id);
 const COL=['#ff3b5c','#ff9500','#ffd60a','#2bd96b','#2f80ff'];
-const VER='4.7.1',VDATE='2026-11-06';
+const VER='4.7.2',VDATE='2026-11-06';
 Object.assign(T,L=='ja'?{
  ver:'バージョン '+VER+'（'+VDATE.replace(/-/g,'/')+'）',
  eHead:'🌀 暴風域',eIn:'入っています',eInFor:h=>'入ってから約'+h+'時間',eInF:'入っているおそれ',eSoon:(d,h)=>d?'あと'+d+'日'+h+'時間':h?'あと約'+h+'時間':'まもなく',
@@ -1099,7 +1100,7 @@ async function recheck(){
   setState('bus',['ok','part','stop'].includes(j.bus)?j.bus:'unk');
   S.ytxt=j.ytext||'';S.yunc=!!j.yuncertain;let yv=['ok','part','stop'].includes(j.yui)?j.yui:'unk';const yr=S.ytxt.replace(/遅延証明(書)?/g,'');if(yv=='part'&&S.ytxt&&!/(遅れ|遅延|運休|見合わせ|運転を見合|中止|停止|運行を休)/.test(yr)){yv='ok';S.ytxt='';S.yunc=0}setState('yui',yv)}
  catch(e){S.err=1}
- try{const r=await fetch('typhoon.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();S.typ=j;S.tyerr=(navigator.onLine===false||j.error)?1:0;tyHistUpd(j)}catch(e){S.tyerr=1}
+ try{const r=await fetch('typhoon.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();fixCourse(j);S.typ=j;S.tyerr=(navigator.onLine===false||j.error)?1:0;tyHistUpd(j)}catch(e){S.tyerr=1}
  try{const r=await fetch('past.json?t='+Date.now(),{cache:'no-store'});if(r.ok){const j=await r.json();if(j&&Array.isArray(j.tracks)&&!j.error)S.pastSrv=j.tracks.filter(x=>x&&Array.isArray(x.p)&&x.p.length>=2).slice(0,3)}}catch(e){}
  tornado();cloudTimes();drawTy();afterData();restart();
  bs.forEach(b=>b.disabled=false);save();draw()}
@@ -1295,10 +1296,14 @@ function tyHistUpd(j){if(!j||j.error||!Array.isArray(j.typhoons))return;const no
   if(nowT-h.at<6*3600000&&!h.x&&!S.ended.some(e=>e.k==k))S.ended.push({k,n:h.n,c:h.c,at:nowT})});
  S.ended=S.ended.filter(e=>nowT-e.at<24*3600000)}
 
+/* the weather chart gives the direction as degrees (270 = west); show it as words like the typhoon info does */
+function fixCourse(o){try{if(Array.isArray(o)){o.forEach(fixCourse);return}if(!o||typeof o!='object')return;
+ if(o.course!=null&&/^\s*\d+(\.\d+)?\s*°?\s*$/.test(String(o.course))){const D=['北','北北東','北東','東北東','東','東南東','南東','南南東','南','南南西','南西','西南西','西','西北西','北西','北北西'];o.course=D[Math.round(parseFloat(o.course)/22.5)%16]}
+ Object.keys(o).forEach(k=>{if(o[k]&&typeof o[k]=='object')fixCourse(o[k])})}catch(e){}}
 function tyText(t){
  const n=t.now,b=nearest(t),ja=L=='ja',R=[];
  /* 🥚台風のたまご：気象庁の天気図に出ている熱帯低気圧（まだ台風情報は出ていない） */
- if(t.egg){const mv=[n.course,n.spdnote].filter(Boolean).join(' ');return '<div class="tyhd">'+tyName(t)+(ja?'（熱帯低気圧）':' (tropical depression)')+'</div><div class="exnote">'+(ja?'台風になるかは、まだ分かりません。気象庁の天気図より':'It may or may not become a typhoon. From the JMA weather chart.')+'</div><div class="tygrid">'+
+ if(t.egg){const mv=[ja?n.course:(EN_DIR[n.course]||n.course),n.spdnote].filter(Boolean).join(' ');return '<div class="tyhd">'+tyName(t)+(ja?'（熱帯低気圧）':' (tropical depression)')+'</div><div class="exnote">'+(ja?'台風になるかは、まだ分かりません。気象庁の天気図より':'It may or may not become a typhoon. From the JMA weather chart.')+'</div><div class="tygrid">'+
   (n.hpa?'<div class="tyr"><span>'+(ja?'中心気圧':'Central pressure')+'</span><b>'+n.hpa+' hPa</b></div>':'')+
   (mv?'<div class="tyr"><span>'+(ja?'動き':'Moving')+'</span><b>'+mv+'</b></div>':'')+
   '<div class="tyr"><span>'+TOREF()+'</span><b>'+(ja?'約':'~')+Math.round(distRef(n.c))+'km</b></div></div>'}
@@ -1445,11 +1450,10 @@ function drawTy(){chipDates();
   if(ex){w.appendChild(sv2('circle',{cx:pc[0],cy:pc[1],r:px(11),fill:'#8a96a3',stroke:'#fff','stroke-width':px(3)}));
    $('lbl').appendChild(sv2('text',{class:'gl tl exl',x:pc[0]+px(16),y:pc[1]-px(14),'text-anchor':'start'},L=='ja'?'温帯低気圧':'Extratropical'))}
   else if(t.egg){/* 🥚台風のたまご：たまごの絵と名前を地図に出す */
-   $('lbl').appendChild(sv2('text',{x:pc[0],y:pc[1],'text-anchor':'middle','dominant-baseline':'central','font-size':px(40)},'🥚'));
-   $('lbl').appendChild(sv2('text',{class:'gl tl',x:pc[0]-px(24),y:pc[1]-px(22),'text-anchor':'end'},L=='ja'?'台風のたまご':'Typhoon egg'))}
+   {const eg=sv2('text',{class:'tl egg',x:pc[0],y:pc[1],'text-anchor':'middle','dominant-baseline':'central'},'🥚');eg.style.fontSize='calc(30px*var(--inv,1))';$('lbl').appendChild(eg)}}
   else{w.appendChild(sv2('circle',{class:'cur',cx:pc[0],cy:pc[1],r:px(8),fill:'#ff3b5c'}));
    w.appendChild(sv2('circle',{class:'sm',cx:pc[0],cy:pc[1],r:px(8),fill:'#fff',stroke:'#12263a'}))}
-  if(list.filter(within).length>1||(ti==0&&list.length>1&&!ex))$('lbl').appendChild(sv2('text',{class:'gl tl',x:pc[0]+px(14),y:pc[1]-px(12),'text-anchor':'start'},tyName(t)))});
+  if(t.egg||(list.length>1&&!ex))$('lbl').appendChild(sv2('text',{class:'gl tl',x:pc[0]+px(14),y:pc[1]-px(12),'text-anchor':'start'},tyName(t)))});
  /* ended typhoons (last known position) */
  S.ended.forEach(e=>{const q=GP(e.c[1],e.c[0]);w.appendChild(sv2('circle',{cx:q[0],cy:q[1],r:px(9),fill:'#b5bec8',stroke:'#fff','stroke-width':px(3)}))});
  /* distance line: selected typhoon -> Okinawa / your location */
@@ -2431,3 +2435,5 @@ setTimeout(()=>{if(S.tab==1)adMaybe()},1600);
 </script>
 </body>
 </html>
+
+</body></html>
