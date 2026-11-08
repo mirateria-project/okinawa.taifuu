@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.awd{margin-top:6px}.awd>summary{list-style:none;display:inline-flex;align-items:center;cursor:pointer;font-weight:900;font-size:15px;padding:8px 16px;border-radius:999px;background:#1d3557;color:#fff;box-shadow:0 3px 0 #0b1a2e;user-select:none;-webkit-user-select:none}.awd>summary::-webkit-details-marker{display:none}.awd>summary:active{transform:translateY(3px);box-shadow:none;background:#2c5288}.awd>summary .c{display:none}.awd[open]>summary .o{display:none}.awd[open]>summary .c{display:inline}.awd[open]>summary{margin-bottom:8px}.tynear.awn{font-weight:900}#prefAsk{position:fixed;left:50%;top:max(18vh,90px);transform:translateX(-50%);width:min(340px,92vw);z-index:60;background:#fff;color:#14213d;border-radius:22px;padding:16px 16px 14px;box-shadow:0 10px 30px rgba(0,0,0,.35);border:3px solid #ffd23f;display:flex;flex-direction:column;gap:8px;text-align:center}#prefAsk[hidden]{display:none}.paT{font-size:20px;font-weight:900}.paS{font-size:14px;font-weight:700;color:#41506b}.paB{font:inherit;font-size:18px;font-weight:900;border:0;border-radius:16px;padding:13px 10px;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.25)}.paB:active{transform:translateY(4px);box-shadow:none;filter:brightness(.9)}.paB.loc{background:#1e88e5;color:#fff}.paB.ok{background:#e8edf5;color:#14213d;font-size:15px}.paO{font-size:13px;font-weight:800;color:#6b778c}.paL{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:800}.paL select{font:inherit;font-size:17px;font-weight:800;padding:10px;border-radius:14px;border:2px solid #1e88e5;background:#f4f8ff;color:#14213d}.paN{font-size:12px;color:#6b778c}</style></head><body>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -740,7 +740,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  <div class="note" id="gebcoN"></div>
 </section>
 
-<div id="gd" hidden><img id="gdImg" alt="しーちゃん"></div><div id="gdB" hidden aria-live="polite"></div><div id="gdP" hidden></div>
+<div id="prefAsk" hidden role="dialog" aria-modal="false"></div><div id="gd" hidden><img id="gdImg" alt="しーちゃん"></div><div id="gdB" hidden aria-live="polite"></div><div id="gdP" hidden></div>
 <div id="busW" hidden><div class="bwin" role="dialog" aria-modal="true"><div class="bwh"><span id="busWT"></span><button type="button" class="bwx" id="busWX" aria-label="close">×</button></div><div id="busWB"></div></div></div>
 <div class="zipp" id="ghpanel" hidden><b>GitHub用のファイル</b><button class="go" id="zipB" type="button">ZIPを保存（全部入り）</button><div class="zipm" id="zipMsg"></div></div>
 <div class="ver" id="ver"></div>
@@ -845,7 +845,7 @@ en:{
 document.documentElement.lang=L;
 const $=id=>document.getElementById(id);
 const COL=['#ff3b5c','#ff9500','#ffd60a','#2bd96b','#2f80ff'];
-const VER='4.8.0',VDATE='2026-11-08';
+const VER='4.10.0',VDATE='2026-11-09';
 Object.assign(T,L=='ja'?{
  ver:'バージョン '+VER+'（'+VDATE.replace(/-/g,'/')+'）',
  eHead:'🌀 暴風域',eIn:'入っています',eInFor:h=>'入ってから約'+h+'時間',eInF:'入っているおそれ',eSoon:(d,h)=>d?'あと'+d+'日'+h+'時間':h?'あと約'+h+'時間':'まもなく',
@@ -1287,6 +1287,9 @@ function fcExt(t,ref){if(!t||isExtra(t)||!inArea(ref))return null;const iss=issu
  const fc=dayFc(t),P=[{h:0,c:[+t.now.c[0],+t.now.c[1]],sw:+t.now.storm||0}].concat(fc.map(f=>({h:+f.h,c:[+f.c[0],+f.c[1]],sw:+f.sw||0})));
  const last=P[P.length-1],dl=hav([last.c[1],last.c[0]],ref),n=fc.length;let v=null;
  if(P.length>=2){const a=P[P.length-2];v=hav([a.c[1],a.c[0]],[last.c[1],last.c[0]])/Math.max(1,last.h-a.h);
+  /* moving away from you overall: it never gets much closer than now and ends farther than now -> no distance, no estimate */
+  {const dn=hav([P[0].c[1],P[0].c[0]],ref);let mn=Infinity;for(let i=1;i<P.length;i++)mn=Math.min(mn,hav([P[i].c[1],P[i].c[0]],ref));
+   if(dl>dn&&mn>dn-Math.max(100,dn*.1))return {away:1,awayC:1,last,n}}
   /* moving away from you at the end of the forecast: no estimate */
   if(hav([a.c[1],a.c[0]],ref)<=dl+1)return {away:1,last,n}}
  else{v=+t.now.spd>0?+t.now.spd:null;
@@ -1380,8 +1383,11 @@ function tyText(t){
  const hasSc=!!(n.scale&&n.scale!='-'),szv=hasSc?(ja?n.scale:(EN_SC[n.scale]||n.scale)):(n.storm?n.storm:null);
  const K1='<div class="tykey'+(AW?' aw':'')+'">'+(AW?'':kv('d',TOREF(1),Math.round(distRef(n.c)),'km'))+kv('g',ja?'最大瞬間風速':'Max gust',n.gust,'m/s')+kv('w',ja?'最大風速':'Max wind',n.wind,'m/s')+kv('v',ja?'進む速さ':'Speed',spv,n.spd!=null?'km/h':'')+kv('s',hasSc?(ja?'大きさ':'Size'):(ja?'暴風半径':'Storm r.'),szv,hasSc?'':(n.storm?'km':''))+kv('p',ja?'中心気圧':'Pressure',n.hpa,'hPa')+'</div>';
  let swe='';{const o=etaOne(t,REF());if(o&&o.in)swe='<span class="swe">'+T.swIn+'</span>';else if(o&&o.fc)swe='<span class="swe">'+T.fcSt(T.dh(o.hr))+'</span>';else if(o)swe='<span class="swe">'+T.extSt(o.n,T.dh(o.hr),o.st,WHO())+'<small>'+T.swNote+'</small></span>'}
- let pst='';if(S.pastOn)PAST().forEach(tr=>{const r=pastEta(tr,t,REF());if(r)pst+='<div class="typast">'+T.pastEta(T.pastNm(tr.n),T.dh(r.h),WHO(),Math.round(r.d))+'</div>'});
- return '<div class="tyhd">'+tyName(t)+swe+'</div><div class="tynear">'+(within(t)?T.tyhit(b.h,Math.round(b.d)):(AW?T.awayHd(PLN()):T.tyfar(Math.round(distRef(n.c)))))+'</div>'+pst+(far?'':K1)+''}
+ let pst='';if(S.pastOn&&!AW)PAST().forEach(tr=>{const r=pastEta(tr,t,REF());if(r)pst+='<div class="typast">'+T.pastEta(T.pastNm(tr.n),T.dh(r.h),WHO(),Math.round(r.d))+'</div>'});
+ /* 遠ざかる台風：名前と「遠ざかっています」だけ。細かい数字はたたんでおき、見たい人だけ開く */
+ if(AW)return '<div class="tyhd">'+tyName(t)+'</div><div class="tynear awn">'+T.awayHd(PLN())+'</div><details class="awd"'+(AWOPEN?' open':'')+'><summary><span class="o">'+(ja?'▲ 詳しく見る':'▲ Show details')+'</span><span class="c">'+(ja?'▼ たたむ':'▼ Hide')+'</span></summary>'+K1+'</details>';
+ return '<div class="tyhd">'+tyName(t)+swe+'</div><div class="tynear">'+(within(t)?T.tyhit(b.h,Math.round(b.d)):T.tyfar(Math.round(distRef(n.c))))+'</div>'+pst+(far?'':K1)+''}
+let AWOPEN=false;document.addEventListener('toggle',e=>{const d=e.target;if(d&&d.classList&&d.classList.contains('awd'))AWOPEN=d.open},true);
 let PATHS=[];
 function chipDates(){try{const t=tyList().find(x=>!isExtra(x))||tyList()[0]||null;const iss=t&&issueOf(t);const all=t?dayAll(t):[];const ja=L=='ja';
  lg.querySelectorAll('.chip').forEach((b,i)=>{const x=all[i],has=!!(x&&x.f&&!x.ex);b.disabled=!has;b.classList.toggle('nodata',!has);b.classList.toggle('exday',!!(x&&x.ex));b.setAttribute('aria-disabled',!has);if(!has&&S.pin==i)S.pin=-1;const c=b.querySelector('.cd');if(!c)return;
@@ -2078,7 +2084,7 @@ function beep(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)(
  const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=1000;g.gain.setValueAtTime(.18,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.09);
  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.1)}catch(e){}
  try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}}
-document.addEventListener('pointerdown',e=>{if(e.target.closest('button,#banner,.opt,.clk,.srcbox a,.mc'))beep()},true);
+document.addEventListener('pointerdown',e=>{if(e.target.closest('button,summary,#banner,.opt,.clk,.srcbox a,.mc'))beep()},true);
 ['touchend','click'].forEach(ev=>document.addEventListener(ev,()=>{try{acOK();if(AC&&!AC._u){const b=AC.createBuffer(1,1,22050),sr=AC.createBufferSource();sr.buffer=b;sr.connect(AC.destination);sr.start(0);AC._u=1}}catch(e){}},true));
 /* offline / autosave */
 function net(){if(!navigator.onLine)$('net').textContent=T.off}
@@ -2293,12 +2299,12 @@ const GT=L=='ja'?{zin:'これは、地図を大きくするボタンだよ',zout
  zlk:'これは、地図を動かせるようにしたり、止めたりするボタンだよ',zmax:'これは、地図を画面いっぱいにするボタンだよ。もう一回押すと元にもどるよ',zwld:'これは、世界の台風やハリケーン、竜巻を見るボタンだよ。押すと、わたしが案内するね',spk:'これは、台風や運行状況を声で読み上げるボタンだよ',
  re2:'これは、いちばん新しい情報を取りに行くボタンだよ',re:'これは、いちばん新しい運行状況を取りに行くボタンだよ',locBtn:'これは、今いる場所を使うボタンだよ。位置はスマホの中だけで使うよ',hbtn:'これは、ホーム画面に追加するやり方を見るボタンだよ',fbtn:'これは、このアプリでできることを見るボタンだよ',
  ibtn:'これは、インスタグラムを開くボタンだよ。コメントしてね',lbtn:'これは、英語に切り替えるボタンだよ',mphd:'これは、下の情報をたたんだり開いたりするボタンだよ',chip:'これは、その日の台風の予報を見るボタンだよ。押すと、わたしが予報円を指さすね',tsb:'これは、見たい台風を選ぶボタンだよ',half:'これは、暴風域と竜巻の情報を切り替えるボタンだよ',
- hint:'ボタンを長押しすると、わたしが説明するよ！',intro:'わたし、しーちゃんが案内するね！ボタンを長押しすると、説明するよ',dflt:'これは、押すと何かが起きるボタンだよ。押してみてね'}
+ hint:'ボタンを長押しすると、わたしが説明するよ！',pref:'地域を選ぶか、📍現在地を使ってね！',intro:'わたし、しーちゃんが案内するね！ボタンを長押しすると、説明するよ',dflt:'これは、押すと何かが起きるボタンだよ。押してみてね'}
 :{zin:'This button zooms the map in',zout:'This button zooms the map out',zbus:'This button shows if buses and Yui Rail in Okinawa are running',japan:'This button shows all of Japan',auto:'This button fits the map to the typhoon',
  zlk:'This button locks or unlocks moving the map',zmax:'This button makes the map full screen. Press again to go back',zwld:'This button shows typhoons, hurricanes and tornadoes around the world',spk:'This button reads the typhoon and transit information aloud',
  re2:'This button gets the newest information',re:'This button gets the newest transit status',locBtn:'This button uses where you are now. Your location stays on your phone',hbtn:'This button shows how to add the app to your Home Screen',fbtn:'This button shows what the app can do',
  ibtn:'This button opens Instagram. Leave a comment!',lbtn:'This button switches to Japanese',mphd:'This button folds or opens the information below',chip:'This button shows the forecast for that day',tsb:'This button chooses which typhoon to show',half:'This button switches between storm and tornado information',
- hint:'Press and hold a button, and I will explain it!',intro:'I\'m Shi-chan, and I\'ll be your guide! Press and hold a button, and I will explain it',dflt:'Press it and see what happens!'};
+ hint:'Press and hold a button, and I will explain it!',pref:'Choose your region, or use 📍 your location!',intro:'I\'m Shi-chan, and I\'ll be your guide! Press and hold a button, and I will explain it',dflt:'Press it and see what happens!'};
 function gdKey(b){if(b.id&&GT[b.id])return b.id;if(b.dataset&&b.dataset.v&&GT[b.dataset.v])return b.dataset.v;if(b.classList.contains('chip'))return 'chip';if(b.classList.contains('tsb'))return 'tsb';if(b.classList.contains('half'))return 'half';return 'dflt'}
 let GD={busy:0,t:[],mouth:0};
 /* Shi-chan can be hidden with the check box (some people only want the forecast) */
@@ -2377,7 +2383,23 @@ function guide(target,txt,intro,opt){if(!txt||S.shiOff===1)return;gdClear();try{
  document.addEventListener('contextmenu',e=>{if(e.target.closest('button,.chip'))e.preventDefault()},true)})();
 $('gd').addEventListener('click',()=>{if(GD.woke){GD.woke=0;return}gdHide()});
 /* first time only: Shi-chan tells you about press-and-hold */
-function gdHint(){const go=()=>{if(GD.busy)return;if($('dlg').open||!$('busW').hidden||!$('swAl').hidden){setTimeout(go,1500);return}S.gdHint=1;save();guide($('zmax'),GT.intro,1)};setTimeout(go,2600)}
+function gdHint(){const go=()=>{if(GD.busy)return;if($('dlg').open||!$('busW').hidden||!$('swAl').hidden){setTimeout(go,1500);return}S.gdHint=1;save();
+ if(needPref()){if(S.shiOff===1)askPref();else guide($('zmax'),GT.intro,1,{done:askPref})}else guide($('zmax'),GT.intro,1)};setTimeout(go,2600)}
+/* v4.10: the first time, ask where you are. Not chosen -> everything is worked out from Okinawa Island */
+function needPref(){return !S.prefAsk&&!S.me&&(S.pref||'oki')=='oki'}
+function askPref(){if(!needPref()||!$('prefAsk').hidden)return;const ja=L=='ja',c=$('prefAsk');
+ c.innerHTML='<div class="paT">'+(ja?'どこの台風情報を見る？':'Where do you want typhoon info for?')+'</div>'+
+  '<div class="paS">'+(ja?'選ばないと、沖縄本島からの距離や時間で計算します。':'If you don\'t choose, distances and times are worked out from Okinawa Island.')+'</div>'+
+  '<button type="button" class="paB loc" id="paLoc">'+(ja?'📍 現在地を使う':'📍 Use my location')+'</button>'+
+  '<div class="paO">'+(ja?'または':'or')+'</div><label class="paL"><span>'+(ja?'地域を選ぶ':'Choose a region')+'</span><select id="paSel"></select></label>'+
+  '<div class="paN">'+(ja?'位置はスマホの中だけで使い、どこにも送りません。':'Your location stays on your phone.')+'</div>'+
+  '<button type="button" class="paB ok" id="paOk">'+(ja?'沖縄本島のままでOK':'Okinawa Island is fine')+'</button>';
+ const ps=$('prefSel'),sel=$('paSel');[...ps.options].forEach(o=>{if(o.value=='me')return;const n=document.createElement('option');n.value=o.value;n.textContent=o.textContent;sel.appendChild(n)});sel.value=S.pref||'oki';
+ const done=()=>{S.prefAsk=1;save();c.hidden=true;try{gdHide()}catch(e){}};
+ $('paLoc').onclick=()=>{done();$('locBtn').click()};
+ sel.onchange=()=>{const v=sel.value;done();ps.value=v;ps.dispatchEvent(new Event('change'))};
+ $('paOk').onclick=done;
+ c.hidden=false;if(S.shiOff!==1)GD.t.push(setTimeout(()=>guide(c,GT.pref),60))}
 if(!S.shiSeen){S.shiSeen=1;if(S.shiOff!==1)S.shiOff=0}else S.shiOff=S.shiOn===1?0:1;save();applyShi();gdHint();
 /* iPhone plays no sound until the screen is touched: if Shi-chan came in silently, the first touch plays her hops and voice */
 ['touchend','click'].forEach(ev=>document.addEventListener(ev,e=>{if(!GD.pend||$('gd').hidden)return;const t=GD.pend;GD.pend=0;if(e.target.closest&&e.target.closest('#gd'))GD.woke=1;gdClear();acOK();
@@ -2471,8 +2493,8 @@ $('mapAd').addEventListener('click',e=>{if(e.target.id=='mapAd')adClose()});
 {const _sh=show;show=function(i){_sh(i);if(i==1)setTimeout(()=>{adMaybe()},900)}}
 setTimeout(()=>{if(S.tab==1)adMaybe()},1600);
 /* v3.12.1: "new features" notice, shown once after an update (not on first install) */
-(function(){const NEWS={ja:['🌍世界の地図に、もう終わった台風（インファ）が残って出ていたのを直しました。日本のまわりは気象庁の台風だけを出します','台風の情報が古いときは、気象庁から直接新しい情報を取りに行くようにしました','「地域・現在地・いま確認・English」のボタンを1行にまとめました','偏西風を動かして見るチェックをなくしました（止まった矢印はそのまま）'],
- en:['🌍 Fixed: a storm that had already ended (In-fa) was still shown on the world map. Around Japan, only JMA typhoons are shown','When the typhoon data is old, the app now gets the newest data from the JMA directly','Region, location, update and language buttons are now on one row','Removed the option to animate the westerlies (the still arrows stay)']};
+(function(){const NEWS={ja:['離れて行く台風は、距離（km）と「まっすぐ来たら」の目安を出さず、「遠ざかっています」と表示するようにしました','遠ざかる台風の細かい数字（風速・気圧など）は、最初はたたんでおき、「▲ 詳しく見る」で開けるようにしました','地域を選んでいない人には、しーちゃんが「地域を選ぶか、📍現在地を使ってね」と案内します（1回だけ）'],
+en:['For a typhoon moving away, the distance (km) and the "if it comes straight" estimate are no longer shown; it now says it is moving away','For a typhoon moving away, the details (wind, pressure, etc.) start folded; tap "▲ Show details" to open them','If you have not chosen a region, Shi-chan asks you once to choose one or use 📍 your location']};
  const seen=S.seenVer;if(FIRST){S.seenVer=VER;save();return}if(seen===VER||String(seen||'').split('.').slice(0,2).join('.')===VER.split('.').slice(0,2).join('.')){if(seen!==VER){S.seenVer=VER;save()}return}
  const done=()=>{S.seenVer=VER;save()};
  const ja=L=='ja',li=(ja?NEWS.ja:NEWS.en).map(x=>'<li style="margin:6px 0">'+x+'</li>').join('');
