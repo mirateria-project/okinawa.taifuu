@@ -555,6 +555,16 @@ body.mapmax{overflow:hidden}
 @keyframes jmv{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
 #simMvW[hidden]{display:none!important}
 /* v4.4.2: Shi-chan off */
+/* v4.8.0: 地域・現在地・いま確認・English を1行に */
+.rgbar{flex-wrap:nowrap!important;gap:5px;align-items:center}
+.rgbar .rg{flex:1 1 auto;min-width:0;gap:3px;font-size:12px}
+.rgbar .rg select{max-width:none;width:100%;min-width:0;font-size:14px;padding:5px 2px 5px 5px}
+.rgbar .barb{gap:4px;flex:none}
+.rgbar .barb button{font-size:13px;padding:7px 8px!important;white-space:nowrap;line-height:1.1}
+.rgbar .rg>span{white-space:nowrap;flex:none}
+@media(max-width:360px){.rgbar .rg>span{display:none}.rgbar .barb button{padding:7px 6px!important;font-size:12px}}
+.rgbar .lbtn{border:2px solid var(--acc)!important;color:var(--acc)!important;background:var(--card)!important;border-radius:999px;font-weight:800}
+
 body.noshi #mcS,body.noshi #mcSp,body.noshi #pzS,body.noshi #gd,body.noshi #gdB,body.noshi #gdP,body.noshi #bub{display:none!important}
 .zipp{display:flex;flex-direction:column;gap:6px;margin:14px 0 0;padding:12px;border:2px dashed var(--line);border-radius:14px}
 .zipp[hidden]{display:none!important}
@@ -594,7 +604,7 @@ button,.chip{-webkit-touch-callout:none;-webkit-user-select:none;user-select:non
 <header>
  <h1 id="ttl"></h1>
  <span class="badge" id="tyb"></span>
- <div class="top-actions"><button class="ghost" id="hbtn"></button><button class="ghost" id="ibtn" style="border-color:#e1306c;color:#e1306c">📷 Instagram</button><button class="ghost" id="fbtn"></button><button class="ghost" id="lbtn" style="border-color:var(--acc);color:var(--acc)"></button></div>
+ <div class="top-actions"><button class="ghost" id="hbtn"></button><button class="ghost" id="ibtn" style="border-color:#e1306c;color:#e1306c">📷 Instagram</button><button class="ghost" id="fbtn"></button></div>
 </header>
 
 <!-- MIRATERIA banner (shared) START -->
@@ -682,7 +692,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </section>
 
 <section class="panel nodata" id="p1" hidden>
- <div class="bar rgbar"><label class="rg"><span id="rgL"></span><select id="prefSel"></select></label><span class="barb"><button class="go loc" id="locBtn"></button><button class="go" id="re2"></button></span></div><div class="chk2" id="chk2"></div>
+ <div class="bar rgbar"><label class="rg"><span id="rgL"></span><select id="prefSel"></select></label><span class="barb"><button class="go loc" id="locBtn"></button><button class="go" id="re2"></button><button class="ghost lbtn" id="lbtn"></button></span></div><div class="chk2" id="chk2"></div>
  <div class="halves" role="tablist"><button class="half etabox" id="etaBox" role="tab"></button><button class="half trhalf" id="trHalf" role="tab"></button></div>
  <div class="tysel" id="tysel" hidden></div>
  <div class="info" id="info"></div>
@@ -718,7 +728,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  <div class="legend" id="legend"></div>
  <div class="fc5" id="fc5"></div>
  <label class="gtopt"><input type="checkbox" id="gtHide"><span id="gtL"></span></label>
- <div class="simbox" id="simBox"><div class="simh" id="simHd"></div><label class="opt"><input type="checkbox" id="simJ"><span id="simJL"></span></label><label class="opt" id="simMvW" hidden><input type="checkbox" id="simMv"><span id="simMvL"></span></label><label class="opt"><input type="checkbox" id="simHi"><span id="simHL"></span></label><div class="simd"><button type="button" class="go" id="drw"></button><button type="button" class="ghost" id="drwU"></button><button type="button" class="ghost" id="drwC"></button></div><div class="simn" id="simN"></div></div>
+ <div class="simbox" id="simBox"><div class="simh" id="simHd"></div><label class="opt"><input type="checkbox" id="simJ"><span id="simJL"></span></label><label class="opt"><input type="checkbox" id="simHi"><span id="simHL"></span></label><div class="simd"><button type="button" class="go" id="drw"></button><button type="button" class="ghost" id="drwU"></button><button type="button" class="ghost" id="drwC"></button></div><div class="simn" id="simN"></div></div>
  <div class="whenbox" id="whenBox" hidden></div>
  <label class="opt pso" id="psoBox"><input type="checkbox" id="kPs"><span id="kPsL"></span></label>
  <div class="info" id="info2"></div>
@@ -794,7 +804,7 @@ const T={ja:{
  alT:'運休アラート（バス・ゆいレールが止まったとき）',alSL:'音で知らせる',alVL:'画面で知らせる',alTest:'アラートをテスト',alX:'閉じる',
  alM:(n,v)=>'⚠ '+n+'：'+v},
 en:{
- ttl:'Okinawa Typhoon & Transit',tab0:'Service status<small class="tbs">(Okinawa only)</small>',tab1:'Typhoon track',re:'Check now',bus:'Bus',yui:'Yui Rail',
+ ttl:'Okinawa Typhoon & Transit',tab0:'Service status<small class="tbs">(Okinawa only)</small>',tab1:'Typhoon track',re:'Update',bus:'Bus',yui:'Yui Rail',
  st:{ok:'Running',part:'Delays',stop:'Suspended',unk:'Unknown'},bst:{ok:'Running',part:'Partly suspended',stop:'All suspended',unk:'Unknown'},
  dok:'Operating as usual',dpart:'Some companies have suspensions',dstop:'Service is suspended',
  dunk:'Cannot get the status. Please check the association page.',dyui:'Cannot get the status. Please check the Yui Rail website.',dypart:'There are delays or partial suspensions.',ysrc:'Yui Rail says: ',yunc:'* The wording differs from usual. Please check the Yui Rail website.',caut:'⚠ This is a guide only. Please check the official websites for accurate information.',srcNote:'This status is read automatically from the official websites of the Okinawa Bus Association and Yui Rail. If something looks wrong, please check the official pages below.',lBus:'Okinawa Bus Association (official)',cLk:'🔗 Open official page',lYui:'Yui Rail (official)',bsrc:'Association says: ',unc:'* The wording differs from usual. Please check the association page.',stale:'* Automatic checks may have stopped.',blink:'Open the Okinawa Bus Association status page',
@@ -815,7 +825,7 @@ en:{
 <ul style="padding-left:20px;line-height:1.7;margin:0 0 8px">
 <li>Bus status at a glance, by color (running / partly suspended / all suspended)</li>
 <li>Shows the bus association's announcement as it is</li>
-<li>Updates every 5 minutes, or tap "Check now"</li>
+<li>Updates every 5 minutes, or tap "Update"</li>
 <li>Sound and screen alerts when service stops (each can be turned on or off)</li>
 <li>Pinch or double-tap the typhoon map to zoom</li> <li>Course simulation: show the westerlies (flowing lines) and the Pacific High, draw your own forecast lines, then check them against the real track</li>
 <li>Opens without a connection (shows the last information received)</li>
@@ -835,7 +845,7 @@ en:{
 document.documentElement.lang=L;
 const $=id=>document.getElementById(id);
 const COL=['#ff3b5c','#ff9500','#ffd60a','#2bd96b','#2f80ff'];
-const VER='4.7.5',VDATE='2026-11-06';
+const VER='4.8.0',VDATE='2026-11-08';
 Object.assign(T,L=='ja'?{
  ver:'バージョン '+VER+'（'+VDATE.replace(/-/g,'/')+'）',
  eHead:'🌀 暴風域',eIn:'入っています',eInFor:h=>'入ってから約'+h+'時間',eInF:'入っているおそれ',eSoon:(d,h)=>d?'あと'+d+'日'+h+'時間':h?'あと約'+h+'時間':'まもなく',
@@ -876,7 +886,7 @@ Object.assign(T,L=='ja'?{
  lkOn:'Lock the map',lkOff:'Unlock the map',lkHint:'Tap 🔒 to move the map',
 
  vMine:'📍 My area',vJapan:'🗾 Japan',vPac:'🌏 Pacific',vAuto:'🌀 Fit typhoon',follow:'Follow the selected typhoon',
- locBtn:'📍 My location',locClr:'Back to Okinawa',locNow:'Showing for: ',locOki:'Okinawa Island (your location not set)',locMe:(a,o,t)=>'Your location ('+Math.abs(a)+'°'+(a<0?'S':'N')+', '+Math.abs(o)+'°'+(o<0?'W':'E')+', at '+t+')',
+ locBtn:'📍 Here',locClr:'Back to Okinawa',locNow:'Showing for: ',locOki:'Okinawa Island (your location not set)',locMe:(a,o,t)=>'Your location ('+Math.abs(a)+'°'+(a<0?'S':'N')+', '+Math.abs(o)+'°'+(o<0?'W':'E')+', at '+t+')',
  locWait:'Getting your location…',locErr:'Could not get your location. Please allow location access in settings.',locNo:'Location is not available on this device.',
  toOki:'To Okinawa Is.',toMe:'To your location',
  etaIn:(h)=>'⚠ You are inside the storm area'+(h!=null?' (for about '+h+' h)':''),
@@ -1093,6 +1103,35 @@ $('alS').onchange=e=>{S.as=e.target.checked?1:0;save()};
 $('alV').onchange=e=>{S.av=e.target.checked?1:0;save();if(!S.av)$('alertbar').hidden=true};
 $('alTest').onclick=()=>alertUser('bus','stop');
 const fmt=iso=>{const d=new Date(iso);return isNaN(d)?now():(d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')};
+
+/* v4.8.0: when typhoon.json is old (GitHub's timer is often late), read the JMA typhoon data directly (same data, same rules as update.mjs) */
+const JMAD=(()=>{const B='https://www.jma.go.jp/bosai/typhoon/data/';
+ const num=v=>{const n=parseFloat(String(v??'').replace(/[^\d.\-]/g,''));return isFinite(n)?n:null};
+ const txt=v=>{v=typeof v==='object'&&v?(v.jp??v.en??''):(v??'');v=String(v).trim();return v&&v!=='-'&&v!=='－'?v:null};
+ const ll=v=>{if(!v)return null;let a=Array.isArray(v)?v:v.deg||v.center||null;if(a&&!Array.isArray(a))a=a.deg||null;if(!Array.isArray(a)||a.length<2)return null;if(Array.isArray(a[0]))a=a[0];let la=+a[0],lo=+a[1];if(!isFinite(la)||!isFinite(lo))return null;if(Math.abs(la)>90)[la,lo]=[lo,la];return [la,lo]};
+ const pos=e=>ll(e.position)||ll(e.center)||ll(e.probabilityCircle&&e.probabilityCircle.center);
+ const km=v=>{if(v==null)return null;if(typeof v==='object')v=v.km??v.radius;const n=num(v);if(n==null)return null;return n>3000?Math.round(n/1000):Math.round(n)};
+ const mr=a=>{if(!a)return null;const arr=Array.isArray(a)?a:[a];const v=arr.map(x=>km(x&&x.range?x.range:x)).filter(x=>x!=null);return v.length?Math.max(...v):null};
+ const gj=async u=>{const c=new AbortController(),tm=setTimeout(()=>c.abort(),9000);try{const r=await fetch(u,{cache:'no-store',signal:c.signal});if(!r.ok)throw 0;return await r.json()}finally{clearTimeout(tm)}};
+ function build(t,spec,fcst){const items=(spec||[]).filter(e=>e&&typeof e.part==='object'),title=(spec||[]).find(e=>e&&typeof e.part!=='object')||{};
+  const an=items.find(e=>+e.advancedHours===0)||items[0];if(!an)throw 0;const c=pos(an);if(!c)throw 0;
+  const sp=an.speed&&typeof an.speed==='object'?an.speed['km/h']:an.speed,spn=num(sp);
+  const now={c,hpa:num(an.pressure),wind:num(an.maximumWind&&an.maximumWind.sustained&&an.maximumWind.sustained['m/s']),gust:num(an.maximumWind&&an.maximumWind.gust&&an.maximumWind.gust['m/s']),
+   spd:spn,spdnote:spn==null?txt(sp):null,course:txt(an.course),scale:txt(an.scale),int:txt(an.intensity),loc:txt(an.location),storm:mr(an.stormWarning),gale:mr(an.galeWarning)};
+  const pts=[];items.filter(e=>+e.advancedHours>0).forEach(e=>{const p=pos(e);if(!p)return;pts.push({h:+e.advancedHours,c:p,r:km(e.probabilityCircleRadius??(e.probabilityCircle&&e.probabilityCircle.radius)),sw:mr(e.stormWarning),cat:txt(e.category&&(e.category.en||e.category.jp))||txt(e.category),int:txt(e.intensity)})});
+  (fcst||[]).filter(e=>e&&typeof e.part==='object'&&+e.advancedHours>0).forEach(e=>{const h=+e.advancedHours,r=km(e.probabilityCircle&&e.probabilityCircle.radius),hit=pts.find(p=>p.h===h);
+   if(hit){if(hit.r==null)hit.r=r;if(hit.sw==null)hit.sw=mr(e.stormWarning)}else{const p=ll(e.center)||ll(e.probabilityCircle&&e.probabilityCircle.center);if(p)pts.push({h,c:p,r,sw:mr(e.stormWarning),cat:txt(e.category&&(e.category.en||e.category.jp))})}});
+  const fc=[],used=new Set();for(let d=1;d<=5;d++){let best=null;pts.forEach((p,i)=>{const g=Math.abs(p.h-24*d);if(!used.has(i)&&g<=12&&(!best||g<best.g))best={g,i,p}});
+   if(best){used.add(best.i);const f={h:24*d,c:best.p.c,r:best.p.r||0,vh:best.p.h};if(best.p.sw)f.sw=best.p.sw;if(best.p.cat)f.cat=best.p.cat;if(best.p.int)f.int=best.p.int;fc.push(f)}}
+  return {id:t.tropicalCyclone||'',number:String(t.typhoonNumber||title.typhoonNumber||''),name:txt(title.name&&title.name.jp)||null,nameEn:(title.name&&title.name.en)||null,
+   cat:txt(t.category)||txt(an.category&&an.category.en)||'',issue:(title.issue&&title.issue.JST)||t.issue||null,fc,now}}
+ return async function(old){const list=await gj(B+'targetTc.json'),arr=Array.isArray(list)?list:[],out=[];let bad=0;
+  await Promise.all(arr.map(async(t,i)=>{const id=t&&t.tropicalCyclone;if(!id)return;try{const [sp,fc]=await Promise.all([gj(B+id+'/specifications.json'),gj(B+id+'/forecast.json').catch(()=>null)]);out[i]=build(t,sp,fc)}catch(e){bad++}}));
+  const ty=out.filter(Boolean);if(arr.length&&!ty.length)throw 0;
+  /* keep the 🥚 eggs from typhoon.json, unless a real typhoon is now within 400 km of them */
+  const eggs=((old&&old.typhoons)||[]).filter(e=>e&&e.egg&&e.now&&e.now.c&&ty.every(t=>hav([+t.now.c[1],+t.now.c[0]],[+e.now.c[1],+e.now.c[0]])>400));
+  return {typhoons:ty.concat(eggs),eggs:eggs.length,checked:new Date().toISOString(),partial:bad>0,direct:1}}})();
+const tyOld=j=>!j||j.error||!j.checked||Date.now()-new Date(j.checked)>20*60000;
 async function recheck(){
  const bs=[$('re'),$('re2')];bs.forEach(b=>b.disabled=true);
  try{const r=await fetch('status.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();
@@ -1100,7 +1139,9 @@ async function recheck(){
   setState('bus',['ok','part','stop'].includes(j.bus)?j.bus:'unk');
   S.ytxt=j.ytext||'';S.yunc=!!j.yuncertain;let yv=['ok','part','stop'].includes(j.yui)?j.yui:'unk';const yr=S.ytxt.replace(/遅延証明(書)?/g,'');if(yv=='part'&&S.ytxt&&!/(遅れ|遅延|運休|見合わせ|運転を見合|中止|停止|運行を休)/.test(yr)){yv='ok';S.ytxt='';S.yunc=0}setState('yui',yv)}
  catch(e){S.err=1}
- try{const r=await fetch('typhoon.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();fixCourse(j);S.typ=j;S.tyerr=(navigator.onLine===false||j.error)?1:0;tyHistUpd(j)}catch(e){S.tyerr=1}
+ {let j=null;try{const r=await fetch('typhoon.json?t='+Date.now(),{cache:'no-store'});if(r.ok)j=await r.json()}catch(e){}
+  if(!PREVIEW&&tyOld(j)){try{j=await JMAD(j)}catch(e){}}
+  if(j){fixCourse(j);S.typ=j;S.tyerr=(navigator.onLine===false||j.error)?1:0;tyHistUpd(j)}else S.tyerr=1}
  try{const r=await fetch('past.json?t='+Date.now(),{cache:'no-store'});if(r.ok){const j=await r.json();if(j&&Array.isArray(j.tracks)&&!j.error)S.pastSrv=j.tracks.filter(x=>x&&Array.isArray(x.p)&&x.p.length>=2).slice(0,3)}}catch(e){}
  tornado();cloudTimes();drawTy();afterData();restart();
  bs.forEach(b=>b.disabled=false);save();draw()}
@@ -2092,7 +2133,7 @@ function contour(LA,LO,val,lev){const out=[],nA=LA.length,nO=LO.length,P=(i,k)=>
  return out}
 const segPath=a=>a.map(q=>'M'+q[0].toFixed(1)+' '+q[1].toFixed(1)+'L'+q[2].toFixed(1)+' '+q[3].toFixed(1)).join('');
 function drawLayers(){const ja=L=='ja',gs=$('gSst'),gh=$('gHigh'),gj=$('gJet');[gs,gh,gj].forEach(e=>{while(e.firstChild)e.removeChild(e.firstChild)});
- ['lyH','lyJ','lyT'].forEach(id=>$(id).classList.toggle('sel',!!S[id]));try{$('simJ').checked=!!S.lyJ;$('simHi').checked=!!S.lyH;$('simMvW').hidden=!S.lyJ;$('simMv').checked=!!S.jetMv}catch(_){}
+ ['lyH','lyJ','lyT'].forEach(id=>$(id).classList.toggle('sel',!!S[id]));try{$('simJ').checked=!!S.lyJ;$('simHi').checked=!!S.lyH;}catch(_){}
  const notes=[],tm=layerTime(),when=d=>{const x=new Date(d);return (x.getMonth()+1)+'/'+x.getDate()+' '+x.getHours()+(ja?'時':':00')};
  if(S.lyT){const d=SSTD.d;if(d&&d.v){const nO=STLO.length,dx=Math.abs(GP(STLO[1],10)[0]-GP(STLO[0],10)[0]);
    d.v.forEach((v,i)=>{if(v==null||v<26)return;const a=STLA[Math.floor(i/nO)],o=STLO[i%nO],q=GP(o,a);gs.appendChild(sv2('circle',{cx:q[0],cy:q[1],r:dx*1.15,fill:v>=29.5?'url(#sst3)':v>=28?'url(#sst2)':'url(#sst1)'}))});
@@ -2110,7 +2151,7 @@ function drawLayers(){const ja=L=='ja',gs=$('gSst'),gh=$('gHigh'),gj=$('gJet');[
   if(S.lyJ){const nA=UPLA.length,UV=[];for(let n=0;n<nA*nO;n++){const w=d.ws[n]&&d.ws[n][k],dr=d.wd[n]&&d.wd[n][k];UV.push(w==null||dr==null?null:[-w*Math.sin(dr*Math.PI/180),-w*Math.cos(dr*Math.PI/180)])}
    const uv=(lo,la)=>{const fi=(la-UPLA[0])/5,fj=(lo-UPLO[0])/5;if(fi<0||fj<0||fi>=nA-1||fj>=nO-1)return null;const i0=Math.floor(fi),j0=Math.floor(fj),ti=fi-i0,tj=fj-j0,c=[UV[i0*nO+j0],UV[i0*nO+j0+1],UV[(i0+1)*nO+j0],UV[(i0+1)*nO+j0+1]];if(c.some(x=>!x))return null;
     const w=[(1-ti)*(1-tj),(1-ti)*tj,ti*(1-tj),ti*tj];return [c[0][0]*w[0]+c[1][0]*w[1]+c[2][0]*w[2]+c[3][0]*w[3],c[0][1]*w[0]+c[1][1]*w[1]+c[2][1]*w[2]+c[3][1]*w[3]]};
-   let best=null,cnt=0;const TH=28,mv=!!S.jetMv,spd=(i,j)=>{const w=d.ws[i*nO+j];return w&&w[k]!=null?w[k]:null};
+   let best=null,cnt=0;const TH=28,mv=false,spd=(i,j)=>{const w=d.ws[i*nO+j];return w&&w[k]!=null?w[k]:null};
    /* v4.6.0: band where the westerlies blow (purple), with a line on both sides like river banks */
    let bp='';for(let i=0;i<nA-1;i++)for(let j=0;j<nO-1;j++){const v=[spd(i,j),spd(i,j+1),spd(i+1,j+1),spd(i+1,j)];if(v.some(x=>x==null)||v.every(x=>x<TH))continue;
     const c=[GP(UPLO[j],UPLA[i]),GP(UPLO[j+1],UPLA[i]),GP(UPLO[j+1],UPLA[i+1]),GP(UPLO[j],UPLA[i+1])],pl=[];
@@ -2148,7 +2189,9 @@ async function usTorList(){if(WLD.tor&&Date.now()-WLD.torAt<600000)return WLD.to
 async function gdacsLoad(){if(WLD.busy||(WLD.st&&Date.now()-WLD.at<1800000))return;WLD.busy=1;
  try{const fr=new Date(Date.now()-12*86400000).toISOString().slice(0,10);
   const r=await fetch('https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=TC&fromDate='+fr+'&alertlevel=Green;Orange;Red');if(!r.ok)throw 0;const j=await r.json();const m=new Map();
-  (j.features||[]).forEach(f=>{const p=f.properties||{},g=f.geometry;if(String(p.iscurrent).toLowerCase()!='true'||!g||g.type!='Point')return;const sv=p.severitydata||{};let kmh=+sv.severity;if(/kt|knot/i.test(sv.severityunit||''))kmh*=1.852;
+  (j.features||[]).forEach(f=>{const p=f.properties||{},g=f.geometry;if(String(p.iscurrent).toLowerCase()!='true'||!g||g.type!='Point')return;
+   /* v4.8.0: GDACS sometimes keeps a storm that already ended as "current" (e.g. In-fa). Skip anything not updated in the last 30 hours */
+   const upd=Date.parse(p.todate||p.datemodified||'');if(!isFinite(upd)||Date.now()-upd>30*3600000)return;const sv=p.severitydata||{};let kmh=+sv.severity;if(/kt|knot/i.test(sv.severityunit||''))kmh*=1.852;
    const o={id:p.eventid,nm:String(p.eventname||p.name||'').replace(/^(Tropical (Storm|Depression)|Typhoon|Hurricane|Cyclone)[- ]*/i,''),lat:+g.coordinates[1],lon:+g.coordinates[0],w:isFinite(kmh)&&kmh>0?Math.round(kmh/3.6):null,tr:[],fc:[],det:p.url&&p.url.details};
    if(!m.has(o.id)||(o.w||0)>=(m.get(o.id).w||0))m.set(o.id,o)});
   const st=[...m.values()].sort((a,b)=>(b.w||0)-(a.w||0)).slice(0,8);
@@ -2171,7 +2214,9 @@ function wLabel(G,q,r,a,b){const vb=sv.getAttribute('viewBox').split(' ').map(Nu
 function stKind(la,lo){if(lo<0)lo+=360;if(la<0||(lo>=30&&lo<100))return 'cyc';if(lo>=100&&lo<180)return 'ty';return 'hu'}
 function drawWorld(){const G=$('wld');while(G.firstChild)G.removeChild(G.firstChild);G._t=[];if(S.mode=='tr')return;const ja=L=='ja',jma=tyAll().map(t=>[+t.now.c[1],+t.now.c[0]]);
  const nmK=x=>String(x||'').toUpperCase().replace(/[-\s]*\d+$/,'').replace(/[^A-Z]/g,''),jn=tyAll().map(t=>nmK(t.nameEn)).filter(Boolean);
- let list=(WLD.st||[]).filter(o=>isFinite(o.lat)&&isFinite(o.lon)&&!jma.some(p=>hav(p,[o.lon,o.lat])<500)&&!(nmK(o.nm)&&jn.includes(nmK(o.nm))));
+ /* v4.8.0: around Japan (100°E–180°, north of the equator) the JMA is the official source, so other agencies' storms there are not drawn (no duplicates / old storms) */
+ const jmaOK=!!(S.typ&&Array.isArray(S.typ.typhoons)&&!S.tyerr),inJ=o=>{const lo=o.lon<0?o.lon+360:o.lon;return o.lat>=0&&o.lat<=60&&lo>=100&&lo<=180};
+ let list=(WLD.st||[]).filter(o=>isFinite(o.lat)&&isFinite(o.lon)&&!(jmaOK&&inJ(o))&&!jma.some(p=>hav(p,[o.lon,o.lat])<500)&&!(nmK(o.nm)&&jn.includes(nmK(o.nm))));
  /* zoomed out to the world: the JMA typhoons are drawn the same simple way (the detailed circles come back when you zoom in) */
  if(V.z<3)list=tyAll().filter(t=>!isExtra(t)).map(t=>({nm:tyName(t),jma:1,lat:+t.now.c[0],lon:+t.now.c[1],w:+t.now.wind||null,tr:[],fc:dayFc(t).slice(0,3).map(f=>[+f.c[0],+f.c[1]])})).concat(list).sort((a,b)=>(b.w||0)-(a.w||0));
  const src=cloudTex();G._t=list.map(o=>{const q=GP(o.lon,o.lat),r=px(20);return [q[0]-r,q[1]-r,2*r,2*r]});
@@ -2355,7 +2400,6 @@ S.lyH=S.lyJ=S.lyT=0;S.jetMv=0;S.view='auto';S.pin=-1;
   :{hd:'🧪 Course simulation<small>Tick to show on the map. Draw your own forecast line, then check it against the real track later</small>',j:'💨 Westerlies (arrows)',h:'H Pacific High (inside orange line)',dOn:'✏️ Draw lines',dOff:'✅ Done drawing',u:'↩️ Undo 1',c:'🗑️ Clear all',tip:'Drag your finger to draw',cf:'Tap again to delete all',n:(c,d)=>c?'Your lines: '+c+' (since '+d+'). Tap "Done drawing" to move the map':'No lines yet. Tap "Draw lines" and drag on the map'};
  $('simHd').innerHTML=TX.hd;$('simJL').textContent=TX.j;$('simHL').textContent=TX.h;$('drwU').textContent=TX.u;$('drwC').textContent=TX.c;
  $('simJ').checked=!!S.lyJ;$('simHi').checked=!!S.lyH;
- $('simMvL').textContent=ja?'▶️ 偏西風を動かして見る（スマホが熱くなりやすい）':'▶️ Animate the westerlies (phone may get warm)';$('simMvW').hidden=!S.lyJ;$('simMv').onchange=e=>{S.jetMv=e.target.checked?1:0;drawLayers()};
  const wide=()=>{try{if(V.z>4.6){fit(112,12,162,47,.03);manual()}}catch(_){}};
  $('simJ').onchange=e=>{if(!!S.lyJ!=e.target.checked){lyToggle('lyJ');if(e.target.checked)wide()}};
  $('simHi').onchange=e=>{if(!!S.lyH!=e.target.checked){lyToggle('lyH');if(e.target.checked)wide()}};
@@ -2427,8 +2471,8 @@ $('mapAd').addEventListener('click',e=>{if(e.target.id=='mapAd')adClose()});
 {const _sh=show;show=function(i){_sh(i);if(i==1)setTimeout(()=>{adMaybe()},900)}}
 setTimeout(()=>{if(S.tab==1)adMaybe()},1600);
 /* v3.12.1: "new features" notice, shown once after an update (not on first install) */
-(function(){const NEWS={ja:['🥚台風のたまご：気象庁が台風情報を出す前の熱帯低気圧も、天気図から見つけて地図に出すようにしました','偏西風を、止まった矢印にしました（太い矢印ほど風が強い）','偏西風が流れる範囲を、上下の線と紫の帯で分かるようにしました','偏西風の動きは「動かして見る」にチェックした人だけ（スマホが熱くなりにくい）','しーちゃんは最初に開いた時だけ登場。次からは地図の下の「しーちゃんをいつも出す」にチェックした人だけ出ます','富士山と桜島の横に、噴火警戒レベル（5段階）を出しました','「1日目〜5日目の進路は気象庁の予報です」と分かるように書き換えました','地図の下のチェックで、しーちゃんを出す・出さないを選べるようにしました','1日目〜5日目のボタンを押すと、しーちゃんがその日の予報円を指さして教えてくれます','しーちゃんは声を出さず、吹き出しで話すようにしました','🌍を押すと、しーちゃんが世界の台風・ハリケーン・竜巻を紹介して、ひとつずつ指さしで教えてくれます','アプリを開くと、しーちゃんがアップで登場して、跳ねてきて案内します（音は画面にさわると鳴ります）','45秒さわらないと動きを止めて、スマホが熱くなりにくくしました（さわるとまた動きます）','ボタンを長押しすると、しーちゃんが跳ねてきて、吹き出しで説明してくれます','画面を台風の地図ひとつにまとめました。バス・ゆいレールは地図の上の「運行状況」ボタンから見られます','バナーを地図のすぐ上に移しました（全画面のときは地図の一番上）','🌍で、世界の台風・ハリケーン・サイクロンと竜巻を見られます','世界の地図の陸地のギザギザを直しました','地図の桜島をタップすると、いまの桜島（気象庁の火山カメラ）を見られます','しーちゃんを2本の指で、少し大きく・小さくできます','地図の富士山をタップすると、富士山のライブカメラを開けます','地域（都道府県）を選べるようになりました。現在地を使うと県名が出ます'],
- en:['🥚Typhoon eggs: tropical depressions are now shown from the JMA weather chart, even before JMA issues typhoon information','Westerlies are now still arrows (thicker = stronger wind)','The westerly band is shown with lines on both sides and a purple fill','Westerly movement only if you tick "Animate" (keeps the phone cooler)','Shi-chan appears on first launch only; after that, tick "Always show Shi-chan" under the map','Volcanic alert level (5 steps) next to Mt. Fuji and Sakurajima','The note now says days 1–5 are the JMA forecast track','A check box under the map now lets you show or hide Shi-chan','Press a day button: Shi-chan points to that day\'s forecast circle','Shi-chan now talks in speech bubbles only (no voice)','Press 🌍: Shi-chan tells you about the storms around the world and points to each one','When the app opens, Shi-chan appears close up, hops over and greets you (her sound plays when you touch the screen)','After 45 s without touching, animations stop so the phone stays cooler (touch to start them again)','Press and hold a button: Shi-chan hops over and explains it','Everything is now on the typhoon map. Bus and Yui Rail: the "Transit" button on the map','The banner now sits right above the map (top of the map in full screen)','🌍 shows typhoons, hurricanes, cyclones and tornadoes around the world','Fixed the jagged coastlines on the world map','Tap Sakurajima on the map to open the JMA volcano cameras','Pinch Shi-chan with two fingers to make her a little bigger or smaller','Tap Mt. Fuji on the map to open its live cameras','Choose your prefecture; using your location shows your prefecture']};
+(function(){const NEWS={ja:['🌍世界の地図に、もう終わった台風（インファ）が残って出ていたのを直しました。日本のまわりは気象庁の台風だけを出します','台風の情報が古いときは、気象庁から直接新しい情報を取りに行くようにしました','「地域・現在地・いま確認・English」のボタンを1行にまとめました','偏西風を動かして見るチェックをなくしました（止まった矢印はそのまま）'],
+ en:['🌍 Fixed: a storm that had already ended (In-fa) was still shown on the world map. Around Japan, only JMA typhoons are shown','When the typhoon data is old, the app now gets the newest data from the JMA directly','Region, location, update and language buttons are now on one row','Removed the option to animate the westerlies (the still arrows stay)']};
  const seen=S.seenVer;if(FIRST){S.seenVer=VER;save();return}if(seen===VER||String(seen||'').split('.').slice(0,2).join('.')===VER.split('.').slice(0,2).join('.')){if(seen!==VER){S.seenVer=VER;save()}return}
  const done=()=>{S.seenVer=VER;save()};
  const ja=L=='ja',li=(ja?NEWS.ja:NEWS.en).map(x=>'<li style="margin:6px 0">'+x+'</li>').join('');
