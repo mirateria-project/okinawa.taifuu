@@ -860,7 +860,7 @@ en:{
 document.documentElement.lang=L;
 const $=id=>document.getElementById(id);
 const COL=['#ff3b5c','#ff9500','#ffd60a','#2bd96b','#2f80ff'];
-const VER='4.14.0',VDATE='2026-11-12';
+const VER='4.14.2',VDATE='2026-11-12';
 Object.assign(T,L=='ja'?{
  ver:'バージョン '+VER+'（'+VDATE.replace(/-/g,'/')+'）',
  eHead:'🌀 暴風域',eIn:'入っています',eInFor:h=>'入ってから約'+h+'時間',eInF:'入っているおそれ',eSoon:(d,h)=>d?'あと'+d+'日'+h+'時間':h?'あと約'+h+'時間':'まもなく',
@@ -1211,7 +1211,9 @@ const dist=c=>hav([c[1],c[0]],OKI_C);
 const REF=()=>S.me&&isFinite(S.me.lon)?[+S.me.lon,+S.me.lat]:(PREF().k=='oki'?OKI_C:[PREF().p[0][1],PREF().p[0][0]]);
 const distRef=c=>hav([c[1],c[0]],REF());
 const isExtra=t=>/^(LOW|ETC|EX|XT|EXTRA)/i.test(t.cat||'')||/温帯/.test(((t.now&&t.now.int)||'')+(t.status||'')+(t.cat||''))||t.extratropical===true;
-const tyAll=()=>(S.typ&&Array.isArray(S.typ.typhoons))?S.typ.typhoons.filter(t=>t&&t.now&&t.now.c&&isFinite(+t.now.c[0])&&isFinite(+t.now.c[1])):[];
+/* v4.14.2: 温帯低気圧に変わって12時間たったものは消す（気象庁は変わった後の発表をしないので、最後の発表がずっと残るため） */
+const EX_KEEP=12*3600e3;function exOld(t){if(!isExtra(t))return false;const k=String(t.id||t.number||t.name||'');let f=Date.now();try{S.exSeen=S.exSeen||{};if(S.exSeen[k])f=S.exSeen[k];else{S.exSeen[k]=f;save()}}catch(e){}const d=new Date(t.issue||t.issued||'');const t0=isNaN(d)?f:Math.min(+d,f);return Date.now()-t0>EX_KEEP}
+const tyAll=()=>(S.typ&&Array.isArray(S.typ.typhoons))?S.typ.typhoons.filter(t=>t&&t.now&&t.now.c&&isFinite(+t.now.c[0])&&isFinite(+t.now.c[1])&&!exOld(t)):[];
 /* selected typhoon first, so the day buttons / callouts / speech follow it */
 function tyList(){const a=tyAll();if(!a.length)return a;let i=a.findIndex(t=>(t.id||t.number)==S.sel);if(i<0){i=a.findIndex(t=>!isExtra(t)&&within(t));if(i<0)i=a.findIndex(t=>!isExtra(t));if(i<0)i=0}
  const s=a[i];return [s].concat(a.filter((t,j)=>j!=i))}
@@ -1568,7 +1570,7 @@ function drawTy(){chipDates();NOFC=[];
  try{drawLayers()}catch(e){}try{drawWorld();drawFuji()}catch(e){}try{drawSaku()}catch(e){}cloudDraw(list);drawSw(list);drawCallouts(list);placeDist();try{NOFC.forEach(o=>nofcLabel(o.pc,o.tail))}catch(e){}try{drawPast(t0)}catch(e){}applyLayers();drawSel();
  mapKey();
  $('p1').classList.toggle('nodata',!list.length);
- const bd=$('tyb');if(list.length){bd.textContent=list.some(t=>!isExtra(t)&&within(t))?T.tyb:T.tyb2;bd.classList.add('on')}else bd.classList.remove('on');
+ /* v4.14.1: 温帯低気圧に変わった台風は「台風発生中」に数えない */const bd=$('tyb'),tyAct=list.filter(t=>!isExtra(t));if(tyAct.length){bd.textContent=tyAct.some(t=>within(t))?T.tyb:T.tyb2;bd.classList.add('on')}else bd.classList.remove('on');
  let h='';
  if(!S.typ||!Array.isArray(S.typ.typhoons))h=T.tyunk;
  else if(!list.length)h=T.tynone;
