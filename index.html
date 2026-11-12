@@ -323,6 +323,16 @@ header{flex-wrap:wrap;row-gap:6px}#ttl{white-space:nowrap}header .top-actions{fl
 .legend .chip.exday .cd,.legend .chip.nodata .cd{font-size:10px;letter-spacing:-.02em}
 .panic .mca,.panic .mcs{animation:shiver .14s linear infinite!important;filter:drop-shadow(0 1px 2px #0005)!important;opacity:1}
 .panic .pz{display:none!important}
+
+/* v4.14.0: 3-day weather, always shown at the bottom right of the map (placed by placeWx so it never covers the credit or Shi-chan) */
+#wx{position:absolute;right:6px;bottom:30px;z-index:3;background:#ffffffeb;color:#12263a;border:2px solid #12263a;border-radius:12px;padding:3px 6px 4px;box-shadow:0 2px 8px #0004;pointer-events:none;line-height:1.15;font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif}
+#wx[hidden]{display:none!important}
+#wx .wxh{font-size:10.5px;font-weight:800;color:#4a5b6c;text-align:center;white-space:nowrap;margin-bottom:1px}
+#wx .wxr{display:flex;gap:3px}
+#wx .wxc{display:flex;flex-direction:column;align-items:center;min-width:40px}
+#wx .wxd{font-size:11px;font-weight:900;white-space:nowrap}
+#wx .wxi{font-size:20px;line-height:1.1}
+#wx .wxp{font-size:12px;font-weight:900;color:#1e6bd6}
 </style>
 <script>(function(){try{var h=document.head;document.querySelectorAll('link[rel="apple-touch-icon"],link[rel="icon"]').forEach(function(l){if(l.parentNode!==h)h.appendChild(l)});0}catch(e){}})();</script><style>
 .map{background:#1e5b94}#svg .sea{fill:#1e5b94}#cld{pointer-events:none;opacity:.85}#svg.mtr #wavRA,#svg.mtr #wavRB,#svg.mtr #wavRC{display:none}#svg.notiles #bathy{display:none}#cld .spin{transform-box:fill-box;transform-origin:center}#cld.anim .spin{animation:cspin 15s linear infinite}@keyframes cspin{to{transform:rotate(-360deg)}}@media (prefers-reduced-motion:reduce){#cld.anim .spin{animation:none}}#svg.mtr #cld,#svg.mtr #dln .dlp{display:none}
@@ -850,7 +860,7 @@ en:{
 document.documentElement.lang=L;
 const $=id=>document.getElementById(id);
 const COL=['#ff3b5c','#ff9500','#ffd60a','#2bd96b','#2f80ff'];
-const VER='4.13.0',VDATE='2026-11-11';
+const VER='4.14.0',VDATE='2026-11-12';
 Object.assign(T,L=='ja'?{
  ver:'バージョン '+VER+'（'+VDATE.replace(/-/g,'/')+'）',
  eHead:'🌀 暴風域',eIn:'入っています',eInFor:h=>'入ってから約'+h+'時間',eInF:'入っているおそれ',eSoon:(d,h)=>d?'あと'+d+'日'+h+'時間':h?'あと約'+h+'時間':'まもなく',
@@ -1626,9 +1636,19 @@ function boxB(a,N,R){const o=new Float32Array(a.length),t=new Float32Array(a.len
  for(let x=0;x<N;x++){let s=0;for(let y=-R;y<=R;y++)s+=t[Math.min(N-1,Math.max(0,y))*N+x];for(let y=0;y<N;y++){o[y*N+x]=s;s+=t[Math.min(N-1,y+R+1)*N+x]-t[Math.max(0,y-R)*N+x]}}
  return o}
 function cleanLow(d){const N=256,M=N*N,LC=LREF||[236,236,236],A=new Float32Array(M),W=new Float32Array(M);
+ /* v4.14.0: the letters of the English place names (and their white edge) used to stay on the sea as white smudges.
+    "ink" = clearly darker than both sea and land, or whiter than land. Around words (many ink pixels) the land-coloured edge is wiped and refilled from what is around it; tiny islands are left alone */
+ const lum=(r,g,b)=>.299*r+.587*g+.114*b,LL=lum(LC[0],LC[1],LC[2]),SL=WREF?lum(WREF[0],WREF[1],WREF[2]):LL-30,IL=Math.min(LL,SL)-22,IH=LL+8,INK=new Float32Array(M),NS=new Uint8Array(M);let nInk=0;
  for(let p=0;p<M;p++){const i=p*4,r=d[i],g=d[i+1],b=d[i+2],t=wt(r,g,b);
+  if(t<.5){NS[p]=1;const l=lum(r,g,b);if(l<IL||l>IH){INK[p]=1;nInk++}}
   if(t>0){A[p]=1-t;W[p]=1;continue}
   const mx=Math.max(r,g,b),mn=Math.min(r,g,b);if(mn>=170&&mx-mn<=18&&Math.max(Math.abs(r-LC[0]),Math.abs(g-LC[1]),Math.abs(b-LC[2]))<=12){A[p]=1;W[p]=1}}
+ if(nInk>=14){const near=boxB(INK,N,2),cid=new Int32Array(M).fill(-1),Q=new Int32Array(M),texty=[];let nc=0;
+  for(let p0=0;p0<M;p0++){if(!NS[p0]||cid[p0]>=0)continue;let h=0,t=0,ink=0,x0=N,x1=0,y0=N,y1=0;Q[t++]=p0;cid[p0]=nc;
+   while(h<t){const p=Q[h++],x=p%N,y=(p/N)|0;if(INK[p])ink++;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;
+    const q=[y>0?p-N:-1,y<N-1?p+N:-1,x>0?p-1:-1,x<N-1?p+1:-1];for(const r of q)if(r>=0&&NS[r]&&cid[r]<0){cid[r]=nc;Q[t++]=r}}
+   texty.push(ink>=14&&(x1-x0>=8||y1-y0>=8));nc++}
+  for(let p=0;p<M;p++)if(cid[p]>=0&&texty[cid[p]]&&near[p]>.01&&W[p]&&A[p]>.5){W[p]=0;A[p]=0}}
  const VA=new Float32Array(M);for(let p=0;p<M;p++)VA[p]=A[p]*W[p];
  const a1=boxB(VA,N,3),w1=boxB(W,N,3);let a2=null,w2=null;
  for(let p=0;p<M;p++){let v;if(W[p])v=A[p];else if(w1[p]>.5)v=a1[p]/w1[p];else{if(!a2){a2=boxB(VA,N,12);w2=boxB(W,N,12)}v=w2[p]>.5?a2[p]/w2[p]:0}
@@ -1972,7 +1992,20 @@ function wxDraw(c){const box=$('wx'),ja=L=='ja';if(!box||!c||!c.days)return;cons
  const who=S.me?(ja?'現在地':'Your area'):(PREF().k=='oki'?(ja?'沖縄本島':'Okinawa Island'):(ja?PREF().ja:PREF().en));
  box.innerHTML='<div class="wxh">'+who+(ja?'の天気':' weather')+'</div><div class="wxr">'+ds.map(x=>{const k=Math.round((Date.parse(x.d)-Date.parse(today))/86400000);
   return '<div class="wxc"><span class="wxd">'+(nm[k]||x.d.slice(5).replace('-','/'))+'</span><span class="wxi">'+(x.c?WXE(x.c):'－')+'</span><span class="wxp">'+(x.p!=null?x.p+'%':'－')+'</span></div>'}).join('')+'</div>';
- box.setAttribute('aria-label',who+(ja?'の天気':' weather'));box.hidden=false}
+ box.setAttribute('aria-label',who+(ja?'の天気':' weather'));box.hidden=false;placeWxSoon()}
+/* v4.14.0: keep the weather box at the bottom right: just above the map credit, and to the left of Shi-chan (or above her) so nothing overlaps */
+function placeWx(){const b=$('wx');if(!b||b.hidden)return;const m=mp.getBoundingClientRect();if(!m.width)return;
+ const o=document.querySelector('.map .osm'),orc=o&&o.offsetParent?o.getBoundingClientRect():null;
+ let bot=orc?Math.max(4,m.bottom-orc.top+4):6,right=6;
+ const pb=$('mpanel');if(pb&&!pb.hidden){const pr=pb.getBoundingClientRect();if(pr.height)bot=Math.max(bot,m.bottom-pr.top+4)}
+ const sc=$('mcS'),st=sc&&getComputedStyle(sc);
+ if(sc&&st.display!='none'&&st.visibility!='hidden'&&!document.body.classList.contains('noshi')){const r=sc.getBoundingClientRect();
+  if(r.width&&r.height){const w=b.offsetWidth||150,h=b.offsetHeight||60,bx0=m.right-right-w,by0=m.bottom-bot-h;
+   const hit=!(bx0>r.right||m.right-right<r.left||by0>r.bottom||m.bottom-bot<r.top);
+   if(hit){const nr=m.right-r.left+4;if(m.right-nr-w>m.left+8)right=nr;else bot=Math.max(bot,m.bottom-r.top+4)}}}
+ b.style.right=right+'px';b.style.bottom=bot+'px'}
+let PWX=0;const placeWxSoon=()=>{if(PWX)return;PWX=requestAnimationFrame(()=>{PWX=0;try{placeWx()}catch(e){}})};
+addEventListener('resize',()=>setTimeout(placeWxSoon,200));setInterval(()=>{if(!document.hidden)placeWxSoon()},800);
 setInterval(()=>{if(!document.hidden)wxLoad()},10*60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)wxLoad()});
 function drawLoc(){const ja=L=='ja';$('locBtn').textContent=T.locBtn;$('locClr').textContent=ja?'地域で選ぶにもどす':'Use the chosen region';$('locClr').hidden=!S.me;$('rgL').textContent=ja?'地域':'Region';
  const sel=$('prefSel');sel.innerHTML=(S.me?'<option value="me">📍 '+(ja?'現在地（'+mePref()+'）':'You ('+mePref()+')')+'</option>':'')+PREFS.map(p=>'<option value="'+p[0]+'">'+(ja?p[1]:p[2])+'</option>').join('');sel.value=S.me?'me':PREF().k;try{wxLoad()}catch(e){}}
@@ -2583,8 +2616,8 @@ $('mapAd').addEventListener('click',e=>{if(e.target.id=='mapAd')adClose()});
 {const _sh=show;show=function(i){_sh(i);if(i==1)setTimeout(()=>{adMaybe()},900)}}
 setTimeout(()=>{if(S.tab==1)adMaybe()},1600);
 /* v3.12.1: "new features" notice, shown once after an update (not on first install) */
-(function(){const NEWS={ja:['進路予想の線が出ない台風（弱まっている時など）は、地図と文字で「進路予想の発表なし」と出るようにしました','もうすぐ温帯低気圧に変わる台風は、その後の予想を灰色の点線で出します','🌍世界の表示に、ハワイやアメリカ周辺の🥚ハリケーンのたまご（発生するかもしれない所）も出るようにしました'],
-en:['When a typhoon has no track forecast (e.g. it is weakening), the map and text now say so','If a typhoon will soon turn extratropical, the forecast after that is shown as a gray dotted line','🌍 now also shows 🥚 hurricane eggs (areas that may develop) near Hawaii and the Americas']};
+(function(){const NEWS={ja:['地図の右下に、今日・明日・あさっての天気をいつも出すようにしました（台風がない時も）','世界地図の海に出ていた白いモヤモヤ（地図の英語の文字の残り）を消しました','進路予想の線が出ない台風（弱まっている時など）は、地図と文字で「進路予想の発表なし」と出るようにしました','もうすぐ温帯低気圧に変わる台風は、その後の予想を灰色の点線で出します','🌍世界の表示に、ハワイやアメリカ周辺の🥚ハリケーンのたまご（発生するかもしれない所）も出るようにしました'],
+en:['Today / tomorrow / next-day weather now always shows at the bottom right of the map (even with no typhoon)','Removed the white smudges (leftover English map text) on the sea in the world view','When a typhoon has no track forecast (e.g. it is weakening), the map and text now say so','If a typhoon will soon turn extratropical, the forecast after that is shown as a gray dotted line','🌍 now also shows 🥚 hurricane eggs (areas that may develop) near Hawaii and the Americas']};
  const seen=S.seenVer;if(FIRST){S.seenVer=VER;save();return}if(seen===VER||String(seen||'').split('.').slice(0,2).join('.')===VER.split('.').slice(0,2).join('.')){if(seen!==VER){S.seenVer=VER;save()}return}
  const done=()=>{S.seenVer=VER;save()};
  const ja=L=='ja',li=(ja?NEWS.ja:NEWS.en).map(x=>'<li style="margin:6px 0">'+x+'</li>').join('');
